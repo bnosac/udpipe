@@ -1,0 +1,15 @@
+Package: udpipe
+Type: Package
+Title: Tokenization, Tagging, Lemmatization and Dependency Parsing to CoNLL-U Format Based on UDPipe
+Version: 0.1.0
+Maintainer: Jan Wijffels <jwijffels@bnosac.be>
+Authors@R: c(person("Jan", "Wijffels", role = c("aut", "cre", "cph"), email = "jwijffels@bnosac.be"), person("BNOSAC", role = "cph"), person("Milan Straka", role = "cph", email = "straka@ufal.mff.cuni.cz"), person("Jana Straková", role = "cph", email = "strakova@ufal.mff.cuni.cz"))
+Description: UDPipe provides fast, accurate and language-agnostic tokenization, tagging, lemmatization and dependency parsing of raw text, which is an essiential part in natural language processing.
+    Next to this parsing, it also allows you to train annotation models based on data of treebanks in "CoNLL-U" format as provided at <http://universaldependencies.org/format.html>. 
+    The techniques used are explained in detail in the paper: "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>.
+License: file LICENSE
+Encoding: UTF-8
+Imports: Rcpp (>= 0.12.12)
+LinkingTo: Rcpp
+SystemRequirements: C++11
+RoxygenNote: 6.0.1.9000
