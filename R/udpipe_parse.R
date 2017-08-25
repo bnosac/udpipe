@@ -145,10 +145,9 @@ as.data.frame.udpipe_connlu <- function(x, ...){
                     sentence_text = na_locf(ifelse(is_sentencetext, sub("^# text = *", "", txt), NA_character_)),
                     is_newparagraph = is_newparagraph)
   
-  out[, data.table::`:=`(paragraph_id = cumsum(is_newparagraph)), by = list(doc_id)]
+  out[, paragraph_id := cumsum(is_newparagraph), by = list(doc_id)]
   out <- out[is_taggeddata, ]
-  out <- out[,  c("id", "form", "lemma", "upostag", "xpostag", "feats", "head", "deprel", "deps", "misc") := 
-               data.table::`:=`(data.table::tstrsplit(txt, "\t", fixed=TRUE))]
+  out <- out[,  c("id", "form", "lemma", "upostag", "xpostag", "feats", "head", "deprel", "deps", "misc") := data.table::tstrsplit(txt, "\t", fixed=TRUE)]
   out <- out[, c("doc_id", "paragraph_id", "sentence_id", "sentence_text", 
                  "id", "form", "lemma", "upostag", "xpostag", "feats", "head", "deprel", "deps", "misc")]
   data.table::setDF(out)
