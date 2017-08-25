@@ -86,7 +86,7 @@ Mark that these models are made available under the CC BY-NC-SA 4.0 license.
 ## Installation & License
 
 The package is availabe under the Mozilla Public License Version 2.0.
-Installation can be done as follows and has only Rcpp as dependency.
+Installation can be done as follows.
 
 ```
 install.packages("devtools")
