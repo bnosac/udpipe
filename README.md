@@ -4,7 +4,7 @@ This repository contains an R package which is an Rcpp wrapper around the UDPipe
 
 - UDPipe provides fast, accurate and language-agnostic tokenization, tagging, lemmatization and dependency parsing of raw text, which is an essential part in natural language processing.
 - The techniques used are explained in detail in the paper: "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>.
-- The R package only has Rcpp as dependency.
+- The R package only has Rcpp and data.table as dependency. No tidyverse if you don't want this!
     
 
 ## Usage
@@ -54,6 +54,23 @@ The resulting tagged output is in CONLL-U format as described at http://universa
 6	puisten	puist	NOUN	N|soort|mv|neut	Number=Plur	1	obl	_	SpaceAfter=No
 7	,	,	PUNCT	Punc|komma	PunctType=Comm	1	punct	_	SpacesAfter=\s\n\s\s
 8	zei	zeg	VERB
+...
+```
+
+You can also get this in a tidy data.frame format with the function as.data.frame.
+This uses the data.table package.
+
+```
+as.data.frame(x)
+
+ doc_id paragraph_id sentence_id id           form         lemma upostag              xpostag                    feats head deprel deps          misc
+     d1            1           1  1            Dus           dus     ADV         Adv|gew|aanw             PronType=Dem    0   root    _ SpaceAfter=No
+     d1            1           1  2              .             .   PUNCT            Punc|punt           PunctType=Peri    1  punct    _             _
+     d1            1           2  1 Godvermehoeren Godvermehoeer    VERB        V|intrans|inf Subcat=Intr|VerbForm=Inf    0   root    _             _
+     d1            1           2  2            met           met     ADP            Prep|voor             AdpType=Prep    3   case    _             _
+     d1            1           2  3            pus           pus    NOUN      N|soort|mv|neut              Number=Plur    1    obl    _             _
+     d1            1           2  4             in            in     ADP            Prep|voor             AdpType=Prep    6   case    _             _
+     d1            1           2  5           alle          alle    PRON Pron|onbep|neut|attr             PronType=Ind    6   nmod    _             _
 ...
 ```
 

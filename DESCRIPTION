@@ -9,7 +9,7 @@ Description: UDPipe provides fast, accurate and language-agnostic tokenization, 
     The techniques used are explained in detail in the paper: "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>.
 License: file LICENSE
 Encoding: UTF-8
-Imports: Rcpp (>= 0.12.12)
+Imports: Rcpp (>= 0.12.12), data.table (>= 1.9.6)
 LinkingTo: Rcpp
 SystemRequirements: C++11
 RoxygenNote: 6.0.1.9000

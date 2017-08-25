@@ -48,4 +48,15 @@ List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVect
 
 
 
+// [[Rcpp::export]]
+Rcpp::CharacterVector na_locf(Rcpp::CharacterVector x) {
+  Rcpp::LogicalVector ismissing = is_na(x);
+  int i;
+  for(i = 1; i < x.size(); i++) {
+    if((x[i] == NA_STRING) & (x[i-1] != NA_STRING)) {
+      x[i] = x[i-1];
+    }
+  }
+  return x;
+}
 

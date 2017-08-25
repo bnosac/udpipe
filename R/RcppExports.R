@@ -9,3 +9,7 @@ udp_tokenise_tag_parse <- function(udmodel, x, docid) {
     .Call('_udpipe_udp_tokenise_tag_parse', PACKAGE = 'udpipe', udmodel, x, docid)
 }
 
+na_locf <- function(x) {
+    .Call('_udpipe_na_locf', PACKAGE = 'udpipe', x)
+}
+

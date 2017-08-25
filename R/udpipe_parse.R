@@ -88,6 +88,69 @@ udpipe_annotate <- function(object, x, doc_id = paste("d", seq_along(x), sep="")
   stopifnot(inherits(doc_id, "character"))
   stopifnot(length(x) == length(doc_id))
   x_conllu <- udp_tokenise_tag_parse(object$model, x, doc_id)
+  class(x_conllu) <- "udpipe_connlu"
   x_conllu
 }
 
+
+
+#' @title Convert the result of udpipe_annotate to a tidy data frame
+#' @description Convert the result of udpipe_annotate to a tidy data frame
+#' @param x an object of class \code{udpipe_connlu} as returned by \code{\link{udpipe_annotate}}
+#' @param ... currently not used
+#' @return a data.frame with columns 
+#' doc_id, paragraph_id, sentence_id, sentence_text, 
+#' id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc)
+#' @seealso \code{\link{udpipe_annotate}}
+#' @export
+#' @examples 
+#' \dontrun{
+#' ## Load the model
+#' f <- file.path(getwd(), "dev/udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
+#' ud_dutch <- udpipe_load_model(f)
+#' 
+#' ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
+#' txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
+#'   zei die schele van Van Bukburg en hij had nog gelijk ook. 
+#'   Er was toen dat liedje van tietenkonttieten kont tieten kontkontkont, 
+#'   maar dat hoefden we geenseens niet te zingen. 
+#'   Je kunt zeggen wat je wil van al die gesluierde poezenpas maar d'r kwam wel 
+#'   een vleeswarenwinkel onder te voorschijn van heb je me daar nou.
+#'   
+#'   En zo gaat het maar door.",
+#'   "Wat die ransaap van een academici nou weer in z'n botte pan heb gehaald mag 
+#'   Joost in m'n schoen gooien, maar feit staat boven water dat het een gore 
+#'   vieze vuile ransaap is.")
+#' x <- udpipe_annotate(ud_dutch, x = txt)
+#' as.data.frame(x)
+#' }
+as.data.frame.udpipe_connlu <- function(x, ...){
+  ## R CMD check happyness
+  doc_id <- NULL
+  paragraph_id <- NULL
+  
+  ## Parse format of all lines in the CONLL-U format
+  txt <- strsplit(x$conllu, "\n")[[1]]
+  is_sentence_boundary <- txt == ""
+  is_comment <- startsWith(txt, "#")
+  is_newdoc <- startsWith(txt, "# newdoc")
+  is_newparagraph <- startsWith(txt, "# newpar")
+  is_sentenceid = startsWith(txt, "# sent_id")
+  is_sentencetext = startsWith(txt, "# text")
+  is_taggeddata <- !is_sentence_boundary & !is_comment
+  
+  out <- data.table::data.table(txt = txt,
+                    doc_id = na_locf(ifelse(is_newdoc, sub("^# newdoc id = *", "", txt), NA_character_)),
+                    sentence_id = na_locf(ifelse(is_sentenceid, sub("^# sent_id = *", "", txt), NA_character_)),
+                    sentence_text = na_locf(ifelse(is_sentencetext, sub("^# text = *", "", txt), NA_character_)),
+                    is_newparagraph = is_newparagraph)
+  
+  out[, data.table::`:=`(paragraph_id = cumsum(is_newparagraph)), by = list(doc_id)]
+  out <- out[is_taggeddata, ]
+  out <- out[,  c("id", "form", "lemma", "upostag", "xpostag", "feats", "head", "deprel", "deps", "misc") := 
+               data.table::`:=`(data.table::tstrsplit(txt, "\t", fixed=TRUE))]
+  out <- out[, c("doc_id", "paragraph_id", "sentence_id", "sentence_text", 
+                 "id", "form", "lemma", "upostag", "xpostag", "feats", "head", "deprel", "deps", "misc")]
+  data.table::setDF(out)
+  out
+}
