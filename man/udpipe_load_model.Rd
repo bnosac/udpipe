@@ -27,12 +27,15 @@ portuguese, romanian, russian, sanskrit, slovak, slovenian, spanish, swedish, ta
 urdu, uyghur, vietnamese. Mark that these models are made available under the CC BY-NC-SA 4.0 license.
 }
 \examples{
+## Download zipped folder with models build on UD version 2.0 + get one model for Dutch
+url <- file.path("https://lindat.mff.cuni.cz",
+ "repository/xmlui/bitstream/handle/11234/1-2364/udpipe-ud-2.0-170801.zip")
+url
 \dontrun{
-## Download zipped folder with models + get one model
-zips <- "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-2364/udpipe-ud-2.0-170801.zip"
-download.file(zips, "udpipe-ud-2.0-170801.zip")
+download.file(url, "udpipe-ud-2.0-170801.zip")
 unzip("udpipe-ud-2.0-170801.zip", list = TRUE)
-unzip("udpipe-ud-2.0-170801.zip", files = "udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe", exdir = "dev")
+unzip("udpipe-ud-2.0-170801.zip", 
+      files = "udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe", exdir = "dev")
 
 f <- file.path(getwd(), "dev/udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
 ## Load model
