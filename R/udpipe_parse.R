@@ -31,7 +31,7 @@
 #' ud_dutch <- udpipe_load_model(f)
 #' }
 udpipe_load_model <- function(file) {
-  file = path.expand(file)
+  file <- path.expand(file)
   if(!file.exists(file)){
     stop(sprintf("File %s containing the language model does not exist", file))
   }
@@ -175,8 +175,8 @@ as.data.frame.udpipe_connlu <- function(x, ...){
   is_comment <- startsWith(txt, "#")
   is_newdoc <- startsWith(txt, "# newdoc")
   is_newparagraph <- startsWith(txt, "# newpar")
-  is_sentenceid = startsWith(txt, "# sent_id")
-  is_sentencetext = startsWith(txt, "# text")
+  is_sentenceid <- startsWith(txt, "# sent_id")
+  is_sentencetext <- startsWith(txt, "# text")
   is_taggeddata <- !is_sentence_boundary & !is_comment
   
   out <- data.table::data.table(txt = txt,
