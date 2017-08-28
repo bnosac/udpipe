@@ -80,7 +80,7 @@ udpipe_load_model <- function(file) {
 #' x <- udpipe_annotate(ud_dutch, x = txt)
 #' cat(x$conllu)
 #' }
-udpipe_annotate <- function(object, x, doc_id = paste("d", seq_along(x), sep=""), ...) {
+udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep=""), ...) {
   if(!inherits(object, "udpipe_model")){
     stop("object should be of class udpipe_model as returned by the function ?udpipe_load_model")
   }
@@ -141,15 +141,20 @@ as.data.frame.udpipe_connlu <- function(x, ...){
   
   out <- data.table::data.table(txt = txt,
                     doc_id = na_locf(ifelse(is_newdoc, sub("^# newdoc id = *", "", txt), NA_character_)),
-                    sentence_id = na_locf(ifelse(is_sentenceid, sub("^# sent_id = *", "", txt), NA_character_)),
-                    sentence_text = na_locf(ifelse(is_sentencetext, sub("^# text = *", "", txt), NA_character_)),
+                    sentence_id = as.integer(na_locf(ifelse(is_sentenceid, sub("^# sent_id = *", "", txt), NA_character_))),
+                    sentence = na_locf(ifelse(is_sentencetext, sub("^# text = *", "", txt), NA_character_)),
                     is_newparagraph = is_newparagraph)
-  
+  underscore_as_na <- function(x){
+    x[is.na(x)] <- NA
+    x
+  }
   out[, paragraph_id := cumsum(is_newparagraph), by = list(doc_id)]
   out <- out[is_taggeddata, ]
-  out <- out[,  c("id", "form", "lemma", "upostag", "xpostag", "feats", "head", "deprel", "deps", "misc") := data.table::tstrsplit(txt, "\t", fixed=TRUE)]
-  out <- out[, c("doc_id", "paragraph_id", "sentence_id", "sentence_text", 
-                 "id", "form", "lemma", "upostag", "xpostag", "feats", "head", "deprel", "deps", "misc")]
+  out <- out[,  c("token_id", "token", "lemma", "upos", "xpos", "feats", "head_token_id", "dep_rel", "deps", "misc") := data.table::tstrsplit(txt, "\t", fixed=TRUE)]
+  out[, token_id := as.integer(underscore_as_na(token_id))]
+  out[, head_token_id := as.integer(underscore_as_na(head_token_id))]
+  out <- out[, c("doc_id", "paragraph_id", "sentence_id", "sentence", 
+                 "token_id", "token", "lemma", "upos", "xpos", "feats", "head_token_id", "dep_rel", "deps", "misc")]
   data.table::setDF(out)
   out
 }
