@@ -74,6 +74,19 @@ as.data.frame(x)
 ...
 ```
 
+Mark that you gain some time if you require only a part of the annotation. This can be done as shown below. Further detailed options can be passed on to tagger and parser. See `?udpipe_annotate` for more details.
+
+```
+## Tokenisation + finds sentences but does not execute POS tagging, nor lemmatisation or dependency parsing
+x <- udpipe_annotate(ud_dutch, x = txt, tagger = "none", parser = "none")
+
+## Tokenisation + finds sentences, does POS tagging and lemmatisation but does not execute dependency parsing
+x <- udpipe_annotate(ud_dutch, x = txt, tagger = "default", parser = "none")
+
+## Tokenisation + finds sentences and executes dependency parsing but does not do POS tagging nor lemmatisation
+x <- udpipe_annotate(ud_dutch, x = txt, tagger = "none", parser = "default")
+```
+
 Pre-trained Universal Dependencies 2.0 models on all UD treebanks are made available at 
 https://ufal.mff.cuni.cz/udpipe, namely at https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364.
 
