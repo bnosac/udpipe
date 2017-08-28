@@ -125,9 +125,7 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
   stopifnot(is.character(parser))
   tagger <- tagger[1]
   parser <- parser[1]
-  tagger <- match.arg(tagger)
-  parser <- match.arg(parser)
-  
+
   x_conllu <- udp_tokenise_tag_parse(object$model, x, doc_id, tokenizer, tagger, parser)
   class(x_conllu) <- "udpipe_connlu"
   x_conllu
@@ -167,7 +165,7 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
 #' }
 as.data.frame.udpipe_connlu <- function(x, ...){
   ## R CMD check happyness
-  doc_id <- paragraph_id <- token_id <- head_token_id <- lemma <- upos <- xpos <- feats <- dep_rel <- misc <- NULL
+  doc_id <- paragraph_id <- token_id <- head_token_id <- lemma <- upos <- xpos <- feats <- dep_rel <- deps <- misc <- NULL
 
   ## Parse format of all lines in the CONLL-U format
   txt <- strsplit(x$conllu, "\n")[[1]]
