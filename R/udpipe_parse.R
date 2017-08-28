@@ -31,6 +31,7 @@
 #' ud_dutch <- udpipe_load_model(f)
 #' }
 udpipe_load_model <- function(file) {
+  file = path.expand(file)
   if(!file.exists(file)){
     stop(sprintf("File %s containing the language model does not exist", file))
   }
