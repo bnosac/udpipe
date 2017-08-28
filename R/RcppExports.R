@@ -5,8 +5,8 @@ udp_load_model <- function(file_model) {
     .Call('_udpipe_udp_load_model', PACKAGE = 'udpipe', file_model)
 }
 
-udp_tokenise_tag_parse <- function(udmodel, x, docid) {
-    .Call('_udpipe_udp_tokenise_tag_parse', PACKAGE = 'udpipe', udmodel, x, docid)
+udp_tokenise_tag_parse <- function(udmodel, x, docid, annotation_tokenizer, annotation_tagger, annotation_parser) {
+    .Call('_udpipe_udp_tokenise_tag_parse', PACKAGE = 'udpipe', udmodel, x, docid, annotation_tokenizer, annotation_tagger, annotation_parser)
 }
 
 na_locf <- function(x) {

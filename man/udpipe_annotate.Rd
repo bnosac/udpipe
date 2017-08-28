@@ -4,7 +4,9 @@
 \alias{udpipe_annotate}
 \title{Tokenise, Tag and Dependency Parsing Annotation on text}
 \usage{
-udpipe_annotate(object, x, doc_id = paste("d", seq_along(x), sep = ""), ...)
+udpipe_annotate(object, x, doc_id = paste("doc", seq_along(x), sep = ""),
+  tokenizer = "tokenizer", tagger = c("default", "none"),
+  parser = c("default", "none"), ...)
 }
 \arguments{
 \item{object}{an object of class \code{udpipe_model} as returned by \code{\link{udpipe_load_model}}}
@@ -13,6 +15,21 @@ udpipe_annotate(object, x, doc_id = paste("d", seq_along(x), sep = ""), ...)
 contains text which you like to tokenize, tag and perform dependency parsing.}
 
 \item{doc_id}{an identifier of a document with the same length as \code{x}.}
+
+\item{tokenizer}{a character string of length 1, which is either 'tokenizer' (default udpipe tokenisation)
+or a character string with more complex tokenisation options 
+as specified in \url{http://ufal.mff.cuni.cz/udpipe/users-manual} in which case \code{tokenizer} should be a character string where the options
+are put after each other using the semicolon as separation.}
+
+\item{tagger}{a character string of length 1, which is either 'default' (default udpipe POS tagging and lemmatisation)
+or 'none' (no POS tagging and lemmatisation needed) or a character string with more complex tagging options 
+as specified in \url{http://ufal.mff.cuni.cz/udpipe/users-manual} in which case \code{tagger} should be a character string where the options
+are put after each other using the semicolon as separation.}
+
+\item{parser}{a character string of length 1, which is either 'default' (default udpipe dependency parsing) or
+'none' (no dependency parsing needed) or a character string with more complex parsing options 
+as specified in \url{http://ufal.mff.cuni.cz/udpipe/users-manual} in which case \code{parser} should be a character string where the options
+are put after each other using the semicolon as separation.}
 
 \item{...}{currently not used}
 }
@@ -48,6 +65,19 @@ txt <- c("Dus. Godvermehoeren met pus in alle puisten,
   vieze vuile ransaap is.")
 x <- udpipe_annotate(ud_dutch, x = txt)
 cat(x$conllu)
+as.data.frame(x)
+
+## Only tokenisation
+x <- udpipe_annotate(ud_dutch, x = txt, tagger = "none", parser = "none")
+as.data.frame(x)
+
+## Only tokenisation and POS tagging + lemmatisation, no dependency parsing
+x <- udpipe_annotate(ud_dutch, x = txt, tagger = "default", parser = "none")
+as.data.frame(x)
+
+## Only tokenisation and dependency parsing, no POS tagging nor lemmatisation
+x <- udpipe_annotate(ud_dutch, x = txt, tagger = "none", parser = "default")
+as.data.frame(x)
 }
 }
 \references{

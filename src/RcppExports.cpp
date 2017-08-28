@@ -17,15 +17,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // udp_tokenise_tag_parse
-List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVector docid);
-RcppExport SEXP _udpipe_udp_tokenise_tag_parse(SEXP udmodelSEXP, SEXP xSEXP, SEXP docidSEXP) {
+List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVector docid, Rcpp::CharacterVector annotation_tokenizer, Rcpp::CharacterVector annotation_tagger, Rcpp::CharacterVector annotation_parser);
+RcppExport SEXP _udpipe_udp_tokenise_tag_parse(SEXP udmodelSEXP, SEXP xSEXP, SEXP docidSEXP, SEXP annotation_tokenizerSEXP, SEXP annotation_taggerSEXP, SEXP annotation_parserSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type udmodel(udmodelSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type docid(docidSEXP);
-    rcpp_result_gen = Rcpp::wrap(udp_tokenise_tag_parse(udmodel, x, docid));
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type annotation_tokenizer(annotation_tokenizerSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type annotation_tagger(annotation_taggerSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type annotation_parser(annotation_parserSEXP);
+    rcpp_result_gen = Rcpp::wrap(udp_tokenise_tag_parse(udmodel, x, docid, annotation_tokenizer, annotation_tagger, annotation_parser));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -43,7 +46,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_udpipe_udp_load_model", (DL_FUNC) &_udpipe_udp_load_model, 1},
-    {"_udpipe_udp_tokenise_tag_parse", (DL_FUNC) &_udpipe_udp_tokenise_tag_parse, 3},
+    {"_udpipe_udp_tokenise_tag_parse", (DL_FUNC) &_udpipe_udp_tokenise_tag_parse, 6},
     {"_udpipe_na_locf", (DL_FUNC) &_udpipe_na_locf, 1},
     {NULL, NULL, 0}
 };
