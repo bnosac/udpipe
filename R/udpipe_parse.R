@@ -166,7 +166,34 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
 as.data.frame.udpipe_connlu <- function(x, ...){
   ## R CMD check happyness
   doc_id <- paragraph_id <- token_id <- head_token_id <- lemma <- upos <- xpos <- feats <- dep_rel <- deps <- misc <- NULL
-
+  ## Check if there is data in x$conllu
+  if(length(x$conllu) <= 1){
+    if(all(x$conllu == "")){
+      msg <- unique(x$error)
+      if(length(msg) == 0){
+        msg <- ""
+      }else{
+        msg <- paste(msg, collapse = ", ")
+      }
+      warning(sprintf("No parsed data in x$conllu, returning default empty data.frame. Error message at x$error indicates e.g.: %s", msg))
+      default <- data.frame(doc_id = character(), 
+                            paragraph_id = integer(), 
+                            sentence_id = integer(), 
+                            sentence = character(), 
+                            token_id = integer(), 
+                            token = character(), 
+                            lemma = character(), 
+                            upos = character(), 
+                            xpos = character(), 
+                            feats = character(), 
+                            head_token_id = integer(), 
+                            dep_rel = character(), 
+                            deps = character(), 
+                            misc = character(), stringsAsFactors = FALSE)
+      return(default)
+    }
+  }
+  
   ## Parse format of all lines in the CONLL-U format
   txt <- strsplit(x$conllu, "\n")[[1]]
   is_sentence_boundary <- txt == ""
