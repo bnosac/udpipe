@@ -30,6 +30,8 @@
 #include <utility>
 #include <vector>
 
+std::ofstream logstream(".udpipe_process.log");
+
 namespace ufal {
 namespace udpipe {
 
@@ -60,7 +62,9 @@ static_assert(sizeof(int) >= sizeof(int32_t), "Int must be at least 4B wide!");
 static_assert(__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__, "Only little endian systems are supported!");
 #endif
 
-#define runtime_failure(message) exit((cerr << message << endl, 1))
+//#define runtime_failure(message) exit((logstream << message << endl, 1))
+#define runtime_failure(message) logstream << message << endl;
+
 
 } // namespace utils
 
@@ -8171,7 +8175,7 @@ void dictionary<LemmaAddinfo>::load(istream& is, int max_suffix_len) {
     sort(forms.begin(), forms.end());
     auto forms_end = unique(forms.begin(), forms.end());
     if (forms_end != forms.end()) {
-//      cerr << "Warning: repeated form-tag in lemma " << lemma << '.' << endl;
+//      logstream << "Warning: repeated form-tag in lemma " << lemma << '.' << endl;
       forms.erase(forms_end, forms.end());
     }
 
@@ -8377,20 +8381,20 @@ void generic_morpho_encoder::encode(istream& in_dictionary, int max_suffix_len, 
   enc.add_1B(tags.symbol_tag.size());
   enc.add_data(tags.symbol_tag);
 
-//  cerr << "Encoding dictionary." << endl;
+//  logstream << "Encoding dictionary." << endl;
   morpho_dictionary_encoder<generic_lemma_addinfo>::encode(in_dictionary, max_suffix_len, enc);
 
   // Load and encode statistical guesser if requested
   enc.add_1B(bool(in_statistical_guesser));
   if (in_statistical_guesser) {
-//    cerr << "Encoding statistical guesser." << endl;
+//    logstream << "Encoding statistical guesser." << endl;
     morpho_statistical_guesser_encoder::encode(in_statistical_guesser, enc);
   }
 
   // done, save the dictionary
-//  cerr << "Compressing dictionary." << endl;
+//  logstream << "Compressing dictionary." << endl;
   if (!compressor::save(out_morpho, enc)) training_failure("Cannot compress and write dictionary to file!");
-//  cerr << "Dictionary saved." << endl;
+//  logstream << "Dictionary saved." << endl;
 }
 
 } // namespace morphodita
@@ -13184,12 +13188,12 @@ bool gru_tokenizer_network_trainer<D>::train(unsigned url_email_tokenizer, unsig
       learning_rate = exp(((epochs - epoch - 2) * log(learning_rate_initial) + (epoch + 1) * log(learning_rate_final)) / (epochs - 1));
 
     // Evaluate
-    cerr << "Epoch " << epoch+1 << ", logprob: " << scientific << setprecision(4) << logprob
+    logstream << "Epoch " << epoch+1 << ", logprob: " << scientific << setprecision(4) << logprob
          << ", training acc: " << fixed << setprecision(2) << 100. * correct / double(total) << "%";
     if (!heldout.empty()) {
       f1_info tokens, sentences;
       evaluate(url_email_tokenizer, segment, allow_spaces, heldout, tokens, sentences);
-      cerr << ", heldout tokens: " << 100. * tokens.precision << "%P/" << 100. * tokens.recall << "%R/"
+      logstream << ", heldout tokens: " << 100. * tokens.precision << "%P/" << 100. * tokens.recall << "%R/"
            << 100. * tokens.f1 << "%, sentences: " << 100. * sentences.precision << "%P/"
            << 100. * sentences.recall << "%R/" << 100. * sentences.f1 << "%";
 
@@ -13199,16 +13203,16 @@ bool gru_tokenizer_network_trainer<D>::train(unsigned url_email_tokenizer, unsig
         best_combined_f1_network = *this;
       }
       if (early_stopping && best_combined_f1 && epoch - best_combined_f1_epoch > 30) {
-        cerr << endl << "Stopping after 30 iterations of not improving sum of sentence and token f1." << endl;
+        logstream << endl << "Stopping after 30 iterations of not improving sum of sentence and token f1." << endl;
         break;
       }
     }
-    cerr << endl;
+    logstream << endl;
   }
 
   // Choose best network if desired
   if (early_stopping && best_combined_f1) {
-    cerr << "Choosing parameters from epoch " << best_combined_f1_epoch+1 << "." << endl;
+    logstream << "Choosing parameters from epoch " << best_combined_f1_epoch+1 << "." << endl;
     this->embeddings = best_combined_f1_network.embeddings;
     this->gru_fwd = best_combined_f1_network.gru_fwd;
     this->gru_bwd = best_combined_f1_network.gru_bwd;
@@ -16433,7 +16437,7 @@ void parser_nn_trainer::train(const string& transition_system_name, const string
           words_covered_from_file += word_id != parser.embeddings.back().unknown_word() && unsigned(word_id) < embeddings_from_file;
         }
 
-    cerr << "Initialized '" << tokens[0] << "' embedding with " << embeddings_from_file << embeddings_from_file_comment
+    logstream << "Initialized '" << tokens[0] << "' embedding with " << embeddings_from_file << embeddings_from_file_comment
          << "," << weights.size() << " words and " << fixed << setprecision(1) << 100. * words_covered_from_file / words_total
          << "%," << 100. * words_covered / words_total << "% coverage." << endl;
   }
@@ -16656,9 +16660,9 @@ void parser_nn_trainer::train(const string& transition_system_name, const string
       for (double old_atomic_logprob = atomic_logprob; atomic_logprob.compare_exchange_weak(old_atomic_logprob, old_atomic_logprob + logprob); ) {}
     };
 
-    cerr << "Iteration " << iteration << ": ";
+    logstream << "Iteration " << iteration << ": ";
     training();
-    cerr << "training logprob " << scientific << setprecision(4) << atomic_logprob;
+    logstream << "training logprob " << scientific << setprecision(4) << atomic_logprob;
 
     // Evaluate heldout data if present
     if (!heldout.empty()) {
@@ -16675,7 +16679,7 @@ void parser_nn_trainer::train(const string& transition_system_name, const string
         }
       }
 
-      cerr << ", heldout UAS " << fixed << setprecision(2) << (100. * correct_unlabelled / total) << "%, LAS " << (100. * correct_labelled / total) << "%";
+      logstream << ", heldout UAS " << fixed << setprecision(2) << (100. * correct_unlabelled / total) << "%, LAS " << (100. * correct_labelled / total) << "%";
 
       if (parameters.early_stopping && correct_labelled > heldout_best_correct_labelled) {
         heldout_best_network = parser.network;
@@ -16684,11 +16688,11 @@ void parser_nn_trainer::train(const string& transition_system_name, const string
       }
     }
 
-    cerr << endl;
+    logstream << endl;
   }
 
   if (parameters.early_stopping && heldout_best_iteration > 0) {
-    cerr << "Using early stopping -- choosing network from iteration " << heldout_best_iteration << endl;
+    logstream << "Using early stopping -- choosing network from iteration " << heldout_best_iteration << endl;
     parser.network = heldout_best_network;
   }
 
@@ -20475,26 +20479,26 @@ class tagger_trainer {
 // Definitions
 template <class TaggerTrainer>
 void tagger_trainer<TaggerTrainer>::train(int decoding_order, int window_size, int iterations, istream& in_morpho_dict, bool use_guesser, istream& in_feature_templates, bool prune_features, istream& in_train, istream& in_heldout, bool early_stopping, ostream& out_tagger) {
-//  cerr << "Loading dictionary: ";
+//  logstream << "Loading dictionary: ";
   unique_ptr<morpho> d(morpho::load(in_morpho_dict));
   if (!d) training_failure("Cannot load dictionary!");
-//  cerr << "done" << endl;
+//  logstream << "done" << endl;
   if (!in_morpho_dict.seekg(0, istream::beg)) training_failure("Cannot seek in dictionary file to the beginning!");
 
   vector<sentence> train_data;
-//  cerr << "Loading train data: ";
-//  cerr << "done, matched " << fixed << setprecision(2) << 100 * load_data(in_train, *d, use_guesser, train_data, true) << '%' << endl;
+//  logstream << "Loading train data: ";
+//  logstream << "done, matched " << fixed << setprecision(2) << 100 * load_data(in_train, *d, use_guesser, train_data, true) << '%' << endl;
   load_data(in_train, *d, use_guesser, train_data, true);
 
   vector<sentence> heldout_data;
   if (in_heldout) {
-//    cerr << "Loading heldout data: ";
-//    cerr << "done, matched " << fixed << setprecision(2) << 100 * load_data(in_heldout, *d, use_guesser, heldout_data, false) << '%' << endl;
+//    logstream << "Loading heldout data: ";
+//    logstream << "done, matched " << fixed << setprecision(2) << 100 * load_data(in_heldout, *d, use_guesser, heldout_data, false) << '%' << endl;
     load_data(in_heldout, *d, use_guesser, heldout_data, false);
   }
 
   // Encode morphological dictionary
-//  cerr << "Encoding morphological dictionary." << endl;
+//  logstream << "Encoding morphological dictionary." << endl;
   out_tagger << in_morpho_dict.rdbuf();
   out_tagger.put(use_guesser);
 
@@ -20584,13 +20588,13 @@ template <class FeatureSequences>
 void perceptron_tagger_trainer<FeatureSequences>::train(int decoding_order, int window_size, int iterations, const vector<sentence>& train, const vector<sentence>& heldout, bool early_stopping, bool prune_features, istream& in_feature_templates, ostream& out_tagger) {
   FeatureSequences features;
 
-//  cerr << "Parsing feature templates..." << endl;
+//  logstream << "Parsing feature templates..." << endl;
   features.parse(window_size, in_feature_templates);
 
-//  cerr << "Training tagger..." << endl;
+//  logstream << "Training tagger..." << endl;
   train_viterbi(decoding_order, window_size, iterations, train, heldout, early_stopping, prune_features, features);
 
-//  cerr << "Encoding tagger..." << endl;
+//  logstream << "Encoding tagger..." << endl;
   typedef feature_sequences_optimizer<FeatureSequences> optimizer;
   typename optimizer::optimized_feature_sequences optimized_features;
   optimizer::optimize(features, optimized_features);
@@ -20633,7 +20637,7 @@ void perceptron_tagger_trainer<FeatureSequences>::train_viterbi(int decoding_ord
   for (int i = 0; i < iterations; i++) {
     // Train
     int train_correct = 0, train_total = 0;
-    cerr << "Iteration " << i + 1 << ": ";
+    logstream << "Iteration " << i + 1 << ": ";
 
     vector<int> tags;
     for (unsigned s = 0; s < train.size(); s++) {
@@ -20692,7 +20696,7 @@ void perceptron_tagger_trainer<FeatureSequences>::train_viterbi(int decoding_ord
         element.second.gamma += element.second.alpha * (train.size() - element.second.last_gamma_update);
         element.second.last_gamma_update = 0;
       }
-    cerr << "done, accuracy " << fixed << setprecision(2) << train_correct * 100 / double(train_total) << '%';
+    logstream << "done, accuracy " << fixed << setprecision(2) << train_correct * 100 / double(train_total) << '%';
 
     // If we have any heldout data, compute accuracy and if requested store best tagger configuration
     if (!heldout.empty()) {
@@ -20723,16 +20727,16 @@ void perceptron_tagger_trainer<FeatureSequences>::train_viterbi(int decoding_ord
         best_features = features;
       }
 
-      cerr << ", heldout accuracy " << fixed << setprecision(2)
+      logstream << ", heldout accuracy " << fixed << setprecision(2)
           << 100 * heldout_correct[TAGS] / double(heldout_total) << "%t/"
           << 100 * heldout_correct[LEMMAS] / double(heldout_total) << "%l/"
           << 100 * heldout_correct[BOTH] / double(heldout_total) << "%b";
     }
-    cerr << endl;
+    logstream << endl;
   }
 
   if (early_stopping && best_iteration >= 0) {
-    cerr << "Chosen tagger model from iteration " << best_iteration + 1 << endl;
+    logstream << "Chosen tagger model from iteration " << best_iteration + 1 << endl;
     features = best_features;
   }
 }
@@ -20869,7 +20873,7 @@ bool trainer_morphodita_parsito::train_tokenizer(const vector<sentence>& trainin
       if (!load_model(tokenizer["from_model"], TOKENIZER_MODEL, tokenizer_data))
         return error.assign("Cannot load model from which the tokenizer should be used!"), false;
 
-      cerr << "Using tokenizer from given model." << endl;
+      logstream << "Using tokenizer from given model." << endl;
       os.write(tokenizer_data.str, tokenizer_data.len);
     } else {
       os.put(1);
@@ -20959,10 +20963,10 @@ bool trainer_morphodita_parsito::train_tokenizer(const vector<sentence>& trainin
         double initialization_range = 0.5; if (!option_double(tokenizer, "initialization_range", initialization_range, error)) return false;
         bool early_stopping = !heldout_sentences.empty(); if (!option_bool(tokenizer, "early_stopping", early_stopping, error)) return false;
 
-        if (run >= 1) cerr << "Random search run " << run << ", batch_size=" << batch_size
+        if (run >= 1) logstream << "Random search run " << run << ", batch_size=" << batch_size
                            << ", learning_rate=" << fixed << setprecision(8) << learning_rate << endl;
 
-        cerr << "Training tokenizer with the following options: " << "tokenize_url=" << (tokenize_url ? 1 : 0)
+        logstream << "Training tokenizer with the following options: " << "tokenize_url=" << (tokenize_url ? 1 : 0)
              << ", allow_spaces=" << (allow_spaces ? 1 : 0) << ", dimension=" << dimension << endl
              << "  epochs=" << epochs << ", batch_size=" << batch_size << ", learning_rate=" << fixed << setprecision(4) << learning_rate
              << ", dropout=" << dropout << ", early_stopping=" << (early_stopping ? 1 : 0) << endl;
@@ -21012,7 +21016,7 @@ bool trainer_morphodita_parsito::train_tagger(const vector<sentence>& training, 
       } while (tagger.count(model_name));
       if (taggers_total < 0 || taggers_total > 4) return error.assign("Cannot create more than four tagger models!"), false;
 
-      cerr << "Using tagger from given model(s)." << endl;
+      logstream << "Using tagger from given model(s)." << endl;
       os.put(taggers_total);
       for (auto&& tagger_data : taggers_data)
         os.write(tagger_data.str + 1, tagger_data.len - 1);
@@ -21048,7 +21052,7 @@ bool trainer_morphodita_parsito::train_parser(const vector<sentence>& training, 
       if (!load_model(parser["from_model"], PARSER_MODEL, parser_data))
         return error.assign("Cannot load model from which the parser should be used!"), false;
 
-      cerr << "Using parser from given model." << endl;
+      logstream << "Using parser from given model." << endl;
       os.write(parser_data.str, parser_data.len);
     } else {
       os.put(1);
@@ -21097,7 +21101,7 @@ bool trainer_morphodita_parsito::train_parser(const vector<sentence>& training, 
       if (!option_double(parser, "l2", l2, error)) return false;
       bool early_stopping = !heldout.empty(); if (!option_bool(parser, "early_stopping", early_stopping, error)) return false;
 
-      if (run >= 1) cerr << "Random search run " << run << ", structured_interval=" << structured_interval
+      if (run >= 1) logstream << "Random search run " << run << ", structured_interval=" << structured_interval
                          << ", learning_rate=" << fixed << setprecision(8) << learning_rate
                          << ", l2=" << l2 << endl;
 
@@ -21170,7 +21174,7 @@ bool trainer_morphodita_parsito::train_parser(const vector<sentence>& training, 
           heldout_trees.back().set_head(tagged.words[i].id, tagged.words[i].head, tagged.words[i].deprel);
       }
 
-      cerr << "Parser transition options: system=" << transition_system << ", oracle=" << transition_oracle
+      logstream << "Parser transition options: system=" << transition_system << ", oracle=" << transition_oracle
            << ", structured_interval=" << structured_interval << ", single_root=" << (single_root ? 1 : 0) << endl
            << "Parser uses lemmas/upos/xpos/feats: " << (tagger ? "automatically generated by tagger" : "from gold data") << endl
            << "Parser embeddings options: upostag=" << embedding_upostag << ", feats=" << embedding_feats << ", xpostag=" << embedding_xpostag
@@ -21292,7 +21296,7 @@ bool trainer_morphodita_parsito::train_tagger_model(const vector<sentence>& trai
   os.put(char(provide_xpostag && use_xpostag));
   os.put(char(provide_feats && use_feats));
 
-  cerr << "Tagger model " << model+1 << " columns: " << "lemma use=" << (use_lemma ? 1 : 0) << "/provide=" << (provide_lemma ? 1 : 0)
+  logstream << "Tagger model " << model+1 << " columns: " << "lemma use=" << (use_lemma ? 1 : 0) << "/provide=" << (provide_lemma ? 1 : 0)
        << ", xpostag use=" << (use_xpostag ? 1 : 0) << "/provide=" << (provide_xpostag ? 1 : 0)
        << ", feats use=" << (use_feats ? 1 : 0) << "/provide=" << (provide_feats ? 1 : 0) << endl;
 
@@ -21304,11 +21308,11 @@ bool trainer_morphodita_parsito::train_tagger_model(const vector<sentence>& trai
   const string& dictionary_model = option_str(tagger, "dictionary_model", model);
   if (!dictionary_model.empty()) {
     // Use specified morphological dictionary
-    cerr << "Using given morphological dictionary for tagger model " << model+1 << "." << endl;
+    logstream << "Using given morphological dictionary for tagger model " << model+1 << "." << endl;
     morpho_description << dictionary_model;
   } else {
     // Create the morphological dictionary and guesser from data
-    cerr << "Creating morphological dictionary for tagger model " << model+1 << "." << endl;
+    logstream << "Creating morphological dictionary for tagger model " << model+1 << "." << endl;
 
     // Dictionary options
     int dictionary_suffix_len = 8; if (!option_int(tagger, "dictionary_suffix_len", dictionary_suffix_len, error, model)) return false;
@@ -21330,7 +21334,7 @@ bool trainer_morphodita_parsito::train_tagger_model(const vector<sentence>& trai
     const string& dictionary_file = option_str(tagger, "dictionary_file", model);
     int max_form_analyses = 0; if (!option_int(tagger, "dictionary_max_form_analyses", max_form_analyses, error, model)) return false;
 
-    cerr << "Tagger model " << model+1 << " dictionary options: " << "max_form_analyses=" << max_form_analyses
+    logstream << "Tagger model " << model+1 << " dictionary options: " << "max_form_analyses=" << max_form_analyses
          << ", custom dictionary_file=" << (dictionary_file.empty() ? "none" : dictionary_file) << endl;
 
     // Guesser options
@@ -21343,10 +21347,10 @@ bool trainer_morphodita_parsito::train_tagger_model(const vector<sentence>& trai
     if (!dictionary_file.empty()) guesser_enrich_dictionary = 0;
     if (!option_int(tagger, "guesser_enrich_dictionary", guesser_enrich_dictionary, error, model)) return false;
 
-    if (run >= 1) cerr << "Random search run " << run << ", guesser_suffix_rules=" << guesser_suffix_rules
+    if (run >= 1) logstream << "Random search run " << run << ", guesser_suffix_rules=" << guesser_suffix_rules
                        << ", guesser_enrich_dictionary=" << guesser_enrich_dictionary << endl;
 
-    cerr << "Tagger model " << model+1 << " guesser options: " << "suffix_rules=" << guesser_suffix_rules
+    logstream << "Tagger model " << model+1 << " guesser options: " << "suffix_rules=" << guesser_suffix_rules
          << ", prefixes_max=" << guesser_prefixes_max << ", prefix_min_count=" << guesser_prefix_min_count
          << ", enrich_dictionary=" << guesser_enrich_dictionary << endl;
 
@@ -21508,7 +21512,7 @@ bool trainer_morphodita_parsito::train_tagger_model(const vector<sentence>& trai
       }
     if (!error.empty()) return false;
 
-    cerr << "Dictionary accuracy for tagging model " << model+1 << " - forms: " << words
+    logstream << "Dictionary accuracy for tagging model " << model+1 << " - forms: " << words
          << ", analyses per form: " << fixed << setprecision(2) << total_analyses / double(words)
          << ", upostag: " << setprecision(1) << 100. * upostag / words << "%, xpostag: " << 100. * xpostag / words
          << "%, feats: " << 100. * feats / words << "%, all tags: " << 100. * all_tags / words << "%, lemma: " << 100. * lemma / words << '%' << endl;
@@ -21532,13 +21536,13 @@ bool trainer_morphodita_parsito::train_tagger_model(const vector<sentence>& trai
       model == 1 ? tagger_features_lemmatizer : tagger_features_tagger;
   if (heldout.empty()) tagger_early_stopping = false;
 
-  cerr << "Tagger model " << model+1 << " options: iterations=" << tagger_iterations
+  logstream << "Tagger model " << model+1 << " options: iterations=" << tagger_iterations
        << ", early_stopping=" << (tagger_early_stopping ? 1 : 0) << ", templates="
        << (tagger_feature_templates == tagger_features_tagger ? "tagger" :
            tagger_feature_templates == tagger_features_lemmatizer ? "lemmatizer" : "custom") << endl;
 
   // Train the tagger
-  cerr << "Training tagger model " << model+1 << "." << endl;
+  logstream << "Training tagger model " << model+1 << "." << endl;
   stringstream input, heldout_input, feature_templates_input(tagger_feature_templates);
   for (auto&& sentence : training) {
     for (size_t i = 1; i < sentence.words.size(); i++)
