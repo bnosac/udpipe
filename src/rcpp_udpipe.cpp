@@ -1,6 +1,7 @@
 #include <Rcpp.h>
-#include "udpipe.h"
 #include <fstream>
+#include <memory>
+#include "udpipe.h"
 using namespace Rcpp;
 using namespace ufal::udpipe;
 
@@ -133,7 +134,7 @@ const char* udp_train(const char* model_file,
   std::vector<sentence> training;
   std::vector<sentence> heldout;
   std::string path;
-  bool done;
+  bool done = false;
   
   // Load training data
   for (int i = 0; i < conllu_input_files.size(); i++){
