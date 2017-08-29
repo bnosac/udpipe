@@ -123,9 +123,9 @@ const char* udp_train(const char* model_file,
   }else if (annotation_tagger.compare("default") == 0){
     trainer_tagger = trainer::DEFAULT;
   }
-  if (trainer_parser.compare("none") == 0){
+  if (annotation_parser.compare("none") == 0){
     trainer_parser = trainer::NONE;
-  }else if (trainer_parser.compare("default") == 0){
+  }else if (annotation_parser.compare("default") == 0){
     trainer_parser = trainer::DEFAULT;
   }
   
