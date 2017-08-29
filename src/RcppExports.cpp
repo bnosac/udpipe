@@ -17,7 +17,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // udp_tokenise_tag_parse
-List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVector docid, Rcpp::CharacterVector annotation_tokenizer, Rcpp::CharacterVector annotation_tagger, Rcpp::CharacterVector annotation_parser);
+List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVector docid, std::string annotation_tokenizer, std::string annotation_tagger, std::string annotation_parser);
 RcppExport SEXP _udpipe_udp_tokenise_tag_parse(SEXP udmodelSEXP, SEXP xSEXP, SEXP docidSEXP, SEXP annotation_tokenizerSEXP, SEXP annotation_taggerSEXP, SEXP annotation_parserSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -25,9 +25,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type udmodel(udmodelSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type docid(docidSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type annotation_tokenizer(annotation_tokenizerSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type annotation_tagger(annotation_taggerSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type annotation_parser(annotation_parserSEXP);
+    Rcpp::traits::input_parameter< std::string >::type annotation_tokenizer(annotation_tokenizerSEXP);
+    Rcpp::traits::input_parameter< std::string >::type annotation_tagger(annotation_taggerSEXP);
+    Rcpp::traits::input_parameter< std::string >::type annotation_parser(annotation_parserSEXP);
     rcpp_result_gen = Rcpp::wrap(udp_tokenise_tag_parse(udmodel, x, docid, annotation_tokenizer, annotation_tagger, annotation_parser));
     return rcpp_result_gen;
 END_RCPP

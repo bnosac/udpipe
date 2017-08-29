@@ -1,7 +1,13 @@
 #include <Rcpp.h>
 #include "udpipe.h"
+#include <fstream>
 using namespace Rcpp;
 using namespace ufal::udpipe;
+
+
+/*
+ * Functionalities to tokenise, tag and do dependency parsing based on a model
+ */
 
 // [[Rcpp::export]]
 SEXP udp_load_model(const char* file_model) {
@@ -14,27 +20,23 @@ SEXP udp_load_model(const char* file_model) {
 
 // [[Rcpp::export]]
 List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVector docid, 
-                            Rcpp::CharacterVector annotation_tokenizer,
-                            Rcpp::CharacterVector annotation_tagger,
-                            Rcpp::CharacterVector annotation_parser) {
+                            std::string annotation_tokenizer,
+                            std::string annotation_tagger,
+                            std::string annotation_parser) {
   Rcpp::XPtr<model> languagemodel(udmodel);
   
-  std::string pipeline_tokenizer;
-  std::string pipeline_tagger;
-  std::string pipeline_parser;
-  pipeline_tokenizer = annotation_tokenizer[0];
-  pipeline_tagger = annotation_tagger[0];
-  pipeline_parser = annotation_parser[0];
+  // Handle default and none input to tokenizer, tagger, parser
+  std::string pipeline_tokenizer = annotation_tokenizer;
+  std::string pipeline_tagger = annotation_tagger;
+  std::string pipeline_parser = annotation_parser;
   if (pipeline_tagger.compare("none") == 0){
     pipeline_tagger = pipeline::NONE;
-  }
-  if (pipeline_tagger.compare("default") == 0){
+  }else if (pipeline_tagger.compare("default") == 0){
     pipeline_tagger = pipeline::DEFAULT;
   }
   if (pipeline_parser.compare("none") == 0){
     pipeline_parser = pipeline::NONE;
-  }
-  if (pipeline_parser.compare("default") == 0){
+  }else if (pipeline_parser.compare("default") == 0){
     pipeline_parser = pipeline::DEFAULT;
   }
   
