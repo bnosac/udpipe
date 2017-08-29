@@ -46,6 +46,7 @@ a list with 3 elements
 Tokenise, Tag and Dependency Parsing Annotation of raw text
 }
 \examples{
+\dontrun{
 ##
 ## Example on tagging Sanskrit
 ##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
@@ -67,7 +68,6 @@ as.data.frame(x)
 ## Example on Dutch
 ##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
 ##
-\dontrun{
 url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
   "inst", "udpipe-ud-2.0-170801", 
   "dutch-ud-2.0-170801.udpipe")

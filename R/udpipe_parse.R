@@ -96,6 +96,7 @@ udpipe_load_model <- function(file) {
 #' \url{http://universaldependencies.org/format.html}
 #' @export
 #' @examples 
+#' \dontrun{
 #' ##
 #' ## Example on tagging Sanskrit
 #' ##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
@@ -117,7 +118,6 @@ udpipe_load_model <- function(file) {
 #' ## Example on Dutch
 #' ##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
 #' ##
-#' \dontrun{
 #' url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
 #'   "inst", "udpipe-ud-2.0-170801", 
 #'   "dutch-ud-2.0-170801.udpipe")
