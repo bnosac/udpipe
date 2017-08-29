@@ -3,6 +3,7 @@
 S3method(as.data.frame,udpipe_connlu)
 export(udpipe_annotate)
 export(udpipe_load_model)
+export(udpipe_train)
 importFrom(Rcpp,evalCpp)
 importFrom(data.table,":=")
 importFrom(data.table,data.table)

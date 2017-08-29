@@ -134,7 +134,8 @@ const char* udp_train(const char* model_file,
   std::vector<sentence> training;
   std::vector<sentence> heldout;
   std::string path;
-  bool done = false;
+  bool done;
+  done = false;
   
   // Load training data
   for (int i = 0; i < conllu_input_files.size(); i++){
