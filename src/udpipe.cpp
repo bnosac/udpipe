@@ -30,7 +30,7 @@
 #include <utility>
 #include <vector>
 
-std::ofstream logstream(".udpipe_process.log");
+std::ofstream logstream(std::getenv("UDPIPE_PROCESS_LOG"));
 
 namespace ufal {
 namespace udpipe {
