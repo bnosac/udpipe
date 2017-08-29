@@ -84,3 +84,75 @@ Rcpp::CharacterVector na_locf(Rcpp::CharacterVector x) {
   return x;
 }
 
+
+/*
+ * Functionalities to train a model based on a conll-u file
+ */
+
+bool append_conllu(std::istream& is, std::vector<sentence>& sentences, std::string& error) {
+  std::unique_ptr<input_format> conllu_input(input_format::new_conllu_input_format());
+  
+  std::string block;
+  while (conllu_input->read_block(is, block)) {
+    conllu_input->set_text(block);
+    while (sentences.emplace_back(), conllu_input->next_sentence(sentences.back(), error)) ;
+    sentences.pop_back();
+    if (!error.empty()) return false;
+  }
+  return true;
+}
+
+// [[Rcpp::export]]
+const char* udp_train(const char* model_file, 
+                      Rcpp::CharacterVector conllu_input_files, Rcpp::CharacterVector conllu_heldout_files,
+                      std::string annotation_tokenizer,
+                      std::string annotation_tagger,
+                      std::string annotation_parser) {
+  
+  // Handle default and none input to tokenizer, tagger, parser
+  std::string trainer_tokenizer = annotation_tokenizer;
+  std::string trainer_tagger = annotation_tagger;
+  std::string trainer_parser = annotation_parser;
+  if (annotation_tokenizer.compare("none") == 0){
+    trainer_tokenizer = trainer::NONE;
+  }else if (annotation_tokenizer.compare("default") == 0){
+    trainer_tokenizer = trainer::DEFAULT;
+  }
+  if (annotation_tagger.compare("none") == 0){
+    trainer_tagger = trainer::NONE;
+  }else if (annotation_tagger.compare("default") == 0){
+    trainer_tagger = trainer::DEFAULT;
+  }
+  if (trainer_parser.compare("none") == 0){
+    trainer_parser = trainer::NONE;
+  }else if (trainer_parser.compare("default") == 0){
+    trainer_parser = trainer::DEFAULT;
+  }
+  
+  std::string error;
+  std::vector<sentence> training;
+  std::vector<sentence> heldout;
+  std::string path;
+  bool done;
+  
+  // Load training data
+  for (int i = 0; i < conllu_input_files.size(); i++){
+    path = conllu_input_files[i];
+    std::ifstream input(path.c_str());
+    done = append_conllu(input, training, error);
+  }
+  // Load heldout data
+  for (int i = 0; i < conllu_heldout_files.size(); i++){
+    path = conllu_heldout_files[i];
+    std::ifstream input(path.c_str());
+    done = append_conllu(input, heldout, error);
+  }
+  // Open output binary file
+  std::ofstream model(model_file, std::ofstream::binary);
+  // Train the model
+  done = trainer::train("morphodita_parsito", 
+                        training, heldout, 
+                        trainer_tokenizer, trainer_tagger, trainer_parser, 
+                        model, error);
+  return model_file;
+}

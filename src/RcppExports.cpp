@@ -43,11 +43,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// udp_train
+const char* udp_train(const char* model_file, Rcpp::CharacterVector conllu_input_files, Rcpp::CharacterVector conllu_heldout_files, std::string annotation_tokenizer, std::string annotation_tagger, std::string annotation_parser);
+RcppExport SEXP _udpipe_udp_train(SEXP model_fileSEXP, SEXP conllu_input_filesSEXP, SEXP conllu_heldout_filesSEXP, SEXP annotation_tokenizerSEXP, SEXP annotation_taggerSEXP, SEXP annotation_parserSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const char* >::type model_file(model_fileSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type conllu_input_files(conllu_input_filesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type conllu_heldout_files(conllu_heldout_filesSEXP);
+    Rcpp::traits::input_parameter< std::string >::type annotation_tokenizer(annotation_tokenizerSEXP);
+    Rcpp::traits::input_parameter< std::string >::type annotation_tagger(annotation_taggerSEXP);
+    Rcpp::traits::input_parameter< std::string >::type annotation_parser(annotation_parserSEXP);
+    rcpp_result_gen = Rcpp::wrap(udp_train(model_file, conllu_input_files, conllu_heldout_files, annotation_tokenizer, annotation_tagger, annotation_parser));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_udpipe_udp_load_model", (DL_FUNC) &_udpipe_udp_load_model, 1},
     {"_udpipe_udp_tokenise_tag_parse", (DL_FUNC) &_udpipe_udp_tokenise_tag_parse, 6},
     {"_udpipe_na_locf", (DL_FUNC) &_udpipe_na_locf, 1},
+    {"_udpipe_udp_train", (DL_FUNC) &_udpipe_udp_train, 6},
     {NULL, NULL, 0}
 };
 
