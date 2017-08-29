@@ -12,10 +12,18 @@
 #' english, estonian, finnish, french, galician, german, gothic, greek, hebrew, hindi, hungarian, indonesian, irish, 
 #' italian, japanese, kazakh, korean, latin, latvian, lithuanian, norwegian, old_church_slavonic, persian, polish, 
 #' portuguese, romanian, russian, sanskrit, slovak, slovenian, spanish, swedish, tamil, turkish, ukrainian, 
-#' urdu, uyghur, vietnamese. Mark that these models are made available under the CC BY-NC-SA 4.0 license.
+#' urdu, uyghur, vietnamese. Mark that these models are made available under the CC BY-NC-SA 4.0 license. \cr
+#' 
+#' These models are also provided in an R package for your convenience at 
+#' \url{https://github.com/jwijffels/udpipe.models.ud.2.0}
 #' @references \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
 #' @export
 #' @examples 
+#' ##
+#' ## Ready-made models for 50 languages are provided by UDPipe at
+#' ##    https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364
+#' ## 
+#' 
 #' ## Download zipped folder with models build on UD version 2.0 + get one model for Dutch
 #' url <- file.path("https://lindat.mff.cuni.cz",
 #'  "repository/xmlui/bitstream/handle/11234/1-2364/udpipe-ud-2.0-170801.zip")
@@ -24,11 +32,23 @@
 #' download.file(url, "udpipe-ud-2.0-170801.zip")
 #' unzip("udpipe-ud-2.0-170801.zip", list = TRUE)
 #' unzip("udpipe-ud-2.0-170801.zip", 
-#'       files = "udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe", exdir = "dev")
+#'       files = "udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
 #' 
-#' f <- file.path(getwd(), "dev/udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
+#' f <- file.path(getwd(), "udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
 #' ## Load model
 #' ud_dutch <- udpipe_load_model(f)
+#' 
+#' ##
+#' ## These languages are also put into an R package provided at 
+#' ##   https://github.com/jwijffels/udpipe.models.ud.2.0
+#' ## You can get these as follows
+#' install.packages("udpipe.models.ud.2.0", repos = "http://www.datatailor.be/rcube", type = "source")
+#' f <- system.file(package = "udpipe.models.ud.2.0", "dutch-ud-2.0-170801.udpipe")
+#' ud_dutch <- udpipe_load_model(f)
+#' 
+#' ## see all models inside that package
+#' list.files(system.file(package = "udpipe.models.ud.2.0", "udpipe-ud-2.0-170801"), 
+#'   recursive = TRUE, full.names = TRUE)
 #' }
 udpipe_load_model <- function(file) {
   file <- path.expand(file)
@@ -45,8 +65,8 @@ udpipe_load_model <- function(file) {
 }
 
 
-#' @title Tokenise, Tag and Dependency Parsing Annotation on text
-#' @description Tokenise, Tag and Dependency Parsing Annotation on text
+#' @title Tokenise, Tag and Dependency Parsing Annotation of raw text
+#' @description Tokenise, Tag and Dependency Parsing Annotation of raw text
 #' @param object an object of class \code{udpipe_model} as returned by \code{\link{udpipe_load_model}}
 #' @param x a character vector in UTF-8 encoding where each element of the character vector 
 #' contains text which you like to tokenize, tag and perform dependency parsing.
@@ -71,15 +91,39 @@ udpipe_load_model <- function(file) {
 #'  This format is explained at \url{http://universaldependencies.org/format.html}}
 #'  \item{error: }{A vector with the same length of \code{x} containing possible errors when annotating \code{x}}
 #' }
-#' @seealso \code{\link{udpipe_load_model}}
+#' @seealso \code{\link{udpipe_load_model}}, \code{\link{as.data.frame.udpipe_connlu}}
 #' @references \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}, 
 #' \url{http://universaldependencies.org/format.html}
 #' @export
 #' @examples 
+#' ##
+#' ## Example on tagging Sanskrit
+#' ##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
+#' ##
+#' url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
+#'   "inst", "udpipe-ud-2.0-170801", 
+#'   "sanskrit-ud-2.0-170801.udpipe")
+#' f <- file.path(getwd(), "sanskrit-ud-2.0-170801.udpipe")
+#' download.file(url = url, destfile = f)
+#' ud_sanskrit <- udpipe_load_model(file = f)
+#' 
+#' txt <- 'ततः असौ प्राह क्षत्रियस्य तिस्रः भार्या धर्मम् भवन्ति तत् एषा कदाचिद् वैश्या
+#' सुता भविष्यति तत् अनुरागः ममास्याम् ततः रथकारः तस्य निश्चयम् विज्ञायावदत् वयस्य किम् अ
+#' धुना कर्तव्यम् कौलिकः आह किम् अहम् जानामि त्वयि मित्रे यत् अभिहितं मया ततः'
+#' x <- udpipe_annotate(ud_sanskrit, x = txt)
+#' as.data.frame(x)
+#' 
+#' ##
+#' ## Example on Dutch
+#' ##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
+#' ##
 #' \dontrun{
-#' ## Load the model
-#' f <- file.path(getwd(), "dev/udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
-#' ud_dutch <- udpipe_load_model(f)
+#' url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
+#'   "inst", "udpipe-ud-2.0-170801", 
+#'   "dutch-ud-2.0-170801.udpipe")
+#' f <- file.path(getwd(), "dutch-ud-2.0-170801.udpipe")
+#' download.file(url = url, destfile = f)
+#' ud_dutch <- udpipe_load_model(file = f)
 #' 
 #' ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
 #' txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
@@ -107,6 +151,11 @@ udpipe_load_model <- function(file) {
 #' 
 #' ## Only tokenisation and dependency parsing, no POS tagging nor lemmatisation
 #' x <- udpipe_annotate(ud_dutch, x = txt, tagger = "none", parser = "default")
+#' as.data.frame(x)
+#' 
+#' ## Provide doc_id for joining and identification purpose
+#' x <- udpipe_annotate(ud_dutch, x = txt, doc_id = c("id1", "feedbackabc"),
+#'                      tagger = "none", parser = "none")
 #' as.data.frame(x)
 #' }
 udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep=""), 
@@ -143,10 +192,17 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
 #' @seealso \code{\link{udpipe_annotate}}
 #' @export
 #' @examples 
+#' ##
+#' ## Example on Dutch
+#' ##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
+#' ##
 #' \dontrun{
-#' ## Load the model
-#' f <- file.path(getwd(), "dev/udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
-#' ud_dutch <- udpipe_load_model(f)
+#' url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
+#'   "inst", "udpipe-ud-2.0-170801", 
+#'   "dutch-ud-2.0-170801.udpipe")
+#' f <- file.path(getwd(), "dutch-ud-2.0-170801.udpipe")
+#' download.file(url = url, destfile = f)
+#' ud_dutch <- udpipe_load_model(file = f)
 #' 
 #' ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
 #' txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
@@ -225,6 +281,7 @@ as.data.frame.udpipe_connlu <- function(x, ...){
   out[, dep_rel := underscore_as_na(dep_rel)]
   out[, deps := underscore_as_na(deps)]
   out[, misc := underscore_as_na(misc)]
+  Encoding(out$token) <- "UTF-8"
   out <- out[, c("doc_id", "paragraph_id", "sentence_id", "sentence", 
                  "token_id", "token", "lemma", "upos", "xpos", "feats", "head_token_id", "dep_rel", "deps", "misc")]
   data.table::setDF(out)

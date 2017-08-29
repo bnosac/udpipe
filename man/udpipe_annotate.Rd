@@ -2,7 +2,7 @@
 % Please edit documentation in R/udpipe_parse.R
 \name{udpipe_annotate}
 \alias{udpipe_annotate}
-\title{Tokenise, Tag and Dependency Parsing Annotation on text}
+\title{Tokenise, Tag and Dependency Parsing Annotation of raw text}
 \usage{
 udpipe_annotate(object, x, doc_id = paste("doc", seq_along(x), sep = ""),
   tokenizer = "tokenizer", tagger = c("default", "none"),
@@ -43,13 +43,37 @@ a list with 3 elements
 }
 }
 \description{
-Tokenise, Tag and Dependency Parsing Annotation on text
+Tokenise, Tag and Dependency Parsing Annotation of raw text
 }
 \examples{
+##
+## Example on tagging Sanskrit
+##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
+##
+url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
+  "inst", "udpipe-ud-2.0-170801", 
+  "sanskrit-ud-2.0-170801.udpipe")
+f <- file.path(getwd(), "sanskrit-ud-2.0-170801.udpipe")
+download.file(url = url, destfile = f)
+ud_sanskrit <- udpipe_load_model(file = f)
+
+txt <- 'ततः असौ प्राह क्षत्रियस्य तिस्रः भार्या धर्मम् भवन्ति तत् एषा कदाचिद् वैश्या
+सुता भविष्यति तत् अनुरागः ममास्याम् ततः रथकारः तस्य निश्चयम् विज्ञायावदत् वयस्य किम् अ
+धुना कर्तव्यम् कौलिकः आह किम् अहम् जानामि त्वयि मित्रे यत् अभिहितं मया ततः'
+x <- udpipe_annotate(ud_sanskrit, x = txt)
+as.data.frame(x)
+
+##
+## Example on Dutch
+##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
+##
 \dontrun{
-## Load the model
-f <- file.path(getwd(), "dev/udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
-ud_dutch <- udpipe_load_model(f)
+url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
+  "inst", "udpipe-ud-2.0-170801", 
+  "dutch-ud-2.0-170801.udpipe")
+f <- file.path(getwd(), "dutch-ud-2.0-170801.udpipe")
+download.file(url = url, destfile = f)
+ud_dutch <- udpipe_load_model(file = f)
 
 ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
 txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
@@ -78,6 +102,11 @@ as.data.frame(x)
 ## Only tokenisation and dependency parsing, no POS tagging nor lemmatisation
 x <- udpipe_annotate(ud_dutch, x = txt, tagger = "none", parser = "default")
 as.data.frame(x)
+
+## Provide doc_id for joining and identification purpose
+x <- udpipe_annotate(ud_dutch, x = txt, doc_id = c("id1", "feedbackabc"),
+                     tagger = "none", parser = "none")
+as.data.frame(x)
 }
 }
 \references{
@@ -85,5 +114,5 @@ as.data.frame(x)
 \url{http://universaldependencies.org/format.html}
 }
 \seealso{
-\code{\link{udpipe_load_model}}
+\code{\link{udpipe_load_model}}, \code{\link{as.data.frame.udpipe_connlu}}
 }

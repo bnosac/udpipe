@@ -24,9 +24,17 @@ ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, 
 english, estonian, finnish, french, galician, german, gothic, greek, hebrew, hindi, hungarian, indonesian, irish, 
 italian, japanese, kazakh, korean, latin, latvian, lithuanian, norwegian, old_church_slavonic, persian, polish, 
 portuguese, romanian, russian, sanskrit, slovak, slovenian, spanish, swedish, tamil, turkish, ukrainian, 
-urdu, uyghur, vietnamese. Mark that these models are made available under the CC BY-NC-SA 4.0 license.
+urdu, uyghur, vietnamese. Mark that these models are made available under the CC BY-NC-SA 4.0 license. \cr
+
+These models are also provided in an R package for your convenience at 
+\url{https://github.com/jwijffels/udpipe.models.ud.2.0}
 }
 \examples{
+##
+## Ready-made models for 50 languages are provided by UDPipe at
+##    https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364
+## 
+
 ## Download zipped folder with models build on UD version 2.0 + get one model for Dutch
 url <- file.path("https://lindat.mff.cuni.cz",
  "repository/xmlui/bitstream/handle/11234/1-2364/udpipe-ud-2.0-170801.zip")
@@ -35,11 +43,23 @@ url
 download.file(url, "udpipe-ud-2.0-170801.zip")
 unzip("udpipe-ud-2.0-170801.zip", list = TRUE)
 unzip("udpipe-ud-2.0-170801.zip", 
-      files = "udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe", exdir = "dev")
+      files = "udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
 
-f <- file.path(getwd(), "dev/udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
+f <- file.path(getwd(), "udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
 ## Load model
 ud_dutch <- udpipe_load_model(f)
+
+##
+## These languages are also put into an R package provided at 
+##   https://github.com/jwijffels/udpipe.models.ud.2.0
+## You can get these as follows
+install.packages("udpipe.models.ud.2.0", repos = "http://www.datatailor.be/rcube", type = "source")
+f <- system.file(package = "udpipe.models.ud.2.0", "dutch-ud-2.0-170801.udpipe")
+ud_dutch <- udpipe_load_model(f)
+
+## see all models inside that package
+list.files(system.file(package = "udpipe.models.ud.2.0", "udpipe-ud-2.0-170801"), 
+  recursive = TRUE, full.names = TRUE)
 }
 }
 \references{

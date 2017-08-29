@@ -8,3 +8,5 @@ src/*.dll
 udpipe-ud-2.0-170801.zip
 dev
 .udpipe_process.log
+dutch-ud-2.0-170801.udpipe
+sanskrit-ud-2.0-170801.udpipe

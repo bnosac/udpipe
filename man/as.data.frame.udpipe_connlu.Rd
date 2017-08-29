@@ -20,10 +20,17 @@ id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc)
 Convert the result of udpipe_annotate to a tidy data frame
 }
 \examples{
+##
+## Example on Dutch
+##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
+##
 \dontrun{
-## Load the model
-f <- file.path(getwd(), "dev/udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
-ud_dutch <- udpipe_load_model(f)
+url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
+  "inst", "udpipe-ud-2.0-170801", 
+  "dutch-ud-2.0-170801.udpipe")
+f <- file.path(getwd(), "dutch-ud-2.0-170801.udpipe")
+download.file(url = url, destfile = f)
+ud_dutch <- udpipe_load_model(file = f)
 
 ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
 txt <- c("Dus. Godvermehoeren met pus in alle puisten, 

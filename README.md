@@ -7,7 +7,7 @@ This repository contains an R package which is an Rcpp wrapper around the UDPipe
 - The R package only has Rcpp and data.table as dependency. No tidyverse if you don't want this!
     
 
-## Usage
+## Usage - tokenisation, tagging, lemmatization and dependency parsing
 
 Currently the package allows you to do fast tokenisation, tagging, lemmatization and dependency parsing with one convenient function called. `udpipe_annotate`
 
@@ -95,6 +95,38 @@ ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, 
 
 Mark that these models are made available under the CC BY-NC-SA 4.0 license.
 
+For R users, these models are also available as an R package at https://github.com/jwijffels/udpipe.models.ud.2.0. If you install that package, you can directly get going on tagging.
+
+```
+library(udpipe.models.ud.2.0)
+list.files(system.file(package = "udpipe.models.ud.2.0", "udpipe-ud-2.0-170801"), recursive = TRUE, full.names = TRUE)
+```
+
+## Usage - build your own model
+
+The package also allows you to build your own model. For this, you need to provide data in CONLL-U format.
+These are provided for many languages at http://universaldependencies.org/#ud-treebanks
+Once you have downloaded these, you can provide these as argument to `udpipe_train`. Provide files for training and for the holdout evaluation dataset in the `files_conllu_training` and `files_conllu_holdout` arguments and specify extra arguments to how the tokenizer, tagger and dependecy parser model should be built, as shown below.
+These options are described at http://ufal.mff.cuni.cz/udpipe/users-manual
+
+```
+mymodel <- udpipe_train(
+  file = "toymodel.udpipe", 
+  files_conllu_training = "/home/bnosac/Desktop/ud-treebanks-v2.0/UD_Dutch/nl-ud-train.conllu",
+  files_conllu_holdout = "/home/bnosac/Desktop/ud-treebanks-v2.0/UD_Dutch/nl-ud-dev.conllu",
+  annotation_tokenizer = "dimension=64;epochs=2;initialization_range=0.1;batch_size=100", 
+  annotation_tagger = "models=1;templates_1=tagger;guesser_suffix_rules_1=10;iterations_1=1", 
+  annotation_parser = "none")
+mymodel
+```
+
+Mark that as training can take a while, you can set the environment variable `UDPIPE_PROCESS_LOG` to a location of a file on disk. The evolution of the training will be put in that log. Mark that you need to do this before you load the udpipe package as shown below.
+
+```
+Sys.setenv(UDPIPE_PROCESS_LOG = "udpipe.log")
+library(udpipe)
+...
+```
 
 ## Installation & License
 
