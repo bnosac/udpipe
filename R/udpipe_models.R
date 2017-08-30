@@ -59,8 +59,7 @@ udpipe_download_model <- function(language = c("ancient_greek-proiel", "ancient_
                                                "slovak", "slovenian-sst", "slovenian", "spanish-ancora", "spanish", 
                                                "swedish-lines", "swedish", "tamil", "turkish", "ukrainian", 
                                                "urdu", "uyghur", "vietnamese"),
-                                  model_dir = getwd(),
-                                  ...) {
+                                  model_dir = getwd()) {
   language <- match.arg(language)
   if(!dir.exists(model_dir)){
     dir.create(model_dir, recursive = TRUE)  

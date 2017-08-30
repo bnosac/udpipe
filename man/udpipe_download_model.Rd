@@ -16,7 +16,7 @@ udpipe_download_model(language = c("ancient_greek-proiel", "ancient_greek",
   "polish", "portuguese-br", "portuguese", "romanian", "russian-syntagrus",
   "russian", "sanskrit", "slovak", "slovenian-sst", "slovenian",
   "spanish-ancora", "spanish", "swedish-lines", "swedish", "tamil", "turkish",
-  "ukrainian", "urdu", "uyghur", "vietnamese"), model_dir = getwd(), ...)
+  "ukrainian", "urdu", "uyghur", "vietnamese"), model_dir = getwd())
 }
 \arguments{
 \item{language}{a character stirng with a language. Possible values are:
