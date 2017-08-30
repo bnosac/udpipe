@@ -11,5 +11,8 @@ License: MPL-2.0
 Encoding: UTF-8
 Imports: Rcpp (>= 0.12.12), data.table (>= 1.9.6)
 LinkingTo: Rcpp
+Suggests: knitr
 SystemRequirements: C++11
 RoxygenNote: 6.0.1.9000
+VignetteBuilder: knitr
+
