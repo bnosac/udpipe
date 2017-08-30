@@ -33,7 +33,11 @@ urdu, uyghur, vietnamese}
 \item{model_dir}{a path where the model will be downloaded to. Defaults to the current working directory}
 }
 \value{
-A data.frame with 1 row and 2 columns: language and model_file which is the location where the model was downloaded to
+A data.frame with 1 row and 2 columns: 
+\itemize{
+ \item{language: }{The language as provided by the input parameter \code{language}}
+ \item{file_model: }{The path to the file on disk where the model was downloaded to}
+}
 }
 \description{
 Ready-made models for 50 languages trained on 67 treebanks are provided by UDPipe at https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364
@@ -58,9 +62,9 @@ These models are also provided in an R package for your convenience at
 \url{https://github.com/jwijffels/udpipe.models.ud.2.0}
 }
 \examples{
-\dontrun{
 x <- udpipe_download_model(language = "dutch")
 x
+x$file_model
 x <- udpipe_download_model(language = "dutch-lassysmall")
 x <- udpipe_download_model(language = "sanskrit")
 x <- udpipe_download_model(language = "russian")
@@ -68,7 +72,6 @@ x <- udpipe_download_model(language = "french")
 x <- udpipe_download_model(language = "english")
 x <- udpipe_download_model(language = "german")
 x <- udpipe_download_model(language = "spanish")
-}
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}

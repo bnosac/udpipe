@@ -150,5 +150,7 @@ Contact BNOSAC: http://www.bnosac.be
 
 
 ```{r, results='hide', echo=FALSE}
-invisible(file.remove(c("dutch-ud-2.0-170801.udpipe", "sanskrit-ud-2.0-170801.udpipe")))
+invisible(file.remove(c("dutch-ud-2.0-170801.udpipe", 
+                        "sanskrit-ud-2.0-170801.udpipe", 
+                        "myannotation.conllu")))
 ```

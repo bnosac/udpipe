@@ -1,11 +1,11 @@
 Package: udpipe
 Type: Package
-Title: Tokenization, Parts of Speech Tagging, Lemmatization and Dependency Parsing Based on the UDPipe Natural Language Processing Toolkit
+Title: Tokenization, Parts of Speech Tagging, Lemmatization and Dependency Parsing Based on the "UDPipe" Natural Language Processing Toolkit
 Version: 0.1.0
 Maintainer: Jan Wijffels <jwijffels@bnosac.be>
 Authors@R: c(person("Jan", "Wijffels", role = c("aut", "cre", "cph"), email = "jwijffels@bnosac.be"), person("BNOSAC", role = "cph"), person("Milan Straka", role = "cph", email = "straka@ufal.mff.cuni.cz"), person("Jana Straková", role = "cph", email = "strakova@ufal.mff.cuni.cz"))
-Description: This Natural Language Processing toolkit provides language-agnostic tokenization, tagging, lemmatization and dependency parsing of raw text. 
-    Next to parsing, the package also allows you to train annotation models based on data of treebanks in "CoNLL-U" format as provided at <http://universaldependencies.org/format.html>. 
+Description: This Natural Language Processing toolkit provides language-agnostic "tokenization", "tagging", "lemmatization" and "dependency parsing" of raw text. 
+    Next to parsing, the package also allows you to train annotation models based on data of "treebanks" in "CoNLL-U" format as provided at <http://universaldependencies.org/format.html>. 
     The techniques are explained in detail in the paper: "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>.
 License: MPL-2.0
 Encoding: UTF-8

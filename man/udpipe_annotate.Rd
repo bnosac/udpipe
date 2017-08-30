@@ -46,18 +46,8 @@ a list with 3 elements
 Tokenise, Tag and Dependency Parsing Annotation of raw text
 }
 \examples{
-\dontrun{
-
-##
-## Example on Dutch
-##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
-##
-url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
-  "inst", "udpipe-ud-2.0-170801", 
-  "dutch-ud-2.0-170801.udpipe")
-f <- file.path(getwd(), "dutch-ud-2.0-170801.udpipe")
-download.file(url = url, destfile = f)
-ud_dutch <- udpipe_load_model(file = f)
+x <- udpipe_download_model(language = "dutch")
+ud_dutch <- udpipe_load_model(x$file_model)
 
 ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
 txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
@@ -91,7 +81,6 @@ as.data.frame(x)
 x <- udpipe_annotate(ud_dutch, x = txt, doc_id = c("id1", "feedbackabc"),
                      tagger = "none", parser = "none")
 as.data.frame(x)
-}
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}, 

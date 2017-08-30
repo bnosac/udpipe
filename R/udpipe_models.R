@@ -18,7 +18,11 @@
 #' swedish-lines, swedish, tamil, turkish, ukrainian, 
 #' urdu, uyghur, vietnamese
 #' @param model_dir a path where the model will be downloaded to. Defaults to the current working directory
-#' @return A data.frame with 1 row and 2 columns: language and model_file which is the location where the model was downloaded to
+#' @return A data.frame with 1 row and 2 columns: 
+#' \itemize{
+#'  \item{language: }{The language as provided by the input parameter \code{language}}
+#'  \item{file_model: }{The path to the file on disk where the model was downloaded to}
+#' }
 #' @seealso \code{\link{udpipe_load_model}}
 #' @details Pre-trained Universal Dependencies 2.0 models on all UD treebanks are made available at 
 #' \url{https://ufal.mff.cuni.cz/udpipe}, namely at \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}.
@@ -34,9 +38,9 @@
 #' @references \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
 #' @export
 #' @examples 
-#' \dontrun{
 #' x <- udpipe_download_model(language = "dutch")
 #' x
+#' x$file_model
 #' x <- udpipe_download_model(language = "dutch-lassysmall")
 #' x <- udpipe_download_model(language = "sanskrit")
 #' x <- udpipe_download_model(language = "russian")
@@ -44,7 +48,6 @@
 #' x <- udpipe_download_model(language = "english")
 #' x <- udpipe_download_model(language = "german")
 #' x <- udpipe_download_model(language = "spanish")
-#' }
 udpipe_download_model <- function(language = c("ancient_greek-proiel", "ancient_greek", "arabic", "basque", 
                                                "belarusian", "bulgarian", "catalan", "chinese", "coptic", "croatian", 
                                                "czech-cac", "czech-cltt", "czech", "danish", "dutch-lassysmall", 
@@ -80,54 +83,26 @@ udpipe_download_model <- function(language = c("ancient_greek-proiel", "ancient_
 #' @title Load an UDPipe model
 #' @description Load an UDPipe model
 #' @param file full path to the model
-#' @return An object of class \code{udpipe_model} which is a list with 2 elements: file containing the file and model which is 
-#' an Rcpp-generated pointer to the loaded model which can be used in \code{\link{udpipe_annotate}}
-#' @seealso \code{\link{udpipe_annotate}}
-#' @details Pre-trained Universal Dependencies 2.0 models on all UD treebanks are made available at 
-#' \url{https://ufal.mff.cuni.cz/udpipe}, namely at \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}.
-#' At the time of writing this consists of models made available on 50 languages, namely: 
-#' ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, czech, danish, dutch, 
-#' english, estonian, finnish, french, galician, german, gothic, greek, hebrew, hindi, hungarian, indonesian, irish, 
-#' italian, japanese, kazakh, korean, latin, latvian, lithuanian, norwegian, old_church_slavonic, persian, polish, 
-#' portuguese, romanian, russian, sanskrit, slovak, slovenian, spanish, swedish, tamil, turkish, ukrainian, 
-#' urdu, uyghur, vietnamese. Mark that these models are made available under the CC BY-NC-SA 4.0 license. \cr
-#' 
-#' These models are also provided in an R package for your convenience at 
-#' \url{https://github.com/jwijffels/udpipe.models.ud.2.0}
+#' @return An object of class \code{udpipe_model} which is a list with 2 elements
+#' \itemize{
+#'  \item{file: }{The path to the model as provided by \code{file}}
+#'  \item{model: }{An Rcpp-generated pointer to the loaded model which can be used in \code{\link{udpipe_annotate}}}
+#' }
+#' @seealso \code{\link{udpipe_annotate}}, \code{\link{udpipe_download_model}}, \code{\link{udpipe_train}}
 #' @references \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
 #' @export
 #' @examples 
-#' ##
-#' ## Ready-made models for 50 languages are provided by UDPipe at
-#' ##    https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364
-#' ## 
+#' x <- udpipe_download_model(language = "dutch-lassysmall")
+#' x$file_model
+#' ud_dutch <- udpipe_load_model(x$file_model)
 #' 
-#' ## Download zipped folder with models build on UD version 2.0 + get one model for Dutch
-#' url <- file.path("https://lindat.mff.cuni.cz",
-#'  "repository/xmlui/bitstream/handle/11234/1-2364/udpipe-ud-2.0-170801.zip")
-#' url
-#' \dontrun{
-#' download.file(url, "udpipe-ud-2.0-170801.zip")
-#' unzip("udpipe-ud-2.0-170801.zip", list = TRUE)
-#' unzip("udpipe-ud-2.0-170801.zip", 
-#'       files = "udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
+#' x <- udpipe_download_model(language = "english")
+#' x$file_model
+#' ud_english <- udpipe_load_model(x$file_model)
 #' 
-#' f <- file.path(getwd(), "udpipe-ud-2.0-170801/dutch-ud-2.0-170801.udpipe")
-#' ## Load model
-#' ud_dutch <- udpipe_load_model(f)
-#' 
-#' ##
-#' ## These languages are also put into an R package provided at 
-#' ##   https://github.com/jwijffels/udpipe.models.ud.2.0
-#' ## You can get these as follows
-#' install.packages("udpipe.models.ud.2.0", repos = "http://www.datatailor.be/rcube", type = "source")
-#' f <- system.file(package = "udpipe.models.ud.2.0", "dutch-ud-2.0-170801.udpipe")
-#' ud_dutch <- udpipe_load_model(f)
-#' 
-#' ## see all models inside that package
-#' list.files(system.file(package = "udpipe.models.ud.2.0", "udpipe-ud-2.0-170801"), 
-#'   recursive = TRUE, full.names = TRUE)
-#' }
+#' x <- udpipe_download_model(language = "hebrew")
+#' x$file_model
+#' ud_hebrew <- udpipe_load_model(x$file_model)
 udpipe_load_model <- function(file) {
   file <- path.expand(file)
   if(!file.exists(file)){

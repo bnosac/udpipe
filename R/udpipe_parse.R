@@ -31,18 +31,8 @@
 #' \url{http://universaldependencies.org/format.html}
 #' @export
 #' @examples 
-#' \dontrun{
-#' 
-#' ##
-#' ## Example on Dutch
-#' ##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
-#' ##
-#' url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
-#'   "inst", "udpipe-ud-2.0-170801", 
-#'   "dutch-ud-2.0-170801.udpipe")
-#' f <- file.path(getwd(), "dutch-ud-2.0-170801.udpipe")
-#' download.file(url = url, destfile = f)
-#' ud_dutch <- udpipe_load_model(file = f)
+#' x <- udpipe_download_model(language = "dutch")
+#' ud_dutch <- udpipe_load_model(x$file_model)
 #' 
 #' ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
 #' txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
@@ -76,7 +66,6 @@
 #' x <- udpipe_annotate(ud_dutch, x = txt, doc_id = c("id1", "feedbackabc"),
 #'                      tagger = "none", parser = "none")
 #' as.data.frame(x)
-#' }
 udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep=""), 
                             tokenizer = "tokenizer", 
                             tagger = c("default", "none"), 
@@ -106,39 +95,22 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
 #' @description Convert the result of udpipe_annotate to a tidy data frame
 #' @param x an object of class \code{udpipe_connlu} as returned by \code{\link{udpipe_annotate}}
 #' @param ... currently not used
-#' @return a data.frame with columns 
-#' doc_id, paragraph_id, sentence_id, sentence_text, 
-#' id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc)
+#' @return a data.frame with columns doc_id, paragraph_id, sentence_id, sentence, 
+#' token_id, token, lemma, upos, xpos, feats, head_token_id, deprel, dep_rel, misc \cr
+#' 
+#' The columns paragraph_id, sentence_id, token_id and head_token_id are integers, the other fields
+#' are character data in UTF-8 encoding. \cr
+#' 
 #' @seealso \code{\link{udpipe_annotate}}
 #' @export
 #' @examples 
-#' ##
-#' ## Example on Dutch
-#' ##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
-#' ##
-#' \dontrun{
-#' url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
-#'   "inst", "udpipe-ud-2.0-170801", 
-#'   "dutch-ud-2.0-170801.udpipe")
-#' f <- file.path(getwd(), "dutch-ud-2.0-170801.udpipe")
-#' download.file(url = url, destfile = f)
-#' ud_dutch <- udpipe_load_model(file = f)
-#' 
-#' ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
-#' txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
-#'   zei die schele van Van Bukburg en hij had nog gelijk ook. 
-#'   Er was toen dat liedje van tietenkonttieten kont tieten kontkontkont, 
-#'   maar dat hoefden we geenseens niet te zingen. 
-#'   Je kunt zeggen wat je wil van al die gesluierde poezenpas maar d'r kwam wel 
-#'   een vleeswarenwinkel onder te voorschijn van heb je me daar nou.
-#'   
-#'   En zo gaat het maar door.",
-#'   "Wat die ransaap van een academici nou weer in z'n botte pan heb gehaald mag 
-#'   Joost in m'n schoen gooien, maar feit staat boven water dat het een gore 
-#'   vieze vuile ransaap is.")
+#' x <- udpipe_download_model(language = "dutch")
+#' ud_dutch <- udpipe_load_model(x$file_model)
+#' txt <- c("Ik ben de weg kwijt, kunt u me zeggen waar de Lange Wapper ligt? Jazeker meneer", 
+#'          "Het gaat vooruit, het gaat verbazend goed vooruit")
 #' x <- udpipe_annotate(ud_dutch, x = txt)
-#' as.data.frame(x)
-#' }
+#' x <- as.data.frame(x)
+#' head(x)
 as.data.frame.udpipe_connlu <- function(x, ...){
   ## R CMD check happyness
   doc_id <- paragraph_id <- token_id <- head_token_id <- lemma <- upos <- xpos <- feats <- dep_rel <- deps <- misc <- NULL

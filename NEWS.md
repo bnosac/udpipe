@@ -4,4 +4,6 @@
 - Allow to do annotation (tokenisation, POS tagging, Lemmatisation, Dependency parsing)
 - Allow to build your own UDPipe model based on data in CONLL-U format
 - Convert the output of udpipe_annotate to a data.frame
+- Allow to download models from https://github.com/jwijffels/udpipe.models.ud.2.0
+- Add vignettes
 

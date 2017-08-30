@@ -134,27 +134,25 @@ const char* udp_train(const char* model_file,
   std::vector<sentence> training;
   std::vector<sentence> heldout;
   std::string path;
-  bool done;
-  done = false;
-  
+
   // Load training data
   for (int i = 0; i < conllu_input_files.size(); i++){
     path = conllu_input_files[i];
     std::ifstream input(path.c_str());
-    done = append_conllu(input, training, error);
+    append_conllu(input, training, error);
   }
   // Load heldout data
   for (int i = 0; i < conllu_heldout_files.size(); i++){
     path = conllu_heldout_files[i];
     std::ifstream input(path.c_str());
-    done = append_conllu(input, heldout, error);
+    append_conllu(input, heldout, error);
   }
   // Open output binary file
   std::ofstream model(model_file, std::ofstream::binary);
   // Train the model
-  done = trainer::train("morphodita_parsito", 
-                        training, heldout, 
-                        trainer_tokenizer, trainer_tagger, trainer_parser, 
-                        model, error);
+  trainer::train("morphodita_parsito", 
+                 training, heldout, 
+                 trainer_tokenizer, trainer_tagger, trainer_parser, 
+                 model, error);
   return model_file;
 }
