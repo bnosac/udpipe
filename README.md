@@ -22,8 +22,8 @@ Installation can be done as follows. Please visit the package documentation and 
 
 ```
 devtools::install_github("bnosac/udpipe", build_vignettes = TRUE)
-vignette("udpipe-annotation.Rmd", package = "udpipe")
-vignette("udpipe-train.Rmd", package = "udpipe")
+vignette("udpipe-annotation", package = "udpipe")
+vignette("udpipe-train", package = "udpipe")
 ```
 
 ## Example
@@ -78,7 +78,7 @@ These are provided for many languages at http://universaldependencies.org/#ud-tr
 How this is done is detailed in the package vignette.
 
 ```
-vignette("udpipe-train.Rmd", package = "udpipe")
+vignette("udpipe-train", package = "udpipe")
 ```
 
 

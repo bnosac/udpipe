@@ -132,12 +132,13 @@ dl <- udpipe_download_model(language = "sanskrit")
 udmodel_sanskrit <- udpipe_load_model(file = dl$file_model)
 txt <- "ततः असौ प्राह क्षत्रियस्य तिस्रः भार्या धर्मम् भवन्ति तत् एषा कदाचिद् वैश्या सुता भविष्यति तत् अनुरागः ममास्याम् ततः रथकारः तस्य निश्चयम् विज्ञायावदत् वयस्य किम् अ धुना कर्तव्यम् कौलिकः आह किम् अहम् जानामि त्वयि मित्रे यत् अभिहितं मया ततः"
 x <- udpipe_annotate(udmodel_sanskrit, x = txt)
-as.data.frame(x)
+x <- as.data.frame(x)
+table(Encoding(x$token))
 ```
 
 - If you want to work with other tools which are capable of handling CONLL-U format, just export your annotation to a file as shown below
 
-```{r}
+```{r, eval=FALSE}
 x <- udpipe_annotate(udmodel_sanskrit, x = txt)
 cat(x$conllu, file = "myannotation.conllu")
 cat(x$conllu)
@@ -151,6 +152,5 @@ Contact BNOSAC: http://www.bnosac.be
 
 ```{r, results='hide', echo=FALSE}
 invisible(file.remove(c("dutch-ud-2.0-170801.udpipe", 
-                        "sanskrit-ud-2.0-170801.udpipe", 
-                        "myannotation.conllu")))
+                        "sanskrit-ud-2.0-170801.udpipe")))
 ```
