@@ -2,6 +2,7 @@
 
 S3method(as.data.frame,udpipe_connlu)
 export(udpipe_annotate)
+export(udpipe_download_model)
 export(udpipe_load_model)
 export(udpipe_train)
 importFrom(Rcpp,evalCpp)
@@ -9,4 +10,5 @@ importFrom(data.table,":=")
 importFrom(data.table,data.table)
 importFrom(data.table,setDF)
 importFrom(data.table,tstrsplit)
+importFrom(utils,download.file)
 useDynLib(udpipe)

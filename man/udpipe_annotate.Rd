@@ -47,22 +47,6 @@ Tokenise, Tag and Dependency Parsing Annotation of raw text
 }
 \examples{
 \dontrun{
-##
-## Example on tagging Sanskrit
-##  models available at https://github.com/jwijffels/udpipe.models.ud.2.0
-##
-url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
-  "inst", "udpipe-ud-2.0-170801", 
-  "sanskrit-ud-2.0-170801.udpipe")
-f <- file.path(getwd(), "sanskrit-ud-2.0-170801.udpipe")
-download.file(url = url, destfile = f)
-ud_sanskrit <- udpipe_load_model(file = f)
-
-txt <- 'ततः असौ प्राह क्षत्रियस्य तिस्रः भार्या धर्मम् भवन्ति तत् एषा कदाचिद् वैश्या
-सुता भविष्यति तत् अनुरागः ममास्याम् ततः रथकारः तस्य निश्चयम् विज्ञायावदत् वयस्य किम् अ
-धुना कर्तव्यम् कौलिकः आह किम् अहम् जानामि त्वयि मित्रे यत् अभिहितं मया ततः'
-x <- udpipe_annotate(ud_sanskrit, x = txt)
-as.data.frame(x)
 
 ##
 ## Example on Dutch
