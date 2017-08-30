@@ -18,7 +18,6 @@
 #' swedish-lines, swedish, tamil, turkish, ukrainian, 
 #' urdu, uyghur, vietnamese
 #' @param model_dir a path where the model will be downloaded to. Defaults to the current working directory
-#' @param ... other arguments passed on to \code{\link{download.file}}
 #' @return A data.frame with 1 row and 2 columns: language and model_file which is the location where the model was downloaded to
 #' @seealso \code{\link{udpipe_load_model}}
 #' @details Pre-trained Universal Dependencies 2.0 models on all UD treebanks are made available at 
@@ -71,7 +70,7 @@ udpipe_download_model <- function(language = c("ancient_greek-proiel", "ancient_
                    "inst", "udpipe-ud-2.0-170801",
                    filename)
   to <- file.path(model_dir, filename)
-  utils::download.file(url = url, destfile = to, ...)
+  utils::download.file(url = url, destfile = to, mode = "wb")
   data.frame(language = language,
              file_model = to,
              stringsAsFactors = FALSE)
@@ -134,9 +133,6 @@ udpipe_load_model <- function(file) {
   file <- path.expand(file)
   if(!file.exists(file)){
     stop(sprintf("File %s containing the language model does not exist", file))
-  }
-  if(basename(file) == file){
-    stop(sprintf("You should provide the full path to the file %s, as in %s", file, file.path(getwd(), file)))
   }
   ptr <- udp_load_model(file)
   structure(

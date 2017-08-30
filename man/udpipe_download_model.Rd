@@ -31,8 +31,6 @@ swedish-lines, swedish, tamil, turkish, ukrainian,
 urdu, uyghur, vietnamese}
 
 \item{model_dir}{a path where the model will be downloaded to. Defaults to the current working directory}
-
-\item{...}{other arguments passed on to \code{\link{download.file}}}
 }
 \value{
 A data.frame with 1 row and 2 columns: language and model_file which is the location where the model was downloaded to
