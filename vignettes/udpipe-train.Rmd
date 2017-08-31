@@ -46,7 +46,7 @@ file_conllu
 cat(head(readLines(file_conllu), 3), sep="\n")
 ```
 
-If you have this type of file and you provide it to `udpipe_train`, a model is saved on disk in a binary format which can then be used to annotate your text data using `udpipe_annotate` in order to Tokenize, get Parts of Speech tags, Lemma's or Dependency relationships.
+If you have this type of file and you provide it to `udpipe_train`, a model is saved on disk in a binary format which can then be used to annotate your text data using `udpipe_annotate` in order to Tokenize, get Parts of Speech tags, find Lemma's or to extract Dependency relationships.
 Let's show how this training works on the toy CONLL-U file we just showed:
 
 
@@ -109,7 +109,7 @@ params$tokenizer <- list(dimension = 24, epochs = 100, initialization_range = 0.
     batch_size = 100, learning_rate = 0.005, dropout = 0.1, early_stopping = 1)
 ```
 
-Before you embark in starting to train your own models, consider that training can take a while. In order to progress the evolution, you can set the environment variable `UDPIPE_PROCESS_LOG` to a location of a file on disk. The evolution of the training will be put in that log so that you can see where the algorithm is. Mark that you need to do this before you initially load the udpipe package as shown below, otherwise the script will not pick up this and will not write progress to the log.
+Before you embark in starting to train your own models, consider that training can take a while. In order to progress the evolution, you can set the environment variable `UDPIPE_PROCESS_LOG` to a location of a file on disk. The evolution of the training will be put in that log so that you can see where the algorithm is. Mark that you need to do this before you initially load the udpipe package as shown below, otherwise the script will not pick this up and will not write progress to the log.
 
 ```
 Sys.setenv(UDPIPE_PROCESS_LOG = "udpipe.log")

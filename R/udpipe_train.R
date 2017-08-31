@@ -35,7 +35,7 @@
 #'  \item{annotation_tokenizer: }{The input argument \code{annotation_tokenizer}}
 #'  \item{annotation_tagger: }{The input argument \code{annotation_tagger}}
 #'  \item{annotation_parser: }{The input argument \code{annotation_parser}}
-#'  \irem{errors: }{Messages from the UDPipe process indicating possible errors}
+#'  \item{errors: }{Messages from the UDPipe process indicating possible errors}
 #'  \item{udpipe_log: }{The log of the udpipe process if you provided the environment variable UDPIPE_PROCESS_LOG as shown in the details}
 #' }
 #' @seealso \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}}
