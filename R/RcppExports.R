@@ -13,7 +13,7 @@ na_locf <- function(x) {
     .Call('_udpipe_na_locf', PACKAGE = 'udpipe', x)
 }
 
-udp_train <- function(model_file, conllu_input_files, conllu_heldout_files, annotation_tokenizer, annotation_tagger, annotation_parser) {
-    .Call('_udpipe_udp_train', PACKAGE = 'udpipe', model_file, conllu_input_files, conllu_heldout_files, annotation_tokenizer, annotation_tagger, annotation_parser)
+udp_train <- function(file_model, conllu_input_files, conllu_heldout_files, annotation_tokenizer, annotation_tagger, annotation_parser) {
+    .Call('_udpipe_udp_train', PACKAGE = 'udpipe', file_model, conllu_input_files, conllu_heldout_files, annotation_tokenizer, annotation_tagger, annotation_parser)
 }
 

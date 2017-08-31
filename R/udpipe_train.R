@@ -35,6 +35,7 @@
 #'  \item{annotation_tokenizer: }{The input argument \code{annotation_tokenizer}}
 #'  \item{annotation_tagger: }{The input argument \code{annotation_tagger}}
 #'  \item{annotation_parser: }{The input argument \code{annotation_parser}}
+#'  \irem{errors: }{Messages from the UDPipe process indicating possible errors}
 #'  \item{udpipe_log: }{The log of the udpipe process if you provided the environment variable UDPIPE_PROCESS_LOG as shown in the details}
 #' }
 #' @seealso \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}}
@@ -58,28 +59,45 @@
 #' Mark that you need to do this before you load the udpipe package.
 #' @export
 #' @examples 
+#' file_conllu <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
+#' cat(readLines(file_conllu), sep="\n")
 #' \dontrun{
-#' mymodel <- udpipe_train(
-#'   file = "toymodel.udpipe", 
-#'   files_conllu_training = "/home/bnosac/Desktop/ud-treebanks-v2.0/UD_Dutch/nl-ud-train.conllu",
-#'   files_conllu_holdout = "/home/bnosac/Desktop/ud-treebanks-v2.0/UD_Dutch/nl-ud-dev.conllu",
-#'   annotation_tokenizer = "dimension=64;epochs=2;initialization_range=0.1;batch_size=100", 
-#'   annotation_tagger = "models=1;templates_1=tagger;guesser_suffix_rules_1=10;iterations_1=1", 
+#' m <- udpipe_train(file = "toyexample.udpipe", files_conllu_training = file_conllu)
+#' 
+#' m <- udpipe_train(file = "toyexample.udpipe", files_conllu_training = file_conllu,
+#'   annotation_tokenizer = "dimension=16;epochs=1",
+#'   annotation_tagger = "default", 
 #'   annotation_parser = "none")
-#' mymodel
+#' 
+#' txt <- "Dit is een tokenizer zonder tagging mogelijkheden, noch laat die dependency parsing toe"
+#' mymodel <- udpipe_load_model("toyexample.udpipe")
+#' x_tagged <- udpipe_annotate(object = mymodel, x = txt, tagger = "default", parser = "none")
+#' x_tagged <- as.data.frame(x_tagged)
 #' }
 udpipe_train <- function(file = file.path(getwd(), "my_annotator.udpipe"), 
                          files_conllu_training, files_conllu_holdout = character(), 
                          annotation_tokenizer = "default", 
                          annotation_tagger = "default", 
                          annotation_parser = "default") {
+  
+  collapse_list <- function(x){
+    if(is.list(x)){
+      x <- mapply(names(x), x, FUN=function(key, value) sprintf("%s=%s", key, value), SIMPLIFY = TRUE, USE.NAMES = FALSE)
+      x <- paste(x, collapse = ";")  
+    }
+    x
+  }
+  annotation_tokenizer <- collapse_list(annotation_tokenizer)
+  annotation_tagger <- collapse_list(annotation_tagger)
+  annotation_parser <- collapse_list(annotation_parser)
+  
   file <- path.expand(file)
   if(!dir.exists(dirname(file))){
     dir.create(dirname(file), recursive = TRUE)
   }
   stopifnot(all(file.exists(files_conllu_training)))
   stopifnot(all(file.exists(files_conllu_holdout)))
-  model <- udp_train(file, files_conllu_training, files_conllu_holdout, 
+  result <- udp_train(file, files_conllu_training, files_conllu_holdout, 
             annotation_tokenizer, annotation_tagger, annotation_parser)
   if(udpipe_env$log != ""){
     log <- readLines(udpipe_env$log)  
@@ -88,10 +106,11 @@ udpipe_train <- function(file = file.path(getwd(), "my_annotator.udpipe"),
   }
   
   structure(
-    list(file = model, 
+    list(file_model = result$file_model, 
          annotation_tokenizer = annotation_tokenizer,
          annotation_tagger = annotation_tagger,
          annotation_parser = annotation_parser,
+         errors = result$errors,
          log = log,
     class = "udpipe_trained_model"))
 }

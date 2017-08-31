@@ -42,6 +42,7 @@ A list with elements
  \item{annotation_tokenizer: }{The input argument \code{annotation_tokenizer}}
  \item{annotation_tagger: }{The input argument \code{annotation_tagger}}
  \item{annotation_parser: }{The input argument \code{annotation_parser}}
+ \irem{errors: }{Messages from the UDPipe process indicating possible errors}
  \item{udpipe_log: }{The log of the udpipe process if you provided the environment variable UDPIPE_PROCESS_LOG as shown in the details}
 }
 }
@@ -77,15 +78,20 @@ The evolution of the training will be put in that log.
 Mark that you need to do this before you load the udpipe package.
 }
 \examples{
+file_conllu <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
+cat(readLines(file_conllu), sep="\\n")
 \dontrun{
-mymodel <- udpipe_train(
-  file = "toymodel.udpipe", 
-  files_conllu_training = "/home/bnosac/Desktop/ud-treebanks-v2.0/UD_Dutch/nl-ud-train.conllu",
-  files_conllu_holdout = "/home/bnosac/Desktop/ud-treebanks-v2.0/UD_Dutch/nl-ud-dev.conllu",
-  annotation_tokenizer = "dimension=64;epochs=2;initialization_range=0.1;batch_size=100", 
-  annotation_tagger = "models=1;templates_1=tagger;guesser_suffix_rules_1=10;iterations_1=1", 
+m <- udpipe_train(file = "toyexample.udpipe", files_conllu_training = file_conllu)
+
+m <- udpipe_train(file = "toyexample.udpipe", files_conllu_training = file_conllu,
+  annotation_tokenizer = "dimension=16;epochs=1",
+  annotation_tagger = "default", 
   annotation_parser = "none")
-mymodel
+
+txt <- "Dit is een tokenizer zonder tagging mogelijkheden, noch laat die dependency parsing toe"
+mymodel <- udpipe_load_model("toyexample.udpipe")
+x_tagged <- udpipe_annotate(object = mymodel, x = txt, tagger = "default", parser = "none")
+x_tagged <- as.data.frame(x_tagged)
 }
 }
 \references{

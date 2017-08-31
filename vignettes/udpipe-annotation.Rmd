@@ -62,7 +62,8 @@ dl
 
 ### Build your own annotator models
 
-The udipe R package also allows you to easily train your own models, based on data in CONLL-U format, so that you can use these for your own commercial or non-commercial purposes. This is described in the other vignette of this package.
+The udipe R package also allows you to easily train your own models, based on data in CONLL-U format, so that you can use these for your own commercial or non-commercial purposes. This is described in the other vignette of this package which you can view by the command `vignette("udpipe-train", package = "udpipe")
+`
 
 
 ## Annotate text

@@ -1,0 +1,40 @@
+# newdoc id = doc1
+# newpar
+# sent_id = 1
+# text = Ik ben de weg kwijt, kunt u me zeggen waar de Lange Wapper ligt?
+1	Ik	ik	PRON	Pron|per|1|ev|nom	Case=Nom|Number=Sing|Person=1|PronType=Prs	5	nsubj	_	_
+2	ben	ben	AUX	V|hulpofkopp|ott|1|ev	Aspect=Imp|Mood=Ind|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin	5	cop	_	_
+3	de	de	DET	Art|bep|zijdofmv|neut	Definite=Def|PronType=Art	4	det	_	_
+4	weg	weg	NOUN	N|soort|ev|neut	Number=Sing	5	obj	_	_
+5	kwijt	kwijt	ADJ	Adj|attr|stell|onverv	Degree=Pos	0	root	_	SpaceAfter=No
+6	,	,	PUNCT	Punc|komma	PunctType=Comm	5	punct	_	_
+7	kunt	kan	VERB	V|hulp|ott|2|ev	Aspect=Imp|Mood=Ind|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin|VerbType=Mod	5	parataxis	_	_
+8	u	u	PRON	Pron|per|2|ev|nom	Case=Nom|Number=Sing|Person=2|PronType=Prs	7	nsubj	_	_
+9	me	me	PRON	Pron|per|1|ev|datofacc	Case=Acc,Dat|Number=Sing|Person=1|PronType=Prs	10	obj	_	_
+10	zeggen	zeg	VERB	V|trans|inf	Subcat=Tran|VerbForm=Inf	7	xcomp	_	_
+11	waar	waar	ADV	Adv|gew|vrag	PronType=Int	15	mark	_	_
+12	de	de	DET	Art|bep|zijdofmv|neut	Definite=Def|PronType=Art	13	det	_	_
+13	Lange	Lange	PROPN	N_N|eigen|ev|neut_eigen|ev|neut	_	15	nsubj	_	_
+14	Wapper	Wapper	PROPN	PROPN	_	13	flat	_	_
+15	ligt	lig	VERB	V|intrans|ott|3|ev	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Subcat=Intr|Tense=Pres|VerbForm=Fin	10	acl	_	SpaceAfter=No
+16	?	?	PUNCT	Punc|vraag	PunctType=Qest	5	punct	_	_
+
+# sent_id = 2
+# text = Jazeker meneer
+1	Jazeker	zeker	ADJ	Adj|attr|stell|onverv	Degree=Pos	2	amod	_	_
+2	meneer	meneer	NOUN	N|soort|ev|neut	Number=Sing	0	root	_	SpacesAfter=\n
+
+# newdoc id = doc2
+# newpar
+# sent_id = 1
+# text = Het gaat vooruit, het gaat verbazend goed vooruit
+1	Het	het	PRON	Pron|onbep|neut|zelfst	PronType=Ind	2	nsubj	_	_
+2	gaat	ga	VERB	V|intrans|ott|3|ev	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Subcat=Intr|Tense=Pres|VerbForm=Fin	0	root	_	_
+3	vooruit	vooruit	ADV	Adv|gew|geenfunc|stell|onverv	Degree=Pos	2	advmod	_	SpaceAfter=No
+4	,	,	PUNCT	Punc|komma	PunctType=Comm	2	punct	_	_
+5	het	het	PRON	Pron|onbep|neut|zelfst	PronType=Ind	6	nsubj	_	_
+6	gaat	ga	VERB	V|intrans|ott|3|ev	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Subcat=Intr|Tense=Pres|VerbForm=Fin	2	parataxis	_	_
+7	verbazend	verbazend	VERB	V|intrans|tegdw|onverv	Subcat=Intr|Tense=Pres|VerbForm=Part	6	advcl	_	_
+8	goed	goed	ADJ	Adj|adv|stell|onverv	Degree=Pos|Variant=Short	6	obl	_	_
+9	vooruit	vooruit	ADV	Adv|gew|geenfunc|stell|onverv	Degree=Pos	6	compound:prt	_	SpacesAfter=\n
+

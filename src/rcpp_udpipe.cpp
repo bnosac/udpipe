@@ -104,7 +104,7 @@ bool append_conllu(std::istream& is, std::vector<sentence>& sentences, std::stri
 }
 
 // [[Rcpp::export]]
-const char* udp_train(const char* model_file, 
+List udp_train(const char* file_model, 
                       Rcpp::CharacterVector conllu_input_files, Rcpp::CharacterVector conllu_heldout_files,
                       std::string annotation_tokenizer,
                       std::string annotation_tagger,
@@ -148,11 +148,15 @@ const char* udp_train(const char* model_file,
     append_conllu(input, heldout, error);
   }
   // Open output binary file
-  std::ofstream model(model_file, std::ofstream::binary);
+  std::ofstream model(file_model, std::ofstream::binary);
   // Train the model
   trainer::train("morphodita_parsito", 
                  training, heldout, 
                  trainer_tokenizer, trainer_tagger, trainer_parser, 
                  model, error);
-  return model_file;
+  
+  // Return
+  List output = List::create(Rcpp::Named("file_model") = file_model, 
+                             Rcpp::Named("errors") = error);
+  return output;
 }
