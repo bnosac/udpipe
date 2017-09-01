@@ -128,13 +128,13 @@ as.data.frame.udpipe_connlu <- function(x, ...){
                             paragraph_id = integer(), 
                             sentence_id = integer(), 
                             sentence = character(), 
-                            token_id = integer(), 
+                            token_id = character(), 
                             token = character(), 
                             lemma = character(), 
                             upos = character(), 
                             xpos = character(), 
                             feats = character(), 
-                            head_token_id = integer(), 
+                            head_token_id = character(), 
                             dep_rel = character(), 
                             deps = character(), 
                             misc = character(), stringsAsFactors = FALSE)
@@ -164,8 +164,8 @@ as.data.frame.udpipe_connlu <- function(x, ...){
   out[, paragraph_id := cumsum(is_newparagraph), by = list(doc_id)]
   out <- out[is_taggeddata, ]
   out <- out[,  c("token_id", "token", "lemma", "upos", "xpos", "feats", "head_token_id", "dep_rel", "deps", "misc") := data.table::tstrsplit(txt, "\t", fixed=TRUE)]
-  out[, token_id := as.integer(underscore_as_na(token_id, which_na = NA_integer_))]
-  out[, head_token_id := as.integer(underscore_as_na(head_token_id, which_na = NA_integer_))]
+  out[, token_id := underscore_as_na(token_id)]
+  out[, head_token_id := underscore_as_na(head_token_id)]
   out[, lemma := underscore_as_na(lemma)]
   out[, upos := underscore_as_na(upos)]
   out[, xpos := underscore_as_na(xpos)]
