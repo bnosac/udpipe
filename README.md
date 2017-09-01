@@ -37,28 +37,25 @@ library(udpipe)
 dl <- udpipe_download_model(language = "dutch")
 dl
 
-udmodel_dutch <- udpipe_load_model(file = "dutch-ud-2.0-170801.udpipe")
+anguage                                                                      file_model
+  dutch C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/dutch-ud-2.0-170801.udpipe
 
-txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
-  zei die schele van Van Bukburg en hij had nog gelijk ook. 
-  Er was toen dat liedje van tietenkonttieten kont tieten kontkontkont, 
-  maar dat hoefden we geenseens niet te zingen. 
-  Je kunt zeggen wat je wil van al die gesluierde poezenpas maar d'r kwam wel 
-  een vleeswarenwinkel onder te voorschijn van heb je me daar nou.")
-x <- udpipe_annotate(udmodel_dutch, x = txt)
+udmodel_dutch <- udpipe_load_model(file = "dutch-ud-2.0-170801.udpipe")
+x <- udpipe_annotate(udmodel_dutch, 
+                     x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.")
 x <- as.data.frame(x)
 x
 ```
 
 ```
- doc_id paragraph_id sentence_id id           form         lemma upostag              xpostag                    feats head deprel deps          misc
-     d1            1           1  1            Dus           dus     ADV         Adv|gew|aanw             PronType=Dem    0   root    _ SpaceAfter=No
-     d1            1           1  2              .             .   PUNCT            Punc|punt           PunctType=Peri    1  punct    _             _
-     d1            1           2  1 Godvermehoeren Godvermehoeer    VERB        V|intrans|inf Subcat=Intr|VerbForm=Inf    0   root    _             _
-     d1            1           2  2            met           met     ADP            Prep|voor             AdpType=Prep    3   case    _             _
-     d1            1           2  3            pus           pus    NOUN      N|soort|mv|neut              Number=Plur    1    obl    _             _
-     d1            1           2  4             in            in     ADP            Prep|voor             AdpType=Prep    6   case    _             _
-     d1            1           2  5           alle          alle    PRON Pron|onbep|neut|attr             PronType=Ind    6   nmod    _             _
+ doc_id paragraph_id sentence_id token_id token lemma  upos                     xpos                                                               feats head_token_id dep_rel deps
+   doc1            1           1        1    Ik    ik  PRON        Pron|per|1|ev|nom                          Case=Nom|Number=Sing|Person=1|PronType=Prs             2   nsubj <NA>
+   doc1            1           1        2  ging    ga  VERB V|intrans|ovt|1of2of3|ev Aspect=Imp|Mood=Ind|Number=Sing|Subcat=Intr|Tense=Past|VerbForm=Fin             0    root <NA>
+   doc1            1           1        3    op    op   ADP                Prep|voor                                                        AdpType=Prep             4    case <NA>
+   doc1            1           1        4  reis  reis  NOUN          N|soort|ev|neut                                                         Number=Sing             2     obj <NA>
+   doc1            1           1        5    en    en CCONJ               Conj|neven                                                                <NA>             7      cc <NA>
+   doc1            1           1        6    ik    ik  PRON        Pron|per|1|ev|nom                          Case=Nom|Number=Sing|Person=1|PronType=Prs             7   nsubj <NA>
+   doc1            1           1        7   nam  neem  VERB   V|trans|ovt|1of2of3|ev Aspect=Imp|Mood=Ind|Number=Sing|Subcat=Tran|Tense=Past|VerbForm=Fin             2    conj <NA>
 ...
 ```
 
