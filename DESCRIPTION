@@ -8,6 +8,7 @@ Description: This Natural Language Processing toolkit provides language-agnostic
     Next to parsing, the package also allows you to train annotation models based on data of "treebanks" in "CoNLL-U" format as provided at <http://universaldependencies.org/format.html>. 
     The techniques are explained in detail in the paper: "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>.
 License: MPL-2.0
+URL: https://github.com/bnosac/udpipe
 Encoding: UTF-8
 Imports: Rcpp (>= 0.12.12), data.table (>= 1.9.6)
 LinkingTo: Rcpp
