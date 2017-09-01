@@ -84,6 +84,7 @@ file_conllu <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
 file_conllu
 cat(head(readLines(file_conllu), 3), sep="\\n")
 
+\dontrun{
 ##
 ## This is a toy example showing how to build a model
 ##
@@ -99,7 +100,7 @@ x <- udpipe_annotate(object = ud_toymodel,
   x = "Dit is een tokenizer en tagger die niet getraind is voor dependency parsing.", 
   tagger = "default", parser = "none")
 x <- as.data.frame(x)
-
+}
 ##
 ## The above was a toy example showing how to build a model, if you want real-life scenario's
 ## look at the training parameter examples given below and train it on your CONLL-U file

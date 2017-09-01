@@ -252,3 +252,9 @@ subset(annotation_params$parser, language_treebank == "nl")
 
 Need support in text mining. 
 Contact BNOSAC: http://www.bnosac.be
+
+
+```{r, results='hide', echo=FALSE}
+invisible(file.remove(c("toymodel.udpipe")))
+```
+

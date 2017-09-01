@@ -62,6 +62,7 @@ These models are also provided in an R package for your convenience at
 \url{https://github.com/jwijffels/udpipe.models.ud.2.0}
 }
 \examples{
+\dontrun{
 x <- udpipe_download_model(language = "dutch")
 x
 x$file_model
@@ -72,6 +73,7 @@ x <- udpipe_download_model(language = "french")
 x <- udpipe_download_model(language = "english")
 x <- udpipe_download_model(language = "german")
 x <- udpipe_download_model(language = "spanish")
+}
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}

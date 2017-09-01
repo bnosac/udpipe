@@ -31,6 +31,7 @@
 #' \url{http://universaldependencies.org/format.html}
 #' @export
 #' @examples 
+#' \dontrun{
 #' x <- udpipe_download_model(language = "dutch")
 #' ud_dutch <- udpipe_load_model(x$file_model)
 #' 
@@ -66,6 +67,7 @@
 #' x <- udpipe_annotate(ud_dutch, x = txt, doc_id = c("id1", "feedbackabc"),
 #'                      tagger = "none", parser = "none")
 #' as.data.frame(x)
+#' }
 udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep=""), 
                             tokenizer = "tokenizer", 
                             tagger = c("default", "none"), 

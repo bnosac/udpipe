@@ -38,6 +38,7 @@
 #' @references \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
 #' @export
 #' @examples 
+#' \dontrun{
 #' x <- udpipe_download_model(language = "dutch")
 #' x
 #' x$file_model
@@ -48,6 +49,7 @@
 #' x <- udpipe_download_model(language = "english")
 #' x <- udpipe_download_model(language = "german")
 #' x <- udpipe_download_model(language = "spanish")
+#' }
 udpipe_download_model <- function(language = c("ancient_greek-proiel", "ancient_greek", "arabic", "basque", 
                                                "belarusian", "bulgarian", "catalan", "chinese", "coptic", "croatian", 
                                                "czech-cac", "czech-cltt", "czech", "danish", "dutch-lassysmall", 
