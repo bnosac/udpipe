@@ -23,10 +23,12 @@ The package is availabe under the Mozilla Public License Version 2.0.
 Installation can be done as follows. Please visit the package documentation and package vignette for further details.
 
 ```
-devtools::install_github("bnosac/udpipe", build_vignettes = TRUE)
+install.packages("udpipe")
 vignette("udpipe-annotation", package = "udpipe")
 vignette("udpipe-train", package = "udpipe")
 ```
+
+For installing the development version of this package: `devtools::install_github("bnosac/udpipe", build_vignettes = TRUE)`
 
 ## Example
 
