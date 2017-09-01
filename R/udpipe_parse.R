@@ -106,13 +106,17 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
 #' @seealso \code{\link{udpipe_annotate}}
 #' @export
 #' @examples 
-#' x <- udpipe_download_model(language = "dutch")
+#' x <- udpipe_download_model(language = "dutch-lassysmall")
 #' ud_dutch <- udpipe_load_model(x$file_model)
 #' txt <- c("Ik ben de weg kwijt, kunt u me zeggen waar de Lange Wapper ligt? Jazeker meneer", 
 #'          "Het gaat vooruit, het gaat verbazend goed vooruit")
 #' x <- udpipe_annotate(ud_dutch, x = txt)
 #' x <- as.data.frame(x)
 #' head(x)
+#' 
+#' 
+#' ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
+#' file.remove("dutch-lassysmall-ud-2.0-170801.udpipe")
 as.data.frame.udpipe_connlu <- function(x, ...){
   ## R CMD check happyness
   doc_id <- paragraph_id <- token_id <- head_token_id <- lemma <- upos <- xpos <- feats <- dep_rel <- deps <- misc <- NULL
