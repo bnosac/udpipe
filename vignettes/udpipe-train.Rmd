@@ -53,9 +53,15 @@ Let's show how this training works on the toy CONLL-U file we just showed:
 ```{r}
 library(udpipe)
 m <- udpipe_train(file = "toymodel.udpipe", files_conllu_training = file_conllu, 
-                  annotation_tokenizer = list(dimension = 16, epochs = 1, batch_size = 100, dropout = 0.7),
-                  annotation_tagger = list(iterations = 1, models = 1, 
-                                           provide_xpostag = 1, provide_lemma = 0, provide_feats = 0), 
+                  annotation_tokenizer = list(dimension = 16, 
+                                              epochs = 1, 
+                                              batch_size = 100, 
+                                              dropout = 0.7),
+                  annotation_tagger = list(iterations = 1, 
+                                           models = 1, 
+                                           provide_xpostag = 1, 
+                                           provide_lemma = 0, 
+                                           provide_feats = 0), 
                   annotation_parser = "none")
 m$file_model
 
@@ -91,29 +97,34 @@ params <- list()
 params$tokenizer <- list(dimension = 24, 
                          epochs = 1, #epochs = 100, 
                          initialization_range = 0.1, 
-                         batch_size = 100, learning_rate = 0.005, dropout = 0.1, early_stopping = 1)
+                         batch_size = 100, learning_rate = 0.005, 
+                         dropout = 0.1, early_stopping = 1)
 
 ## Tagger training parameters
 params$tagger <- list(models = 2, 
   templates_1 = "tagger", 
-      guesser_suffix_rules_1 = 8, guesser_enrich_dictionary_1 = 6, guesser_prefixes_max_1 = 0, 
+      guesser_suffix_rules_1 = 8, guesser_enrich_dictionary_1 = 6, 
+      guesser_prefixes_max_1 = 0, 
       use_lemma_1 = 0, use_xpostag_1 = 1, use_feats_1 = 1, 
-      provide_lemma_1 = 0, provide_xpostag_1 = 1, provide_feats_1 = 1, prune_features_1 = 0, 
+      provide_lemma_1 = 0, provide_xpostag_1 = 1, 
+      provide_feats_1 = 1, prune_features_1 = 0, 
   templates_2 = "lemmatizer", 
-      guesser_suffix_rules_2 = 6, guesser_enrich_dictionary_2 = 4, guesser_prefixes_max_2 = 4, use_lemma_2 = 1, use_xpostag_2 = 0, 
-      use_feats_2 = 0, provide_lemma_2 = 1, provide_xpostag_2 = 0, 
+      guesser_suffix_rules_2 = 6, guesser_enrich_dictionary_2 = 4, 
+      guesser_prefixes_max_2 = 4, 
+      use_lemma_2 = 1, use_xpostag_2 = 0, use_feats_2 = 0, 
+      provide_lemma_2 = 1, provide_xpostag_2 = 0, 
       provide_feats_2 = 0, prune_features_2 = 0)
 
 ## Dependency parser training parameters
 params$parser <- list(iterations = 1, 
-                      #iterations = 30, 
-                      embedding_upostag = 20, embedding_feats = 20, embedding_xpostag = 0, 
-                      embedding_form = 50, 
-                      #embedding_form_file = "../ud-2.0-embeddings/nl.skip.forms.50.vectors", 
-                      embedding_lemma = 0, embedding_deprel = 20, 
-                      learning_rate = 0.01, learning_rate_final = 0.001, l2 = 0.5, hidden_layer = 200, 
-                      batch_size = 10, transition_system = "projective", transition_oracle = "dynamic", 
-                      structured_interval = 10)
+  #iterations = 30, 
+  embedding_upostag = 20, embedding_feats = 20, embedding_xpostag = 0, 
+  embedding_form = 50, 
+  #embedding_form_file = "../ud-2.0-embeddings/nl.skip.forms.50.vectors", 
+  embedding_lemma = 0, embedding_deprel = 20, 
+  learning_rate = 0.01, learning_rate_final = 0.001, l2 = 0.5, hidden_layer = 200, 
+  batch_size = 10, transition_system = "projective", transition_oracle = "dynamic", 
+  structured_interval = 10)
 
 ## Train the model
 m <- udpipe_train(file = "toymodel.udpipe", 
