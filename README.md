@@ -37,8 +37,8 @@ library(udpipe)
 dl <- udpipe_download_model(language = "dutch")
 dl
 
-anguage                                                                      file_model
-  dutch C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/dutch-ud-2.0-170801.udpipe
+language                                                                      file_model
+   dutch C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/dutch-ud-2.0-170801.udpipe
 
 udmodel_dutch <- udpipe_load_model(file = "dutch-ud-2.0-170801.udpipe")
 x <- udpipe_annotate(udmodel_dutch, 
