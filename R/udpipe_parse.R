@@ -31,8 +31,7 @@
 #' \url{http://universaldependencies.org/format.html}
 #' @export
 #' @examples 
-#' \dontrun{
-#' x <- udpipe_download_model(language = "dutch")
+#' x <- udpipe_download_model(language = "dutch-lassysmall")
 #' ud_dutch <- udpipe_load_model(x$file_model)
 #' 
 #' ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
@@ -67,7 +66,10 @@
 #' x <- udpipe_annotate(ud_dutch, x = txt, doc_id = c("id1", "feedbackabc"),
 #'                      tagger = "none", parser = "none")
 #' as.data.frame(x)
-#' }
+#' 
+#' 
+#' ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
+#' file.remove("dutch-lassysmall-ud-2.0-170801.udpipe")
 udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep=""), 
                             tokenizer = "tokenizer", 
                             tagger = c("default", "none"), 

@@ -46,8 +46,7 @@ a list with 3 elements
 Tokenise, Tag and Dependency Parsing Annotation of raw text
 }
 \examples{
-\dontrun{
-x <- udpipe_download_model(language = "dutch")
+x <- udpipe_download_model(language = "dutch-lassysmall")
 ud_dutch <- udpipe_load_model(x$file_model)
 
 ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
@@ -82,7 +81,10 @@ as.data.frame(x)
 x <- udpipe_annotate(ud_dutch, x = txt, doc_id = c("id1", "feedbackabc"),
                      tagger = "none", parser = "none")
 as.data.frame(x)
-}
+
+
+## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
+file.remove("dutch-lassysmall-ud-2.0-170801.udpipe")
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}, 

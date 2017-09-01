@@ -62,12 +62,12 @@ These models are also provided in an R package for your convenience at
 \url{https://github.com/jwijffels/udpipe.models.ud.2.0}
 }
 \examples{
-\dontrun{
-x <- udpipe_download_model(language = "dutch")
+x <- udpipe_download_model(language = "sanskrit", model_dir = tempdir())
 x
 x$file_model
+\dontrun{
+x <- udpipe_download_model(language = "dutch")
 x <- udpipe_download_model(language = "dutch-lassysmall")
-x <- udpipe_download_model(language = "sanskrit")
 x <- udpipe_download_model(language = "russian")
 x <- udpipe_download_model(language = "french")
 x <- udpipe_download_model(language = "english")

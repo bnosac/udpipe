@@ -38,12 +38,12 @@
 #' @references \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
 #' @export
 #' @examples 
-#' \dontrun{
-#' x <- udpipe_download_model(language = "dutch")
+#' x <- udpipe_download_model(language = "sanskrit", model_dir = tempdir())
 #' x
 #' x$file_model
+#' \dontrun{
+#' x <- udpipe_download_model(language = "dutch")
 #' x <- udpipe_download_model(language = "dutch-lassysmall")
-#' x <- udpipe_download_model(language = "sanskrit")
 #' x <- udpipe_download_model(language = "russian")
 #' x <- udpipe_download_model(language = "french")
 #' x <- udpipe_download_model(language = "english")
@@ -94,11 +94,10 @@ udpipe_download_model <- function(language = c("ancient_greek-proiel", "ancient_
 #' @references \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
 #' @export
 #' @examples 
-#' \dontrun{
-#' x <- udpipe_download_model(language = "dutch-lassysmall")
+#' x <- udpipe_download_model(language = "dutch-lassysmall", model_dir = tempdir())
 #' x$file_model
 #' ud_dutch <- udpipe_load_model(x$file_model)
-#' 
+#' \dontrun{
 #' x <- udpipe_download_model(language = "english")
 #' x$file_model
 #' ud_english <- udpipe_load_model(x$file_model)

@@ -20,11 +20,10 @@ An object of class \code{udpipe_model} which is a list with 2 elements
 Load an UDPipe model
 }
 \examples{
-\dontrun{
-x <- udpipe_download_model(language = "dutch-lassysmall")
+x <- udpipe_download_model(language = "dutch-lassysmall", model_dir = tempdir())
 x$file_model
 ud_dutch <- udpipe_load_model(x$file_model)
-
+\dontrun{
 x <- udpipe_download_model(language = "english")
 x$file_model
 ud_english <- udpipe_load_model(x$file_model)

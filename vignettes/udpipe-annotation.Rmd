@@ -103,7 +103,7 @@ table(x$upos)
 
 Mark that by default `udpipe_annotate` does Tokenization, Parts of Speech Tagging, Lemmatization and Dependency parsing. If you want to gain some time because you require only a part of the annotation, you can specify to leave parts of the annotation out. This is done as follows.
 
-```{r, eval=FALSE}
+```{r}
 ## Tokenization + finds sentences, does not execute POS tagging, nor lemmatization or dependency parsing
 x <- udpipe_annotate(udmodel_dutch, x = txt, tagger = "none", parser = "none")
 x <- as.data.frame(x)
@@ -142,10 +142,9 @@ x <- as.data.frame(x)
 
 - If you want to work with other tools which are capable of handling CONLL-U format, just export your annotation to a file as shown below
 
-```{r, eval=FALSE}
+```{r}
 x <- udpipe_annotate(udmodel_sanskrit, x = txt)
 cat(x$conllu, file = "myannotation.conllu")
-cat(x$conllu)
 ```
 
 ## Support in text mining
@@ -156,5 +155,6 @@ Contact BNOSAC: http://www.bnosac.be
 
 ```{r, results='hide', echo=FALSE}
 invisible(file.remove(c("dutch-ud-2.0-170801.udpipe", 
-                        "sanskrit-ud-2.0-170801.udpipe")))
+                        "sanskrit-ud-2.0-170801.udpipe",
+                        "myannotation.conllu")))
 ```

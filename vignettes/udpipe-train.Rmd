@@ -84,11 +84,13 @@ m <- udpipe_train(file = "toymodel.udpipe", files_conllu_training = file_conllu,
 
 When you want to train the model with specific tokenizer/tagger/parser settings, you need to provide these settings as a list to the respective arguments `annotation_tokenizer`, `annotation_tagger` and `annotation_parser`. The possible options for each of these settings are explained in detail below and their logic is detailed in the paper "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>.
 
-```{r, eval=FALSE}
+```{r}
 params <- list()
 
 ## Tokenizer training parameters
-params$tokenizer <- list(dimension = 24, epochs = 100, initialization_range = 0.1, 
+params$tokenizer <- list(dimension = 24, 
+                         epochs = 1, #epochs = 100, 
+                         initialization_range = 0.1, 
                          batch_size = 100, learning_rate = 0.005, dropout = 0.1, early_stopping = 1)
 
 ## Tagger training parameters
@@ -103,10 +105,11 @@ params$tagger <- list(models = 2,
       provide_feats_2 = 0, prune_features_2 = 0)
 
 ## Dependency parser training parameters
-params$parser <- list(iterations = 30, 
+params$parser <- list(iterations = 1, 
+                      #iterations = 30, 
                       embedding_upostag = 20, embedding_feats = 20, embedding_xpostag = 0, 
                       embedding_form = 50, 
-                      embedding_form_file = "../ud-2.0-embeddings/nl.skip.forms.50.vectors", 
+                      #embedding_form_file = "../ud-2.0-embeddings/nl.skip.forms.50.vectors", 
                       embedding_lemma = 0, embedding_deprel = 20, 
                       learning_rate = 0.01, learning_rate_final = 0.001, l2 = 0.5, hidden_layer = 200, 
                       batch_size = 10, transition_system = "projective", transition_oracle = "dynamic", 
@@ -114,13 +117,13 @@ params$parser <- list(iterations = 30,
 
 ## Train the model
 m <- udpipe_train(file = "toymodel.udpipe", 
-                  files_conllu_training = "traindata.conllu", files_conllu_holdout = "holdout.conllu", 
+                  files_conllu_training = file_conllu, 
                   annotation_tokenizer = params$tokenizer,
                   annotation_tagger = params$tagger,
                   annotation_parser = params$parser)
 ```
 
-As you have seen above in the example, if you want to train also the dependency parser, you also need pre-trained word embeddings which you can provide in the `embedding_form_file` argument. Example training data can be found at https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364. If you also have a holdout file in CONLL-U format, the training is stopped before model performance decreases on the holdout CONLL-U file.
+As you have seen above in the example, if you want to train the dependency parser, you can also provide pre-trained word embeddings which you can provide in the `embedding_form_file` argument. Example training data can be found at https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364. If you also have a holdout file in CONLL-U format which you can provide in the `files_conllu_holdout` argument, the training is stopped before model performance decreases on the holdout CONLL-U file.
 
 
 Mark. Before you embark in starting to train your own models with more realistic learning parameters, consider that training can take a while. In order to progress the evolution, you can set the environment variable `UDPIPE_PROCESS_LOG` to a location of a file on disk. The evolution of the training will be put in that log so that you can see where the algorithm is. Mark that you need to do this before you initially load the udpipe package as shown below, otherwise the script will not pick this up and will not write progress to the log.
