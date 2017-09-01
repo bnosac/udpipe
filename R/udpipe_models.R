@@ -1,10 +1,10 @@
 #' @title Download an UDPipe model provided by the UDPipe community for a specific language of choice
 #' @description 
-#' Ready-made models for 50 languages trained on 67 treebanks are provided by UDPipe at https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364
+#' Ready-made models for 50 languages trained on 67 treebanks are provided by UDPipe at \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
 #' in one zip file. You can either download these manually in order to use it for annotation purposes 
 #' or use \code{udpipe_download_model} to download these models for a specific language of choice. \cr
 #' 
-#' For your convenience, these models are also made available at https://github.com/jwijffels/udpipe.models.ud.2.0 under the CC-BY-NC-SA
+#' For your convenience, these models are also made available at \url{https://github.com/jwijffels/udpipe.models.ud.2.0} under the CC-BY-NC-SA
 #' licence. This function downloads the models from that location, so if you use this function you are complying to that license.
 #' If you want to train models for commercial purposes, you can easily do this with \code{\link{udpipe_train}}
 #' @param language a character stirng with a language. Possible values are:

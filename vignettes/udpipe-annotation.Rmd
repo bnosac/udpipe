@@ -18,12 +18,15 @@ vignette: >
 
 ```{r setup, include=FALSE, cache=FALSE}
 options(width = 1000)
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, comment = NA)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, comment = NA, eval = TRUE)
 ```
 
 ## UDPipe - General
 
-The data preparation part of any Natural Language Processing flow consists of a number of important steps: Tokenization (1), Parts of Speech tagging (2), Lemmatization (3) and Dependency Parsing (4). This package allows you to do out-of-the-box annotation of these 4 steps and also allows you to train your own annotator models. 
+The data preparation part of any Natural Language Processing flow consists of a number of important steps: Tokenization (1), Parts of Speech tagging (2), Lemmatization (3) and Dependency Parsing (4). This package allows you to do out-of-the-box annotation of these 4 steps and also allows you to train your own annotator models directly from R.
+
+![](udpipe-rlogo.png)
+
 It does this by providing an Rcpp wrapper around the UDPipe C++ library which is described at http://ufal.mff.cuni.cz/udpipe and is available at https://github.com/ufal/udpipe.
 
 ### udpipe the R package
@@ -100,7 +103,7 @@ table(x$upos)
 
 Mark that by default `udpipe_annotate` does Tokenization, Parts of Speech Tagging, Lemmatization and Dependency parsing. If you want to gain some time because you require only a part of the annotation, you can specify to leave parts of the annotation out. This is done as follows.
 
-```{r}
+```{r, eval=FALSE}
 ## Tokenization + finds sentences, does not execute POS tagging, nor lemmatization or dependency parsing
 x <- udpipe_annotate(udmodel_dutch, x = txt, tagger = "none", parser = "none")
 x <- as.data.frame(x)
@@ -133,8 +136,8 @@ dl <- udpipe_download_model(language = "sanskrit")
 udmodel_sanskrit <- udpipe_load_model(file = dl$file_model)
 txt <- "ततः असौ प्राह क्षत्रियस्य तिस्रः भार्या धर्मम् भवन्ति तत् एषा कदाचिद् वैश्या सुता भविष्यति तत् अनुरागः ममास्याम् ततः रथकारः तस्य निश्चयम् विज्ञायावदत् वयस्य किम् अ धुना कर्तव्यम् कौलिकः आह किम् अहम् जानामि त्वयि मित्रे यत् अभिहितं मया ततः"
 x <- udpipe_annotate(udmodel_sanskrit, x = txt)
+Encoding(x$conllu)
 x <- as.data.frame(x)
-table(Encoding(x$token))
 ```
 
 - If you want to work with other tools which are capable of handling CONLL-U format, just export your annotation to a file as shown below

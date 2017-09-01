@@ -18,7 +18,7 @@ vignette: >
 
 ```{r setup, include=FALSE, cache=FALSE}
 options(width = 1000)
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, comment = NA)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, comment = NA, eval = TRUE)
 ```
 
 ## General
@@ -52,64 +52,78 @@ Let's show how this training works on the toy CONLL-U file we just showed:
 
 ```{r}
 library(udpipe)
-m <- udpipe_train(file = "toyexample.udpipe", files_conllu_training = file_conllu, 
-                  annotation_tokenizer = "dimension=16;epochs=1",
-                  annotation_tagger = "none",
+m <- udpipe_train(file = "toymodel.udpipe", files_conllu_training = file_conllu, 
+                  annotation_tokenizer = list(dimension = 16, epochs = 1, batch_size = 100, dropout = 0.7),
+                  annotation_tagger = list(iterations = 1, models = 1, 
+                                           provide_xpostag = 1, provide_lemma = 0, provide_feats = 0), 
                   annotation_parser = "none")
 m$file_model
 
-## The model is now trained and saved in file toyexample.udpipe in the current working directory
+## The model is now trained and saved in file toymodel.udpipe in the current working directory
 ## Now we can use the model to annotate some text
-txt <- "Dit is een tokenizer zonder tagging mogelijkheden, noch laat die dependency parsing toe"
-
-mymodel <- udpipe_load_model("toyexample.udpipe")
-x_tagged <- udpipe_annotate(object = mymodel, x = txt, tagger = "none", parser = "none")
-head(as.data.frame(x_tagged), 2)
+mymodel <- udpipe_load_model("toymodel.udpipe")
+x <- udpipe_annotate(
+  object = mymodel, 
+  x = "Dit is een tokenizer met POS tagging, zonder lemmatisation noch laat deze dependency parsing toe.", 
+  parser = "none")
+head(as.data.frame(x), 2)
 ```
 
-In the above example, we trained only a tokenizer. This was done by setting the `annotation_tagger` and the `annotation_parser` argument to 'none'. If you want to create a tagger which is capable of executing tokenisation, tagging as well as dependency parsing with the default settings of the algoritm, you just proceed as follows.
+In the above example, we trained only a tokenizer and POS tagger, excluding lemmatisation and feature tagging and without dependency parsing. This was done by setting the `annotation_parser` argument to 'none' and setting `provide_lemma` and `provide_feats` to 0. The other arguments were merely set to reduce computation time in this package vignette. 
+
+### Providing more details on the model annotation process
+
+If you want to create a tagger which is capable of executing tokenisation, tagging as well as dependency parsing with the default settings of the algorithm, you just proceed as follows.
 
 ```{r, eval=FALSE}
-m <- udpipe_train(file = "toyexample.udpipe", files_conllu_training = file_conllu, 
+m <- udpipe_train(file = "toymodel.udpipe", files_conllu_training = file_conllu, 
                   annotation_tokenizer = "default",
                   annotation_tagger = "default",
                   annotation_parser = "default")
 ```
 
-When you want to train the model with specific tokenizer/tagger/parser settings, you need to provide these settings as a character string to the arguments `annotation_tokenizer`, `annotation_tagger` and `annotation_parser`. This should be a comma-separated character string of arguments with their values. As shown below.
-
-The possible options for each of these settings are explained in detail below and their logic is detailed in the paper "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>.
+When you want to train the model with specific tokenizer/tagger/parser settings, you need to provide these settings as a list to the respective arguments `annotation_tokenizer`, `annotation_tagger` and `annotation_parser`. The possible options for each of these settings are explained in detail below and their logic is detailed in the paper "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>.
 
 ```{r, eval=FALSE}
 params <- list()
 
 ## Tokenizer training parameters
-params$tokenizer <- "dimension=24;epochs=100;initialization_range=0.1;batch_size=100;learning_rate=0.005;dropout=0.1;early_stopping=1"
+params$tokenizer <- list(dimension = 24, epochs = 100, initialization_range = 0.1, 
+                         batch_size = 100, learning_rate = 0.005, dropout = 0.1, early_stopping = 1)
 
 ## Tagger training parameters
-params$tagger <- "models=2;templates_1=tagger;guesser_suffix_rules_1=8;guesser_enrich_dictionary_1=6;guesser_prefixes_max_1=0;use_lemma_1=0;use_xpostag_1=1;use_feats_1=1;provide_lemma_1=0;provide_xpostag_1=1;provide_feats_1=1;prune_features_1=0;templates_2=lemmatizer;guesser_suffix_rules_2=6;guesser_enrich_dictionary_2=4;guesser_prefixes_max_2=4;use_lemma_2=1;use_xpostag_2=0;use_feats_2=0;provide_lemma_2=1;provide_xpostag_2=0;provide_feats_2=0;prune_features_2=0"
+params$tagger <- list(models = 2, 
+  templates_1 = "tagger", 
+      guesser_suffix_rules_1 = 8, guesser_enrich_dictionary_1 = 6, guesser_prefixes_max_1 = 0, 
+      use_lemma_1 = 0, use_xpostag_1 = 1, use_feats_1 = 1, 
+      provide_lemma_1 = 0, provide_xpostag_1 = 1, provide_feats_1 = 1, prune_features_1 = 0, 
+  templates_2 = "lemmatizer", 
+      guesser_suffix_rules_2 = 6, guesser_enrich_dictionary_2 = 4, guesser_prefixes_max_2 = 4, use_lemma_2 = 1, use_xpostag_2 = 0, 
+      use_feats_2 = 0, provide_lemma_2 = 1, provide_xpostag_2 = 0, 
+      provide_feats_2 = 0, prune_features_2 = 0)
 
 ## Dependency parser training parameters
-params$parser <- "iterations=30;embedding_upostag=20;embedding_feats=20;embedding_xpostag=0;embedding_form=50;embedding_form_file=../ud-2.0-embeddings/nl.skip.forms.50.vectors;embedding_lemma=0;embedding_deprel=20;learning_rate=0.01;learning_rate_final=0.001;l2=0.5;hidden_layer=200;batch_size=10;transition_system=projective;transition_oracle=dynamic;structured_interval=10"
+params$parser <- list(iterations = 30, 
+                      embedding_upostag = 20, embedding_feats = 20, embedding_xpostag = 0, 
+                      embedding_form = 50, 
+                      embedding_form_file = "../ud-2.0-embeddings/nl.skip.forms.50.vectors", 
+                      embedding_lemma = 0, embedding_deprel = 20, 
+                      learning_rate = 0.01, learning_rate_final = 0.001, l2 = 0.5, hidden_layer = 200, 
+                      batch_size = 10, transition_system = "projective", transition_oracle = "dynamic", 
+                      structured_interval = 10)
 
 ## Train the model
-m <- udpipe_train(file = "toyexample.udpipe", 
+m <- udpipe_train(file = "toymodel.udpipe", 
                   files_conllu_training = "traindata.conllu", files_conllu_holdout = "holdout.conllu", 
                   annotation_tokenizer = params$tokenizer,
                   annotation_tagger = params$tagger,
                   annotation_parser = params$parser)
 ```
 
-As you have seen above in the example, if you want to train also the dependency parser, you also need pre-trained word embeddings. Example training data can be found at https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364.
+As you have seen above in the example, if you want to train also the dependency parser, you also need pre-trained word embeddings which you can provide in the `embedding_form_file` argument. Example training data can be found at https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364. If you also have a holdout file in CONLL-U format, the training is stopped before model performance decreases on the holdout CONLL-U file.
 
-Mark that `udpipe_train` also allows you to give these annotation arguments as a list so for the above example, this would be:
 
-```{r, eval=FALSE}
-params$tokenizer <- list(dimension = 24, epochs = 100, initialization_range = 0.1, 
-    batch_size = 100, learning_rate = 0.005, dropout = 0.1, early_stopping = 1)
-```
-
-Before you embark in starting to train your own models, consider that training can take a while. In order to progress the evolution, you can set the environment variable `UDPIPE_PROCESS_LOG` to a location of a file on disk. The evolution of the training will be put in that log so that you can see where the algorithm is. Mark that you need to do this before you initially load the udpipe package as shown below, otherwise the script will not pick this up and will not write progress to the log.
+Mark. Before you embark in starting to train your own models with more realistic learning parameters, consider that training can take a while. In order to progress the evolution, you can set the environment variable `UDPIPE_PROCESS_LOG` to a location of a file on disk. The evolution of the training will be put in that log so that you can see where the algorithm is. Mark that you need to do this before you initially load the udpipe package as shown below, otherwise the script will not pick this up and will not write progress to the log.
 
 ```
 Sys.setenv(UDPIPE_PROCESS_LOG = "udpipe.log")
@@ -138,8 +152,10 @@ In order to use the detokenizer, use the `detokenizer=file:filename_with_plainte
 In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the tokenizer settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at http://universaldependencies.org/#ud-treebanks.
 
 ```{r}
-x <- readLines(system.file(package = "udpipe", "models-ud-2.0", "params_tokenizer"))
-cat(head(x, n = 5), sep = "\n")
+data(annotation_params)
+head(annotation_params$tokenizer)
+## Example for training the tokenizer on the Dutch treebank
+subset(annotation_params$tokenizer, language_treebank == "nl")
 ```
 
 ## Settings for the tagger:
@@ -175,8 +191,8 @@ During random hyperparameter search, guesser_suffix_rules is chosen uniformly fr
 In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the tagger settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at http://universaldependencies.org/#ud-treebanks.
 
 ```{r}
-x <- readLines(system.file(package = "udpipe", "models-ud-2.0", "params_tagger"))
-cat(head(x, n = 5), sep = "\n")
+## Example for training the tagger on the Dutch treebank
+subset(annotation_params$tagger, language_treebank == "nl")
 ```
 
 ## Settings for the dependency parser:
@@ -228,8 +244,8 @@ During random hyperparameter search, structured_interval is chosen uniformly fro
 In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the parser settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at http://universaldependencies.org/#ud-treebanks.
 
 ```{r}
-x <- readLines(system.file(package = "udpipe", "models-ud-2.0", "params_parser"))
-cat(head(x, n = 5), sep = "\n")
+## Example for training the dependency parser on the Dutch treebank
+subset(annotation_params$parser, language_treebank == "nl")
 ```
 
 ## Support in text mining
