@@ -11,7 +11,7 @@ License: MPL-2.0
 URL: https://github.com/bnosac/udpipe
 Encoding: UTF-8
 Depends: R (>= 2.10)
-Imports: Rcpp (>= 0.12.12), data.table (>= 1.9.6)
+Imports: Rcpp (>= 0.11.5), data.table (>= 1.9.6)
 LinkingTo: Rcpp
 Suggests: knitr
 SystemRequirements: C++11
