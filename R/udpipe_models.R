@@ -94,6 +94,7 @@ udpipe_download_model <- function(language = c("ancient_greek-proiel", "ancient_
 #' @references \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
 #' @export
 #' @examples 
+#' \dontrun{
 #' x <- udpipe_download_model(language = "dutch-lassysmall")
 #' x$file_model
 #' ud_dutch <- udpipe_load_model(x$file_model)
@@ -105,6 +106,7 @@ udpipe_download_model <- function(language = c("ancient_greek-proiel", "ancient_
 #' x <- udpipe_download_model(language = "hebrew")
 #' x$file_model
 #' ud_hebrew <- udpipe_load_model(x$file_model)
+#' }
 udpipe_load_model <- function(file) {
   file <- path.expand(file)
   if(!file.exists(file)){

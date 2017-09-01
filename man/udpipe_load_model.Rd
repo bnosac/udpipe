@@ -20,6 +20,7 @@ An object of class \code{udpipe_model} which is a list with 2 elements
 Load an UDPipe model
 }
 \examples{
+\dontrun{
 x <- udpipe_download_model(language = "dutch-lassysmall")
 x$file_model
 ud_dutch <- udpipe_load_model(x$file_model)
@@ -31,6 +32,7 @@ ud_english <- udpipe_load_model(x$file_model)
 x <- udpipe_download_model(language = "hebrew")
 x$file_model
 ud_hebrew <- udpipe_load_model(x$file_model)
+}
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
