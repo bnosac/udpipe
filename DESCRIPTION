@@ -17,6 +17,8 @@ Encoding: UTF-8
 Depends: R (>= 2.10)
 Imports: Rcpp (>= 0.11.5), data.table (>= 1.9.6)
 LinkingTo: Rcpp
+Suggests: knitr
 SystemRequirements: C++11
 RoxygenNote: 6.0.1.9000
+VignetteBuilder: knitr
 
