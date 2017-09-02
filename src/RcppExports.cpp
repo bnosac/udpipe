@@ -17,7 +17,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // udp_tokenise_tag_parse
-List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVector docid, std::string annotation_tokenizer, std::string annotation_tagger, std::string annotation_parser);
+Rcpp::List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVector docid, std::string annotation_tokenizer, std::string annotation_tagger, std::string annotation_parser);
 RcppExport SEXP _udpipe_udp_tokenise_tag_parse(SEXP udmodelSEXP, SEXP xSEXP, SEXP docidSEXP, SEXP annotation_tokenizerSEXP, SEXP annotation_taggerSEXP, SEXP annotation_parserSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -44,7 +44,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // udp_train
-List udp_train(const char* file_model, Rcpp::CharacterVector conllu_input_files, Rcpp::CharacterVector conllu_heldout_files, std::string annotation_tokenizer, std::string annotation_tagger, std::string annotation_parser);
+Rcpp::List udp_train(const char* file_model, Rcpp::CharacterVector conllu_input_files, Rcpp::CharacterVector conllu_heldout_files, std::string annotation_tokenizer, std::string annotation_tagger, std::string annotation_parser);
 RcppExport SEXP _udpipe_udp_train(SEXP file_modelSEXP, SEXP conllu_input_filesSEXP, SEXP conllu_heldout_filesSEXP, SEXP annotation_tokenizerSEXP, SEXP annotation_taggerSEXP, SEXP annotation_parserSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

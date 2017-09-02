@@ -2,7 +2,6 @@
 #include <fstream>
 #include <memory>
 #include "udpipe.h"
-using namespace Rcpp;
 using namespace ufal::udpipe;
 
 
@@ -20,7 +19,7 @@ SEXP udp_load_model(const char* file_model) {
 }
 
 // [[Rcpp::export]]
-List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVector docid, 
+Rcpp::List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVector docid, 
                             std::string annotation_tokenizer,
                             std::string annotation_tagger,
                             std::string annotation_parser) {
@@ -53,8 +52,8 @@ List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVect
   
   int i;
   for (i = 0; i < x.size(); i++){
-    iss.str (as<std::string>(x[i]));
-    doc_id = as<std::string>(docid[i]);
+    iss.str (Rcpp::as<std::string>(x[i]));
+    doc_id = Rcpp::as<std::string>(docid[i]);
     languagemodel_pipeline.set_document_id(doc_id);
     languagemodel_pipeline.process(iss, oss, error);
     iss.clear();
@@ -65,7 +64,7 @@ List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVect
   std::string data =  oss.str();
   
   // Return
-  List output = List::create(Rcpp::Named("x") = x, 
+  Rcpp::List output = Rcpp::List::create(Rcpp::Named("x") = x, 
                              Rcpp::Named("conllu") = data,
                              Rcpp::Named("errors") = result);
   return output;
@@ -75,7 +74,6 @@ List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVect
 
 // [[Rcpp::export]]
 Rcpp::CharacterVector na_locf(Rcpp::CharacterVector x) {
-  Rcpp::LogicalVector ismissing = is_na(x);
   int i;
   for(i = 1; i < x.size(); i++) {
     if((x[i] == NA_STRING) & (x[i-1] != NA_STRING)) {
@@ -104,7 +102,7 @@ bool append_conllu(std::istream& is, std::vector<sentence>& sentences, std::stri
 }
 
 // [[Rcpp::export]]
-List udp_train(const char* file_model, 
+Rcpp::List udp_train(const char* file_model, 
                       Rcpp::CharacterVector conllu_input_files, Rcpp::CharacterVector conllu_heldout_files,
                       std::string annotation_tokenizer,
                       std::string annotation_tagger,
@@ -156,7 +154,7 @@ List udp_train(const char* file_model,
                  model, error);
   
   // Return
-  List output = List::create(Rcpp::Named("file_model") = file_model, 
+  Rcpp::List output = Rcpp::List::create(Rcpp::Named("file_model") = file_model, 
                              Rcpp::Named("errors") = error);
   return output;
 }
