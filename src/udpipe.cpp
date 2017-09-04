@@ -19766,8 +19766,8 @@ void multiword_splitter::append_token(string_piece token, string_piece misc, sen
   }
 
   // Determine casing
-  enum casingtype{ UC_FIRST, UC_ALL, OTHER };
-  casingtype casing = OTHER;
+  enum { UC_FIRST, UC_ALL, OTHER }; 
+  int casing = OTHER;
 
   if (unicode::category(utf8::first(token.str, token.len)) & unicode::Lut) {
     casing = UC_ALL;
