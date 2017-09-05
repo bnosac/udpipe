@@ -2,7 +2,6 @@
 #include <fstream>
 #include <memory>
 #include "udpipe.h"
-using namespace ufal::udpipe;
 
 
 /*
@@ -12,9 +11,9 @@ using namespace ufal::udpipe;
 // [[Rcpp::export]]
 SEXP udp_load_model(const char* file_model) {
   // Load language model and return the pointer to be used by udp_tokenise_tag_parse
-  model *languagemodel;
-  languagemodel = model::load(file_model);
-  Rcpp::XPtr<model> ptr(languagemodel, true);
+  ufal::udpipe::model *languagemodel;
+  languagemodel = ufal::udpipe::model::load(file_model);
+  Rcpp::XPtr<ufal::udpipe::model> ptr(languagemodel, true);
   return ptr;
 }
 
@@ -23,25 +22,25 @@ Rcpp::List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::Stri
                             std::string annotation_tokenizer,
                             std::string annotation_tagger,
                             std::string annotation_parser) {
-  Rcpp::XPtr<model> languagemodel(udmodel);
+  Rcpp::XPtr<ufal::udpipe::model> languagemodel(udmodel);
   
   // Handle default and none input to tokenizer, tagger, parser
   std::string pipeline_tokenizer = annotation_tokenizer;
   std::string pipeline_tagger = annotation_tagger;
   std::string pipeline_parser = annotation_parser;
   if (pipeline_tagger.compare("none") == 0){
-    pipeline_tagger = pipeline::NONE;
+    pipeline_tagger = ufal::udpipe::pipeline::NONE;
   }else if (pipeline_tagger.compare("default") == 0){
-    pipeline_tagger = pipeline::DEFAULT;
+    pipeline_tagger = ufal::udpipe::pipeline::DEFAULT;
   }
   if (pipeline_parser.compare("none") == 0){
-    pipeline_parser = pipeline::NONE;
+    pipeline_parser = ufal::udpipe::pipeline::NONE;
   }else if (pipeline_parser.compare("default") == 0){
-    pipeline_parser = pipeline::DEFAULT;
+    pipeline_parser = ufal::udpipe::pipeline::DEFAULT;
   }
   
   // Set up pipeline: tokenizer, tagger and dependency parser, output format conllu
-  pipeline languagemodel_pipeline = pipeline(languagemodel, pipeline_tokenizer, pipeline_tagger, pipeline_parser, "conllu");
+  ufal::udpipe::pipeline languagemodel_pipeline = ufal::udpipe::pipeline(languagemodel, pipeline_tokenizer, pipeline_tagger, pipeline_parser, "conllu");
   
   // Put character data in a stream
   std::string error;
@@ -88,8 +87,8 @@ Rcpp::CharacterVector na_locf(Rcpp::CharacterVector x) {
  * Functionalities to train a model based on a conll-u file
  */
 
-bool append_conllu(std::istream& is, std::vector<sentence>& sentences, std::string& error) {
-  std::unique_ptr<input_format> conllu_input(input_format::new_conllu_input_format());
+bool append_conllu(std::istream& is, std::vector<ufal::udpipe::sentence>& sentences, std::string& error) {
+  std::unique_ptr<ufal::udpipe::input_format> conllu_input(ufal::udpipe::input_format::new_conllu_input_format());
   
   std::string block;
   while (conllu_input->read_block(is, block)) {
@@ -113,24 +112,24 @@ Rcpp::List udp_train(const char* file_model,
   std::string trainer_tagger = annotation_tagger;
   std::string trainer_parser = annotation_parser;
   if (annotation_tokenizer.compare("none") == 0){
-    trainer_tokenizer = trainer::NONE;
+    trainer_tokenizer = ufal::udpipe::trainer::NONE;
   }else if (annotation_tokenizer.compare("default") == 0){
-    trainer_tokenizer = trainer::DEFAULT;
+    trainer_tokenizer = ufal::udpipe::trainer::DEFAULT;
   }
   if (annotation_tagger.compare("none") == 0){
-    trainer_tagger = trainer::NONE;
+    trainer_tagger = ufal::udpipe::trainer::NONE;
   }else if (annotation_tagger.compare("default") == 0){
-    trainer_tagger = trainer::DEFAULT;
+    trainer_tagger = ufal::udpipe::trainer::DEFAULT;
   }
   if (annotation_parser.compare("none") == 0){
-    trainer_parser = trainer::NONE;
+    trainer_parser = ufal::udpipe::trainer::NONE;
   }else if (annotation_parser.compare("default") == 0){
-    trainer_parser = trainer::DEFAULT;
+    trainer_parser = ufal::udpipe::trainer::DEFAULT;
   }
   
   std::string error;
-  std::vector<sentence> training;
-  std::vector<sentence> heldout;
+  std::vector<ufal::udpipe::sentence> training;
+  std::vector<ufal::udpipe::sentence> heldout;
   std::string path;
 
   // Load training data
@@ -148,7 +147,7 @@ Rcpp::List udp_train(const char* file_model,
   // Open output binary file
   std::ofstream model(file_model, std::ofstream::binary);
   // Train the model
-  trainer::train("morphodita_parsito", 
+  ufal::udpipe::trainer::train("morphodita_parsito", 
                  training, heldout, 
                  trainer_tokenizer, trainer_tagger, trainer_parser, 
                  model, error);
