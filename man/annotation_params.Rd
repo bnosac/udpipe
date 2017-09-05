@@ -3,7 +3,7 @@
 \docType{data}
 \name{annotation_params}
 \alias{annotation_params}
-\title{POS tags and definitions used in the Penn Treebank.}
+\title{List with training options set by the UDPipe community when building models based on the Universal Dependencies data}
 \description{
 In order to show the settings which were used by the UDPipe community when building 
 the models made available when using \code{\link{udpipe_download_model}}, 

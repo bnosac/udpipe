@@ -17,7 +17,7 @@ An object of class \code{udpipe_model} which is a list with 2 elements
 }
 }
 \description{
-Load an UDPipe model
+Load an UDPipe model so that it can be use in \code{\link{udpipe_annotate}}
 }
 \examples{
 x <- udpipe_download_model(language = "dutch-lassysmall", model_dir = tempdir())

@@ -15,11 +15,11 @@
 a data.frame with columns doc_id, paragraph_id, sentence_id, sentence, 
 token_id, token, lemma, upos, xpos, feats, head_token_id, deprel, dep_rel, misc \cr
 
-The columns paragraph_id, sentence_id, token_id and head_token_id are integers, the other fields
+The columns paragraph_id, sentence_id are integers, the other fields
 are character data in UTF-8 encoding. \cr
 }
 \description{
-Convert the result of udpipe_annotate to a tidy data frame
+Convert the result of \code{\link{udpipe_annotate}} to a tidy data frame
 }
 \examples{
 x <- udpipe_download_model(language = "dutch-lassysmall")
