@@ -1,3 +1,9 @@
+# CHANGES IN udpipe VERSION 0.1.1
+
+- Fix issue on Solaris builds at CRAN, namely: error: expected primary-expression before ‘enum’
+- Use ufal::udpipe namespace directly
+- Documentation fixes
+
 # CHANGES IN udpipe VERSION 0.1
 
 - Initial release based on UDPipe commit a2ebb99d243546f64c95d0faf36882bb1d67a670
