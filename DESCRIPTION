@@ -1,6 +1,7 @@
 Package: udpipe
 Type: Package
-Title: Tokenization, Parts of Speech Tagging, Lemmatization and Dependency Parsing with the 'UDPipe' 'NLP' Toolkit
+Title: Tokenization, Parts of Speech Tagging, Lemmatization and Dependency
+    Parsing with the 'UDPipe' 'NLP' Toolkit
 Version: 0.1.1
 Maintainer: Jan Wijffels <jwijffels@bnosac.be>
 Authors@R: c(person('Jan', 'Wijffels', role = c('aut', 'cre', 'cph'), email = 'jwijffels@bnosac.be'), 
@@ -8,17 +9,24 @@ Authors@R: c(person('Jan', 'Wijffels', role = c('aut', 'cre', 'cph'), email = 'j
     person("Institute of Formal and Applied Linguistics, Faculty of Mathematics and Physics, Charles University in Prague, Czech Republic", role = 'cph'),
     person('Milan Straka', role = 'cph', email = 'straka@ufal.mff.cuni.cz'), 
     person('Jana Straková', role = 'cph', email = 'strakova@ufal.mff.cuni.cz'))
-Description: This natural language processing toolkit provides language-agnostic 'tokenization', 'parts of speech tagging', 'lemmatization' and 'dependency parsing' of raw text. 
-    Next to text parsing, the package also allows you to train annotation models based on data of 'treebanks' in 'CoNLL-U' format as provided at <http://universaldependencies.org/format.html>. 
-    The techniques are explained in detail in the paper: 'Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe', available at <doi:10.18653/v1/K17-3009>.
+Description: This natural language processing toolkit provides language-agnostic
+    'tokenization', 'parts of speech tagging', 'lemmatization' and 'dependency
+    parsing' of raw text. Next to text parsing, the package also allows you to train
+    annotation models based on data of 'treebanks' in 'CoNLL-U' format as provided
+    at <http://universaldependencies.org/format.html>. The techniques are explained
+    in detail in the paper: 'Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0
+    with UDPipe', available at <doi:10.18653/v1/K17-3009>.
 License: MPL-2.0
 URL: https://github.com/bnosac/udpipe
 Encoding: UTF-8
-Depends: R (>= 2.10)
-Imports: Rcpp (>= 0.11.5), data.table (>= 1.9.6)
+Depends:
+    R (>= 2.10)
+Imports:
+    Rcpp (>= 0.11.5),
+    data.table (>= 1.9.6)
 LinkingTo: Rcpp
-Suggests: knitr
+Suggests:
+    knitr
 SystemRequirements: C++11
-RoxygenNote: 6.0.1.9000
+RoxygenNote: 6.0.1
 VignetteBuilder: knitr
-
