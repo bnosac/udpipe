@@ -1,3 +1,7 @@
+# CHANGES IN udpipe VERSION 0.1.2
+
+- Remove logic of UDPIPE_PROCESS_LOG (using Rcpp::Rout instead). This fixes issue detected with valgrind about ofstream
+
 # CHANGES IN udpipe VERSION 0.1.1
 
 - Fix issue on Solaris builds at CRAN, namely: error: expected primary-expression before ‘enum’
