@@ -44,7 +44,6 @@ A list with elements
  \item{annotation_parser: }{The input argument \code{annotation_parser}}
  \item{errors: }{Messages from the UDPipe process indicating possible errors for example when passing the wrong arguments to the 
  annotation_tokenizer, annotation_tagger or annotation_parser}
- \item{udpipe_log: }{The log of the udpipe process if you provided the environment variable UDPIPE_PROCESS_LOG as shown in the details}
 }
 }
 \description{
@@ -71,12 +70,7 @@ ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, 
 czech, danish, dutch, english, estonian, finnish, french, galician, german, gothic, greek, hebrew, hindi, hungarian, 
 indonesian, irish, italian, japanese, kazakh, korean, latin, latvian, lithuanian, norwegian, 
 old_church_slavonic, persian, polish, portuguese, romanian, russian, sanskrit, slovak, 
-slovenian, spanish, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese. \cr
-
-Mark that as training can take a while, you can set the environment variable UDPIPE_PROCESS_LOG to
-a location of a file on disk. As in Sys.setenv(UDPIPE_PROCESS_LOG = "udpipe.log"). 
-The evolution of the training will be put in that log. 
-Mark that you need to do this before you load the udpipe package.
+slovenian, spanish, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese.
 }
 \examples{
 ## You need to have a file on disk in CONLL-U format, taking the toy example file put in the package

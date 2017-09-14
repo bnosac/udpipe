@@ -137,12 +137,7 @@ m <- udpipe_train(file = "toymodel.udpipe",
 As you have seen above in the example, if you want to train the dependency parser, you can also provide pre-trained word embeddings which you can provide in the `embedding_form_file` argument. Example training data can be found at https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364. If you also have a holdout file in CONLL-U format which you can provide in the `files_conllu_holdout` argument, the training is stopped before model performance decreases on the holdout CONLL-U file.
 
 
-Mark. Before you embark in starting to train your own models with more realistic learning parameters, consider that training can take a while. In order to progress the evolution, you can set the environment variable `UDPIPE_PROCESS_LOG` to a location of a file on disk. The evolution of the training will be put in that log so that you can see where the algorithm is. Mark that you need to do this before you initially load the udpipe package as shown below, otherwise the script will not pick this up and will not write progress to the log.
-
-```
-Sys.setenv(UDPIPE_PROCESS_LOG = "udpipe.log")
-library(udpipe)
-```
+Mark. Before you embark in starting to train your own models with more realistic learning parameters, consider that training can take a while. 
 
 ## Settings for the tokenizer:
 
