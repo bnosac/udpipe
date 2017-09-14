@@ -70,9 +70,10 @@ m$file_model
 mymodel <- udpipe_load_model("toymodel.udpipe")
 x <- udpipe_annotate(
   object = mymodel, 
-  x = "Dit is een tokenizer met POS tagging, zonder lemmatisation noch laat deze dependency parsing toe.", 
+  x = "Dit is een tokenizer met POS tagging, 
+       zonder lemmatisation noch laat deze dependency parsing toe.", 
   parser = "none")
-head(as.data.frame(x), 2)
+str(as.data.frame(x))
 ```
 
 In the above example, we trained only a tokenizer and POS tagger, excluding lemmatisation and feature tagging and without dependency parsing. This was done by setting the `annotation_parser` argument to 'none' and setting `provide_lemma` and `provide_feats` to 0. The other arguments were merely set to reduce computation time in this package vignette. 
@@ -162,9 +163,10 @@ In order to show the settings which were used by the UDPipe community when build
 
 ```{r}
 data(annotation_params)
-head(annotation_params$tokenizer)
+str(annotation_params$tokenizer, 3)
 ## Example for training the tokenizer on the Dutch treebank
-subset(annotation_params$tokenizer, language_treebank == "nl")
+hyperparams_nl <- subset(annotation_params$tokenizer, language_treebank == "nl")
+as.list(hyperparams_nl)
 ```
 
 ## Settings for the tagger:
@@ -201,7 +203,8 @@ In order to show the settings which were used by the UDPipe community when build
 
 ```{r}
 ## Example for training the tagger on the Dutch treebank
-subset(annotation_params$tagger, language_treebank == "nl")
+hyperparams_nl <- subset(annotation_params$tagger, language_treebank == "nl")
+as.list(hyperparams_nl)
 ```
 
 ## Settings for the dependency parser:
@@ -254,7 +257,8 @@ In order to show the settings which were used by the UDPipe community when build
 
 ```{r}
 ## Example for training the dependency parser on the Dutch treebank
-subset(annotation_params$parser, language_treebank == "nl")
+hyperparams_nl <- subset(annotation_params$parser, language_treebank == "nl")
+as.list(hyperparams_nl)
 ```
 
 ## Support in text mining
