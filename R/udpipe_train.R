@@ -39,7 +39,7 @@
 #'  annotation_tokenizer, annotation_tagger or annotation_parser}
 #'  \item{udpipe_log: }{The log of the udpipe process if you provided the environment variable UDPIPE_PROCESS_LOG as shown in the details}
 #' }
-#' @seealso \code{\link{annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}}
+#' @seealso \code{\link{udpipe_annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}}
 #' @references \url{http://ufal.mff.cuni.cz/udpipe/users-manual}
 #' @details 
 #' In order to train a model, you need to provide files which are in CONLL-U format in argument \code{files_conllu_training}. 
@@ -94,10 +94,10 @@
 #' ## look at the training parameter examples given below and train it on your CONLL-U file
 #' ##
 #' ## Example training arguments used for the models available at udpipe_download_model
-#' data(annotation_params)
-#' head(annotation_params$tokenizer)
-#' head(annotation_params$tagger)
-#' head(annotation_params$parser)
+#' data(udpipe_annotation_params)
+#' head(udpipe_annotation_params$tokenizer)
+#' head(udpipe_annotation_params$tagger)
+#' head(udpipe_annotation_params$parser)
 #' \dontrun{
 #' ## More details in the package vignette:
 #' vignette("udpipe-train", package = "udpipe")

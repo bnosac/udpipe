@@ -166,10 +166,10 @@ In order to use the detokenizer, use the `detokenizer=file:filename_with_plainte
 In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the tokenizer settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at http://universaldependencies.org/#ud-treebanks.
 
 ```{r}
-data(annotation_params)
-head(annotation_params$tokenizer)
+data(udpipe_annotation_params)
+head(udpipe_annotation_params$tokenizer)
 ## Example for training the tokenizer on the Dutch treebank
-subset(annotation_params$tokenizer, language_treebank == "nl")
+subset(udpipe_annotation_params$tokenizer, language_treebank == "nl")
 ```
 
 ## Settings for the tagger:
@@ -206,7 +206,7 @@ In order to show the settings which were used by the UDPipe community when build
 
 ```{r}
 ## Example for training the tagger on the Dutch treebank
-subset(annotation_params$tagger, language_treebank == "nl")
+subset(udpipe_annotation_params$tagger, language_treebank == "nl")
 ```
 
 ## Settings for the dependency parser:
@@ -259,7 +259,7 @@ In order to show the settings which were used by the UDPipe community when build
 
 ```{r}
 ## Example for training the dependency parser on the Dutch treebank
-subset(annotation_params$parser, language_treebank == "nl")
+subset(udpipe_annotation_params$parser, language_treebank == "nl")
 ```
 
 ## Support in text mining

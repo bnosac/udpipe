@@ -113,10 +113,10 @@ x <- as.data.frame(x)
 ## look at the training parameter examples given below and train it on your CONLL-U file
 ##
 ## Example training arguments used for the models available at udpipe_download_model
-data(annotation_params)
-head(annotation_params$tokenizer)
-head(annotation_params$tagger)
-head(annotation_params$parser)
+data(udpipe_annotation_params)
+head(udpipe_annotation_params$tokenizer)
+head(udpipe_annotation_params$tagger)
+head(udpipe_annotation_params$parser)
 \dontrun{
 ## More details in the package vignette:
 vignette("udpipe-train", package = "udpipe")
@@ -126,5 +126,5 @@ vignette("udpipe-train", package = "udpipe")
 \url{http://ufal.mff.cuni.cz/udpipe/users-manual}
 }
 \seealso{
-\code{\link{annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}}
+\code{\link{udpipe_annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}}
 }
