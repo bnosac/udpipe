@@ -37,7 +37,6 @@
 #'  \item{annotation_parser: }{The input argument \code{annotation_parser}}
 #'  \item{errors: }{Messages from the UDPipe process indicating possible errors for example when passing the wrong arguments to the 
 #'  annotation_tokenizer, annotation_tagger or annotation_parser}
-#'  \item{udpipe_log: }{The log of the udpipe process if you provided the environment variable UDPIPE_PROCESS_LOG as shown in the details}
 #' }
 #' @seealso \code{\link{udpipe_annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}}
 #' @references \url{http://ufal.mff.cuni.cz/udpipe/users-manual}
@@ -52,12 +51,7 @@
 #' czech, danish, dutch, english, estonian, finnish, french, galician, german, gothic, greek, hebrew, hindi, hungarian, 
 #' indonesian, irish, italian, japanese, kazakh, korean, latin, latvian, lithuanian, norwegian, 
 #' old_church_slavonic, persian, polish, portuguese, romanian, russian, sanskrit, slovak, 
-#' slovenian, spanish, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese. \cr
-#' 
-#' Mark that as training can take a while, you can set the environment variable UDPIPE_PROCESS_LOG to
-#' a location of a file on disk. As in Sys.setenv(UDPIPE_PROCESS_LOG = "udpipe.log"). 
-#' The evolution of the training will be put in that log. 
-#' Mark that you need to do this before you load the udpipe package.
+#' slovenian, spanish, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese. 
 #' @export
 #' @examples 
 #' ## You need to have a file on disk in CONLL-U format, taking the toy example file put in the package
@@ -127,18 +121,12 @@ udpipe_train <- function(file = file.path(getwd(), "my_annotator.udpipe"),
   stopifnot(all(file.exists(files_conllu_holdout)))
   result <- udp_train(file, files_conllu_training, files_conllu_holdout, 
             annotation_tokenizer, annotation_tagger, annotation_parser)
-  if(udpipe_env$log != ""){
-    log <- readLines(udpipe_env$log)  
-  }else{
-    log <- "You need to set Sys.setenv(UDPIPE_PROCESS_LOG = 'udpipe.log') before loading the package to get the log of udpipe"
-  }
-  
+
   structure(
     list(file_model = result$file_model, 
          annotation_tokenizer = annotation_tokenizer,
          annotation_tagger = annotation_tagger,
          annotation_parser = annotation_parser,
          errors = result$errors,
-         log = log,
     class = "udpipe_trained_model"))
 }

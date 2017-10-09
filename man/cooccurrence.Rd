@@ -18,30 +18,29 @@ cooccurrence(x, order = TRUE, ...)
 \arguments{
 \item{x}{either
 \itemize{
-  \item a data.frame where the data.frame contains 1 row per document/term (cooccurrenc.data.frame),
-  in which case you need to provide \code{group} and \code{term}
-  \item a character vector with terms (cooccurrence.character)
-  \item an object of class \code{cooccurrence} (cooccurrence.cooccurrence)
+  \item a data.frame where the data.frame contains 1 row per document/term,
+  in which case you need to provide \code{group} and \code{term}. This uses cooccurrence.data.frame.
+  \item a character vector with terms. This uses cooccurrence.character.
+  \item an object of class \code{cooccurrence}.This uses cooccurrence.cooccurrence.
 }}
 
 \item{order}{logical indicating if we need to sort the output from high cooccurrences to low coccurrences. Defaults to TRUE.}
 
 \item{...}{other arguments passed on to the methods}
 
-\item{group}{character string with a column in the data frame \code{x}}
+\item{group}{character string with a column in the data frame \code{x}. To be used if \code{x} is a data.frame.}
 
-\item{term}{character string with a column in the data frame \code{x}, containing 1 term per row}
+\item{term}{character string with a column in the data frame \code{x}, containing 1 term per row. To be used if \code{x} is a data.frame.}
 }
 \value{
 a data.frame with columns term1, term2 and cooc indicating
-for the combination of term1 and term2 how many times this occurred
+for the combination of term1 and term2 how many times this combination occurred
 }
 \description{
 A cooccurence data.frame indicates how many times each term co-occurs with another term.
 This type of dataset is a data.frame with fields term1, term2 and cooc where cooc indicates how many times
 term1 and term2 co-occurred.\cr
-
-The dataset can be constructed based upon a data frame where you look with a group if 2 terms occurred.\cr
+The dataset can be constructed based upon a data frame where you look within a group if 2 terms occurred.\cr
 It also can be constructed based upon a vector of words in which case we look how many times each word is 
 followed by another word.
 }

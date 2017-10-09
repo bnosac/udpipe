@@ -12,7 +12,7 @@
   min_posterior = -1, min_terms = 0, labels, ...)
 }
 \arguments{
-\item{object}{an object of class LDA_VEM}
+\item{object}{an object of class LDA_VEM or LDA_Gibbs as returned by \code{LDA} from the topicmodels package}
 
 \item{newdata}{a document/term matrix containing data for which to make a prediction}
 
@@ -44,10 +44,11 @@ Defaults to topic_prob_001 up to topic_prob_999.}
 }
 }
 \description{
-Gives either the topic predictions by document or the term posteriors by topic.
+Gives either the predictions to which topic a document belongs or 
+the term posteriors by topic indicating which terms are emitted by each topic.\cr
 If you provide in \code{newdata} a document term matrix 
-which for a document does not have any terms with nonzero entries (document without text),
-the prediction will give as topic output NA values.
+for which a document does not contain any text and hence does not have any terms with nonzero entries,
+the prediction will give as topic prediction NA values (see the examples).
 }
 \examples{
 ## Build document/term matrix on dutch nouns

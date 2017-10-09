@@ -1,9 +1,10 @@
 #' @title Predict method for an object of class LDA_VEM or class LDA_Gibbs
-#' @description Gives either the topic predictions by document or the term posteriors by topic.
+#' @description Gives either the predictions to which topic a document belongs or 
+#' the term posteriors by topic indicating which terms are emitted by each topic.\cr
 #' If you provide in \code{newdata} a document term matrix 
-#' which for a document does not have any terms with nonzero entries (document without text),
-#' the prediction will give as topic output NA values.
-#' @param object an object of class LDA_VEM
+#' for which a document does not contain any text and hence does not have any terms with nonzero entries,
+#' the prediction will give as topic prediction NA values (see the examples).
+#' @param object an object of class LDA_VEM or LDA_Gibbs as returned by \code{LDA} from the topicmodels package
 #' @param newdata a document/term matrix containing data for which to make a prediction
 #' @param type either 'topic' or 'terms' for the topic predictions or the term posteriors
 #' @param labels a character vector of the same length as the number of topics in the topic model. 
