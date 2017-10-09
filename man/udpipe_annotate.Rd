@@ -14,7 +14,8 @@ udpipe_annotate(object, x, doc_id = paste("doc", seq_along(x), sep = ""),
 \item{x}{a character vector in UTF-8 encoding where each element of the character vector 
 contains text which you like to tokenize, tag and perform dependency parsing.}
 
-\item{doc_id}{an identifier of a document with the same length as \code{x}.}
+\item{doc_id}{an identifier of a document with the same length as \code{x}. This should be a character vector.
+\code{doc_id[i]} corresponds to \code{x[i]}.}
 
 \item{tokenizer}{a character string of length 1, which is either 'tokenizer' (default udpipe tokenisation)
 or a character string with more complex tokenisation options 

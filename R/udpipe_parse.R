@@ -5,7 +5,8 @@
 #' @param object an object of class \code{udpipe_model} as returned by \code{\link{udpipe_load_model}}
 #' @param x a character vector in UTF-8 encoding where each element of the character vector 
 #' contains text which you like to tokenize, tag and perform dependency parsing.
-#' @param doc_id an identifier of a document with the same length as \code{x}.
+#' @param doc_id an identifier of a document with the same length as \code{x}. This should be a character vector.
+#' \code{doc_id[i]} corresponds to \code{x[i]}.
 #' @param tokenizer a character string of length 1, which is either 'tokenizer' (default udpipe tokenisation)
 #' or a character string with more complex tokenisation options 
 #' as specified in \url{http://ufal.mff.cuni.cz/udpipe/users-manual} in which case \code{tokenizer} should be a character string where the options
@@ -78,7 +79,9 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
     stop("object should be of class udpipe_model as returned by the function ?udpipe_load_model")
   }
   stopifnot(inherits(x, "character"))
-  stopifnot(inherits(doc_id, "character"))
+  if(!inherits(doc_id, "character")){
+    doc_id <- as.character(doc_id)
+  }
   stopifnot(length(x) == length(doc_id))
   stopifnot(length(tagger) > 0)
   stopifnot(length(parser) > 0)

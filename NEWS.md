@@ -1,3 +1,26 @@
+# CHANGES IN udpipe VERSION 0.2
+
+- Added data preparation elements for standard text mining flows namely: 
+    cooccurrence
+    document_term_frequencies
+    document_term_matrix
+    dtm_tfidf
+    dtm_remove_terms
+    dtm_remove_lowfreq
+    dtm_remove_tfidf
+    dtm_reverse
+    dtm_cor
+    txt_collapse
+    txt_sample
+    txt_show
+    txt_recode
+    txt_previous
+    txt_next
+    txt_nextgram
+- Added predict.LDA_VEM and predict.LDA_Gibbs
+- Renamed dataset annotation_params to udpipe_annotation_params
+- Added example datasets called brussels_listings, brussels_reviews, brussels_reviews_anno
+
 # CHANGES IN udpipe VERSION 0.1.1
 
 - Fix issue on Solaris builds at CRAN, namely: error: expected primary-expression before ‘enum’
