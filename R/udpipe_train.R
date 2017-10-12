@@ -114,6 +114,8 @@ udpipe_train <- function(file = file.path(getwd(), "my_annotator.udpipe"),
   annotation_parser <- collapse_list(annotation_parser)
   
   file <- path.expand(file)
+  files_conllu_training <- path.expand(files_conllu_training)
+  files_conllu_holdout <- path.expand(files_conllu_holdout)
   if(!dir.exists(dirname(file))){
     dir.create(dirname(file), recursive = TRUE)
   }
