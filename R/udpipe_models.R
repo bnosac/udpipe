@@ -73,6 +73,9 @@ udpipe_download_model <- function(language = c("ancient_greek-proiel", "ancient_
   url <- file.path("https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master",
                    "inst", "udpipe-ud-2.0-170801",
                    filename)
+  url <- file.path("https://raw.githubusercontent.com/jwijffels/udpipe.models.ud.2.0/master",
+                   "inst", "udpipe-ud-2.0-170801",
+                   filename)
   to <- file.path(model_dir, filename)
   utils::download.file(url = url, destfile = to, mode = "wb")
   data.frame(language = language,

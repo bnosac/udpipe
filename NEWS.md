@@ -21,6 +21,7 @@
 - Renamed dataset annotation_params to udpipe_annotation_params
 - Added example datasets called brussels_listings, brussels_reviews, brussels_reviews_anno
 - Use path.expand on conll-u files which are used for training
+- udpipe_download_model now downloads from https://raw.githubusercontent.com/jwijffels/udpipe.models.ud.2.0/master instead of https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master
 
 # CHANGES IN udpipe VERSION 0.1.2
 
