@@ -198,3 +198,23 @@ txt_freq <- function(x, exclude = c(NA, NaN), order=TRUE){
   rownames(tab) <- NULL
   tab
 }
+
+
+#' @title Highlight words in a character vector
+#' @description Highlight words in a character vector. The words provided in \code{terms} are 
+#' highlighted in the text by wrapping it around the following charater: |.
+#' So 'I like milk and sugar in my coffee' would give 'I like |milk| and sugar in my coffee' if you 
+#' want to highlight the word milk
+#' @param x a character vector with text
+#' @param terms a vector of words to highlight which appear in \code{x}
+#' @return A character vector with the same length of \code{x} where the terms provided in \code{terms}
+#' are put in between || to highlight them
+#' @export
+#' @examples 
+#' x <- "I like milk and sugar in my coffee."
+#' txt_highlight(x, terms = "sugar")
+#' txt_highlight(x, terms = c("milk", "my"))
+txt_highlight <- function(x, terms){
+  terms <- paste(terms, collapse = "|")
+  gsub(pattern = sprintf("(%s)", terms), replacement = "\\|\\1\\|", x = x, fixed = FALSE)
+}

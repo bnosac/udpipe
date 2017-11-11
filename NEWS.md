@@ -2,6 +2,7 @@
 
 - Added data preparation elements for standard text mining flows namely: 
     cooccurrence
+    collocation
     document_term_frequencies
     document_term_matrix
     dtm_tfidf
@@ -13,6 +14,7 @@
     txt_collapse
     txt_sample
     txt_show
+    txt_highlight
     txt_recode
     txt_previous
     txt_next
