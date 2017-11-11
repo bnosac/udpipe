@@ -218,3 +218,34 @@ txt_highlight <- function(x, terms){
   terms <- paste(terms, collapse = "|")
   gsub(pattern = sprintf("(%s)", terms), replacement = "\\|\\1\\|", x = x, fixed = FALSE)
 }
+
+
+
+
+#' @title Create a unique identifier for each combination of fields in a data frame
+#' @description Create a unique identifier for each combination of fields in a data frame. 
+#' This unique identifier is unique for each combination of the elements of the fields. 
+#' The generated identifier is like a primary key or a secondary key on a table.
+#' This is just a small wrapper around \code{\link[data.table]{frank}}
+#' @param x a data.frame
+#' @param fields a character vector of columns from \code{x}
+#' @param start_from integer number indicating to start from that number onwards
+#' @return an integer vector of the same length as the number of rows in \code{x} 
+#' containing the unique identifier
+#' @export
+#' @examples 
+#' data(brussels_reviews_anno)
+#' x <- brussels_reviews_anno
+#' x$doc_sent_id <- unique_identifier(x, fields = c("doc_id", "sentence_id"))
+#' head(x, 15)
+#' range(x$doc_sent_id)
+#' x$doc_sent_id <- unique_identifier(x, fields = c("doc_id", "sentence_id"), start_from = 10)
+#' head(x, 15)
+#' range(x$doc_sent_id)
+unique_identifier <- function(x, fields, start_from = 1L){
+  id <- data.table::frankv(x, cols = fields, ties.method = "dense")
+  if(!missing(start_from)){
+    id <- id - 1L + as.integer(start_from)
+  }
+  id
+}

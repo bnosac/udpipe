@@ -19,6 +19,7 @@
     txt_previous
     txt_next
     txt_nextgram
+    unique_identifier
 - Added predict.LDA_VEM and predict.LDA_Gibbs
 - Renamed dataset annotation_params to udpipe_annotation_params
 - Added example datasets called brussels_listings, brussels_reviews, brussels_reviews_anno
