@@ -18,7 +18,7 @@ for example a document id or a sentence id. Collocations will be computed within
 group in order not to find collocations across sentences or documents for example.}
 
 \item{ngram_max}{integer indicating the size of the collocations. Defaults to 2, indicating
-to computer bigrams. If set to 3, will find collocations of bigrams and trigrams.}
+to compute bigrams. If set to 3, will find collocations of bigrams and trigrams.}
 
 \item{n_min}{integer indicating the frequency of how many times a collocation should
 at least occur in the data in order to be returned. Defaults to 2.}
@@ -43,7 +43,7 @@ a data.frame with columns
 }
 \description{
 Collocations are a sequence of words or terms that co-occur more often than would be expected by chance.
-Common collocation are adjectives + nouns, nouns followed by nouns, verbs and nouns, advers and adjectives,
+Common collocation are adjectives + nouns, nouns followed by nouns, verbs and nouns, adverbs and adjectives,
 verbs and prepositional phrases or verbs and adverbs.\cr
 This function extracts relevant collocations and computes the following statistics on them
 which are indicators of how likely two terms are collocated compared to being independent.
