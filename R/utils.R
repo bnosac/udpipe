@@ -115,7 +115,7 @@ txt_nextgram <- function(x, n = 2, sep = " "){
   if(n == 1){
     return(x)
   }
-  nextel <- n - 1
+  nextel <- n - 1L
   out <- list()
   out[[1]] <- x
   for(i in 1:nextel){
@@ -123,7 +123,7 @@ txt_nextgram <- function(x, n = 2, sep = " "){
   }
   out$sep <- sep
   out <- do.call(paste, out)
-  out[(length(out)-(nextel-1)):length(out)] <- NA
+  out[max((length(out)-(nextel-1L)), 1L):length(out)] <- NA
   out
 }
 

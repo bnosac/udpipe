@@ -1,3 +1,7 @@
+# CHANGES IN udpipe VERSION 0.2.1
+
+- Fix issue in txt_nextgram if n was larger than the number of elements in x
+
 # CHANGES IN udpipe VERSION 0.2
 
 - Added data preparation elements for standard text mining flows namely: 
