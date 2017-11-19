@@ -5,6 +5,19 @@
 
 using namespace Rcpp;
 
+// phrases_regex_locate
+Rcpp::List phrases_regex_locate(Rcpp::StringVector x, std::string pattern, int ngram_max);
+RcppExport SEXP _udpipe_phrases_regex_locate(SEXP xSEXP, SEXP patternSEXP, SEXP ngram_maxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< std::string >::type pattern(patternSEXP);
+    Rcpp::traits::input_parameter< int >::type ngram_max(ngram_maxSEXP);
+    rcpp_result_gen = Rcpp::wrap(phrases_regex_locate(x, pattern, ngram_max));
+    return rcpp_result_gen;
+END_RCPP
+}
 // udp_load_model
 SEXP udp_load_model(const char* file_model);
 RcppExport SEXP _udpipe_udp_load_model(SEXP file_modelSEXP) {
@@ -61,6 +74,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_udpipe_phrases_regex_locate", (DL_FUNC) &_udpipe_phrases_regex_locate, 3},
     {"_udpipe_udp_load_model", (DL_FUNC) &_udpipe_udp_load_model, 1},
     {"_udpipe_udp_tokenise_tag_parse", (DL_FUNC) &_udpipe_udp_tokenise_tag_parse, 6},
     {"_udpipe_na_locf", (DL_FUNC) &_udpipe_na_locf, 1},

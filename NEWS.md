@@ -1,6 +1,8 @@
 # CHANGES IN udpipe VERSION 0.2.1
 
+- Added phrases to extract POS sequences more easily like noun phrases, verb phrases or any sequence of parts of speech tags and their corresponding words
 - Fix issue in txt_nextgram if n was larger than the number of elements in x
+
 
 # CHANGES IN udpipe VERSION 0.2
 
