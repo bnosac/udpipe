@@ -120,5 +120,5 @@ vignette("udpipe-train", package = "udpipe")
 \url{http://ufal.mff.cuni.cz/udpipe/users-manual}
 }
 \seealso{
-\code{\link{udpipe_annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}}
+\code{\link{udpipe_annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}}, \code{\link{udpipe_accuracy}}
 }
