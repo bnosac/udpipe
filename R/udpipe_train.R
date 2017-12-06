@@ -38,7 +38,7 @@
 #'  \item{errors: }{Messages from the UDPipe process indicating possible errors for example when passing the wrong arguments to the 
 #'  annotation_tokenizer, annotation_tagger or annotation_parser}
 #' }
-#' @seealso \code{\link{udpipe_annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}}, \code{\link{udpipe_accuracy}}
+#' @seealso \code{\link{udpipe_annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}}
 #' @references \url{http://ufal.mff.cuni.cz/udpipe/users-manual}
 #' @details 
 #' In order to train a model, you need to provide files which are in CONLL-U format in argument \code{files_conllu_training}. 
@@ -131,61 +131,5 @@ udpipe_train <- function(file = file.path(getwd(), "my_annotator.udpipe"),
          annotation_parser = annotation_parser,
          errors = result$errors,
     class = "udpipe_trained_model"))
-}
-
-
-
-
-#' @title Evaluate the accuracy of your UDPipe model on holdout data
-#' @description Get precision, recall and F1 measures on finding words, sentences, 
-#' parts of speech tags (upos and xpos) and the grammatical annotated features.
-#' For the accuracy of the dependency parsing, the output shows 
-#' the LAS (labeled attachment score - the percentage of predicted dependencies
-#' where the arc and the label are assigned correctly) and 
-#' UAS (unlabeled attachment score – where the arc is assigned correctly) 
-#' dependency scores on holdout data in conllu format.
-#' @param object an object of class \code{udpipe_model} as returned by \code{\link{udpipe_load_model}}
-#' @param file_conllu the full path to a file on disk containing holdout data in conllu format
-#' @param tokenizer a character string of length 1, which is either 'default' or 'none'
-#' @param tagger a character string of length 1, which is either 'default' or 'none'
-#' @param parser a character string of length 1, which is either 'default' or 'none'
-#' @return a list with 3 elements
-#' \itemize{
-#'  \item{accuracy: }{A character vector with accuracy metrics.}
-#'  \item{error: }{A character string with possible errors when calculating the accuracy metrics}
-#' }
-#' @seealso \code{\link{udpipe_load_model}}
-#' @references \url{https://ufal.mff.cuni.cz/udpipe}, 
-#' \url{http://universaldependencies.org/format.html}
-#' @export
-#' @examples 
-#' x <- udpipe_download_model(language = "dutch-lassysmall")
-#' ud_dutch <- udpipe_load_model(x$file_model)
-#' 
-#' file_conllu <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
-#' metrics <- udpipe_accuracy(ud_dutch, file_conllu, 
-#'                            tokenizer = "default", tagger = "none", parser = "none")
-#' metrics$accuracy
-#' 
-#' ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
-#' file.remove("dutch-lassysmall-ud-2.0-170801.udpipe")
-udpipe_accuracy <- function(object, 
-                            file_conllu, 
-                            tokenizer = c("default", "none"), 
-                            tagger = c("default", "none"), 
-                            parser = c("default", "none")) {
-  if(!inherits(object, "udpipe_model")){
-    stop("object should be of class udpipe_model as returned by the function ?udpipe_load_model")
-  }
-  stopifnot(file.exists(file_conllu))
-  tokenizer <- match.arg(tokenizer)
-  tagger <- match.arg(tagger)
-  parser <- match.arg(parser)
-  
-  f <- tempfile()
-  out <- udp_evaluate(object$model, file_conllu, f, tokenizer, tagger, parser)
-  out$accuracy <- readLines(f)
-  class(out) <- "udpipe_accuracy"
-  out
 }
 

@@ -1,10 +1,10 @@
 # CHANGES IN udpipe VERSION 0.2.1
 
 - Added phrases to extract POS sequences more easily like noun phrases, verb phrases or any sequence of parts of speech tags and their corresponding words
-- Add udpipe_accuracy
 - Fix issue in txt_nextgram if n was larger than the number of elements in x
 - Fix heap-use-after-free address sanitiser issue
 - Fix runtime error: null pointer passed as argument 1, which is declared to never be null (e.g. udpipe.cpp: 3338)
+- Another stab at the Solaris compilation issue
 
 
 # CHANGES IN udpipe VERSION 0.2

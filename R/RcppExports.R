@@ -13,10 +13,6 @@ udp_tokenise_tag_parse <- function(udmodel, x, docid, annotation_tokenizer, anno
     .Call('_udpipe_udp_tokenise_tag_parse', PACKAGE = 'udpipe', udmodel, x, docid, annotation_tokenizer, annotation_tagger, annotation_parser)
 }
 
-udp_evaluate <- function(udmodel, conllu_test_file, output_file, annotation_tokenizer, annotation_tagger, annotation_parser) {
-    .Call('_udpipe_udp_evaluate', PACKAGE = 'udpipe', udmodel, conllu_test_file, output_file, annotation_tokenizer, annotation_tagger, annotation_parser)
-}
-
 na_locf <- function(x) {
     .Call('_udpipe_na_locf', PACKAGE = 'udpipe', x)
 }
