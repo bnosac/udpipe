@@ -26,8 +26,13 @@ a list with 3 elements
 }
 }
 \description{
-Get precision, recall and F1 measures on finding words / sentences / upos / xpos / features
-annotation as well as UAS and LAS dependency scores on holdout data in conllu format.
+Get precision, recall and F1 measures on finding words, sentences, 
+parts of speech tags (upos and xpos) and the grammatical annotated features.
+For the accuracy of the dependency parsing, the output shows 
+the LAS (labeled attachment score - the percentage of predicted dependencies
+where the arc and the label are assigned correctly) and 
+UAS (unlabeled attachment score – where the arc is assigned correctly) 
+dependency scores on holdout data in conllu format.
 }
 \examples{
 x <- udpipe_download_model(language = "dutch-lassysmall")

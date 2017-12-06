@@ -137,8 +137,13 @@ udpipe_train <- function(file = file.path(getwd(), "my_annotator.udpipe"),
 
 
 #' @title Evaluate the accuracy of your UDPipe model on holdout data
-#' @description Get precision, recall and F1 measures on finding words / sentences / upos / xpos / features
-#' annotation as well as UAS and LAS dependency scores on holdout data in conllu format.
+#' @description Get precision, recall and F1 measures on finding words, sentences, 
+#' parts of speech tags (upos and xpos) and the grammatical annotated features.
+#' For the accuracy of the dependency parsing, the output shows 
+#' the LAS (labeled attachment score - the percentage of predicted dependencies
+#' where the arc and the label are assigned correctly) and 
+#' UAS (unlabeled attachment score – where the arc is assigned correctly) 
+#' dependency scores on holdout data in conllu format.
 #' @param object an object of class \code{udpipe_model} as returned by \code{\link{udpipe_load_model}}
 #' @param file_conllu the full path to a file on disk containing holdout data in conllu format
 #' @param tokenizer a character string of length 1, which is either 'default' or 'none'
