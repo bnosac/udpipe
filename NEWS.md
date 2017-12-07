@@ -1,3 +1,7 @@
+# CHANGES IN udpipe VERSION 0.3
+
+- Add udpipe_accuracy 
+ 
 # CHANGES IN udpipe VERSION 0.2.2
 
 - Another stab at fixing the Solaris compilation issue in  ufal::udpipe::multiword_splitter::append_token

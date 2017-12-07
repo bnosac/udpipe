@@ -157,3 +157,47 @@ Rcpp::List udp_train(const char* file_model,
                              Rcpp::Named("errors") = error);
   return output;
 }
+
+
+// [[Rcpp::export]]
+Rcpp::List udp_evaluate(SEXP udmodel, 
+                        Rcpp::CharacterVector conllu_test_file, 
+                        Rcpp::CharacterVector output_file, 
+                        std::string annotation_tokenizer,
+                        std::string annotation_tagger,
+                        std::string annotation_parser) {
+  Rcpp::XPtr<ufal::udpipe::model> languagemodel(udmodel);
+  
+  // Handle default and none input to tokenizer, tagger, parser
+  std::string pipeline_tokenizer = annotation_tokenizer;
+  std::string pipeline_tagger = annotation_tagger;
+  std::string pipeline_parser = annotation_parser;
+  if (pipeline_tagger.compare("none") == 0){
+    pipeline_tagger = ufal::udpipe::pipeline::NONE;
+  }else if (pipeline_tagger.compare("default") == 0){
+    pipeline_tagger = ufal::udpipe::pipeline::DEFAULT;
+  }
+  if (pipeline_parser.compare("none") == 0){
+    pipeline_parser = ufal::udpipe::pipeline::NONE;
+  }else if (pipeline_parser.compare("default") == 0){
+    pipeline_parser = ufal::udpipe::pipeline::DEFAULT;
+  }
+  
+  // Set up evaluator
+  ufal::udpipe::evaluator modelevaluator = ufal::udpipe::evaluator(languagemodel, pipeline_tokenizer, pipeline_tagger, pipeline_parser);
+  
+  // Input CONLLU filestream and output file containing the evaluation
+  std::string path;
+  path = conllu_test_file[0];
+  std::ifstream infile(path.c_str());
+  path = output_file[0];
+  std::ofstream outfile(path.c_str());
+  
+  // Evaluate the model
+  std::string error;
+  modelevaluator.evaluate(infile, outfile, error);
+  
+  // Return the file and the error
+  Rcpp::List output = Rcpp::List::create(Rcpp::Named("error") = error);
+  return output;
+}

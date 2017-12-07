@@ -21,3 +21,7 @@ udp_train <- function(file_model, conllu_input_files, conllu_heldout_files, anno
     .Call('_udpipe_udp_train', PACKAGE = 'udpipe', file_model, conllu_input_files, conllu_heldout_files, annotation_tokenizer, annotation_tagger, annotation_parser)
 }
 
+udp_evaluate <- function(udmodel, conllu_test_file, output_file, annotation_tokenizer, annotation_tagger, annotation_parser) {
+    .Call('_udpipe_udp_evaluate', PACKAGE = 'udpipe', udmodel, conllu_test_file, output_file, annotation_tokenizer, annotation_tagger, annotation_parser)
+}
+
