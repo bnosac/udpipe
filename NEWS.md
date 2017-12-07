@@ -1,3 +1,7 @@
+# CHANGES IN udpipe VERSION 0.2.2
+
+- Another stab at fixing the Solaris compilation issue in  ufal::udpipe::multiword_splitter::append_token
+
 # CHANGES IN udpipe VERSION 0.2.1
 
 - Added phrases to extract POS sequences more easily like noun phrases, verb phrases or any sequence of parts of speech tags and their corresponding words
