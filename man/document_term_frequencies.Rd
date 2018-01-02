@@ -70,4 +70,16 @@ x <- document_term_frequencies(x = brussels_reviews$feedback, document = brussel
                                split = " ")
 x <- document_term_frequencies(x = brussels_reviews$feedback, document = brussels_reviews$id, 
                                split = "[[:space:][:punct:][:digit:]]+")
+                               
+##
+## document-term-frequencies on several fields to easily include bigram and trigrams
+##
+library(data.table)
+x <- as.data.table(brussels_reviews_anno)
+x <- x[, token_bigram := txt_nextgram(token, n = 2), by = list(doc_id, sentence_id)]
+x <- x[, token_trigram := txt_nextgram(token, n = 3), by = list(doc_id, sentence_id)]
+x <- document_term_frequencies(x = x, 
+                               document = "doc_id", 
+                               term = c("token", "token_bigram", "token_trigram"))
+head(x)
 }
