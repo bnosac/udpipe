@@ -36,6 +36,18 @@
 #'                                split = " ")
 #' x <- document_term_frequencies(x = brussels_reviews$feedback, document = brussels_reviews$id, 
 #'                                split = "[[:space:][:punct:][:digit:]]+")
+#'                                
+#' ##
+#' ## document-term-frequencies on several fields to easily include bigram and trigrams
+#' ##
+#' library(data.table)
+#' x <- as.data.table(brussels_reviews_anno)
+#' x <- x[, token_bigram := txt_nextgram(token, n = 2), by = list(doc_id, sentence_id)]
+#' x <- x[, token_trigram := txt_nextgram(token, n = 3), by = list(doc_id, sentence_id)]
+#' x <- document_term_frequencies(x = x, 
+#'                                document = "doc_id", 
+#'                                term = c("token", "token_bigram", "token_trigram"))
+#' head(x)
 document_term_frequencies <- function(x, document, ...){
   UseMethod("document_term_frequencies")
 }
@@ -43,9 +55,19 @@ document_term_frequencies <- function(x, document, ...){
 #' @describeIn document_term_frequencies Create a data.frame with one row per document/term combination indicating the frequency of the term in the document
 #' @export
 document_term_frequencies.data.frame <- function(x, document = colnames(x)[1], term = colnames(x)[2], ...){
+  result <- list()
+  for(field in term){
+    result[[field]] <- dtf(x, document, term = field, ...)
+  }
+  result <- data.table::rbindlist(result)
+  result <- dtf(result)
+  result
+}
+
+dtf <- function(x, document = colnames(x)[1], term = colnames(x)[2], ...){
   # r cmd check happiness
   freq <- .N <- NULL
-
+  
   x <- setDT(x)
   if("freq" %in% colnames(x)){
     result <- x[, list(freq = as.integer(sum(freq))), by = c(document, term)]  
@@ -61,6 +83,7 @@ document_term_frequencies.data.frame <- function(x, document = colnames(x)[1], t
   result<- result[!is.na(term), ]
   result
 }
+
 
 #' @describeIn document_term_frequencies Create a data.frame with one row per document/term combination indicating the frequency of the term in the document
 #' @param split The regular expression to be used if \code{x} is a character vector. 
@@ -108,6 +131,18 @@ document_term_frequencies.character <- function(x, document=paste("doc", seq_alo
 #' ## allowing you to making sure terms which are not in the data are provided in the resulting dtm
 #' allterms <- unique(x$term)
 #' dtm <- document_term_matrix(head(x, 1000), vocabulary = allterms)
+#' 
+#' ##
+#' ## Example adding bigrams/trigrams to the document term matrix
+#' ##
+#' library(data.table)
+#' x <- as.data.table(brussels_reviews_anno)
+#' x <- x[, token_bigram := txt_nextgram(token, n = 2), by = list(doc_id, sentence_id)]
+#' x <- x[, token_trigram := txt_nextgram(token, n = 3), by = list(doc_id, sentence_id)]
+#' x <- document_term_frequencies(x = x, 
+#'                                document = "doc_id", 
+#'                                term = c("token", "token_bigram", "token_trigram"))
+#' dtm <- document_term_matrix(x)
 document_term_matrix <- function(x, vocabulary, ...){
   UseMethod("document_term_matrix")
 }
@@ -165,7 +200,6 @@ document_term_matrix.simple_triplet_matrix <- function(x, ...){
                               dimnames = x$dimnames)
   dtm
 }
-
 
 
 

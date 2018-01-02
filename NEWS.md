@@ -1,6 +1,7 @@
 # CHANGES IN udpipe VERSION 0.3
 
 - Add udpipe_accuracy 
+- Allow to provide several fields in document_term_frequencies to easily allow to include bigrams/trigrams/... for topic modelling purposes e.g. alongside the textrank package or alongside collocation
  
 # CHANGES IN udpipe VERSION 0.2.2
 
