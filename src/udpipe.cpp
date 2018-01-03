@@ -66,7 +66,6 @@ static_assert(__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__, "Only little endian sys
 //#define runtime_failure(message) Rcpp::Rcout << message << endl;
 #define runtime_failure(message) Rcpp::stop(message);
 
-
 } // namespace utils
 
 /////////
@@ -1284,7 +1283,7 @@ class morpho {
   static morpho* load(istream& is);
   static morpho* load(const char* fname);
 
-  enum guesser_mode { NO_GUESSER = 0, GUESSER = 1 };
+  enum guesser_mode { NO_GUESSER = 0, GUESSER = 1, GUESSER_UNSPECIFIED = -1 };
 
   // Perform morphologic analysis of a form. The form is given by a pointer and
   // length and therefore does not need to be '\0' terminated.  The guesser
@@ -1368,7 +1367,7 @@ class tagger {
   virtual const morpho* get_morpho() const = 0;
 
   // Perform morphologic analysis and subsequent disambiguation.
-  virtual void tag(const vector<string_piece>& forms, vector<tagged_lemma>& tags, morpho::guesser_mode guesser = morpho::guesser_mode(-1)) const = 0;
+  virtual void tag(const vector<string_piece>& forms, vector<tagged_lemma>& tags, morpho::guesser_mode guesser = morpho::GUESSER_UNSPECIFIED) const = 0;
 
   // Perform disambiguation only on given analyses.
   virtual void tag_analyzed(const vector<string_piece>& forms, const vector<vector<tagged_lemma>>& analyses, vector<int>& tags) const = 0;
@@ -1542,14 +1541,16 @@ unsigned binary_decoder::next_1B() throw (binary_decoder_error) {
 
 unsigned binary_decoder::next_2B() throw (binary_decoder_error) {
   if (data + sizeof(uint16_t) > data_end) throw binary_decoder_error("No more data in binary_decoder");
-  unsigned result = *(uint16_t*)data;
+  uint16_t result;
+  memcpy(&result, data, sizeof(uint16_t));
   data += sizeof(uint16_t);
   return result;
 }
 
 unsigned binary_decoder::next_4B() throw (binary_decoder_error) {
   if (data + sizeof(uint32_t) > data_end) throw binary_decoder_error("No more data in binary_decoder");
-  unsigned result = *(uint32_t*)data;
+  uint32_t result;
+  memcpy(&result, data, sizeof(uint32_t));
   data += sizeof(uint32_t);
   return result;
 }
@@ -3232,13 +3233,15 @@ unsigned pointer_decoder::next_1B() {
 }
 
 unsigned pointer_decoder::next_2B() {
-  unsigned result = *(uint16_t*)data;
+  uint16_t result;
+  memcpy(&result, data, sizeof(uint16_t));
   data += sizeof(uint16_t);
   return result;
 }
 
 unsigned pointer_decoder::next_4B() {
-  unsigned result = *(uint32_t*)data;
+  uint32_t result;
+  memcpy(&result, data, sizeof(uint32_t));
   data += sizeof(uint32_t);
   return result;
 }
@@ -3253,6 +3256,103 @@ template <class T> const T* pointer_decoder::next(unsigned elements) {
   const T* result = (const T*) data;
   data += sizeof(T) * elements;
   return result;
+}
+
+} // namespace utils
+
+/////////
+// File: utils/unaligned_access.h
+/////////
+
+// This file is part of UFAL C++ Utils <http://github.com/ufal/cpp_utils/>.
+//
+// Copyright 2017 Institute of Formal and Applied Linguistics, Faculty of
+// Mathematics and Physics, Charles University in Prague, Czech Republic.
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+namespace utils {
+
+//
+// Declarations
+//
+
+template<class T, class P>
+inline T unaligned_load(const P* ptr);
+
+template<class T, class P>
+inline T unaligned_load_inc(const P*& ptr);
+
+template<class T, class P>
+inline void unaligned_store(P* ptr, T value);
+
+template<class T, class P>
+inline void unaligned_store_inc(P*& ptr, T value);
+
+template<class T>
+T* unaligned_lower_bound(T* first, size_t size, T val);
+
+template<class T>
+T* unaligned_upper_bound(T* first, size_t size, T val);
+
+//
+// Definitions
+//
+
+template<class T, class P>
+inline T unaligned_load(const P* ptr) {
+  T value;
+  memcpy(&value, ptr, sizeof(T));
+  return value;
+}
+
+template<class T, class P>
+inline T unaligned_load_inc(const P*& ptr) {
+  T value;
+  memcpy(&value, ptr, sizeof(T));
+  ((const char*&)ptr) += sizeof(T);
+  return value;
+}
+
+template<class T, class P>
+inline void unaligned_store(P* ptr, T value) {
+  memcpy(ptr, &value, sizeof(T));
+}
+
+template<class T, class P>
+inline void unaligned_store_inc(P*& ptr, T value) {
+  memcpy(ptr, &value, sizeof(T));
+  ((char*&)ptr) += sizeof(T);
+}
+
+template<class T>
+T* unaligned_lower_bound(T* first, size_t size, T val) {
+  while (size) {
+    size_t step = size >> 1;
+    if (unaligned_load<T>(first + step) < val) {
+      first += step + 1;
+      size -= step + 1;
+    } else {
+      size = step;
+    }
+  }
+  return first;
+}
+
+template<class T>
+T* unaligned_upper_bound(T* first, size_t size, T val) {
+  while (size) {
+    size_t step = size >> 1;
+    if (!(val < unaligned_load<T>(first + step))) {
+      first += step + 1;
+      size -= step + 1;
+    } else {
+      size = step;
+    }
+  }
+  return first;
 }
 
 } // namespace utils
@@ -3340,8 +3440,8 @@ struct persistent_unordered_map::fnv_hash {
 
   inline uint32_t index(const char* data, int len) const {
     if (len <= 0) return 0;
-    if (len == 1) return *(const uint8_t*)data;
-    if (len == 2) return *(const uint16_t*)data;
+    if (len == 1) return unaligned_load<uint8_t>(data);
+    if (len == 2) return unaligned_load<uint16_t>(data);
 
     uint32_t hash = 2166136261U;
     while (len--)
@@ -3652,9 +3752,9 @@ bool derivator_dictionary::load(istream& is) {
           unsigned char* lemma_data = derinet.fill(lemma.data(), lemma.size(), 1 + lemma_comment_len + 4 + 2 + 4 * children);
           *lemma_data++ = lemma_comment_len;
           while (lemma_comment_len--) *lemma_data++ = *lemma_comment++;
-          *(uint32_t*)(lemma_data) = 0; lemma_data += sizeof(uint32_t);
-          *(uint16_t*)(lemma_data) = children; lemma_data += sizeof(uint16_t);
-          if (children) ((uint32_t*)lemma_data)[children - 1] = 0;
+          unaligned_store_inc<uint32_t>(lemma_data, 0);
+          unaligned_store_inc<uint16_t>(lemma_data, children);
+          if (children) unaligned_store<uint32_t>(((uint32_t*)lemma_data) + children - 1, 0);
         } else if (pass == 3 && !parent.empty()) {
           auto lemma_data = derinet.at(lemma.data(), lemma.size(), [](pointer_decoder& data) {
             data.next<char>(data.next_1B());
@@ -3670,15 +3770,16 @@ bool derivator_dictionary::load(istream& is) {
 
           unsigned parent_offset = parent_data - parent.size() - derinet.data_start(parent.size());
           assert(parent.size() < (1<<8) && parent_offset < (1<<24));
-          *(uint32_t*)(lemma_data + 1 + *lemma_data) = (parent_offset << 8) | parent.size();
+          unaligned_store<uint32_t>((void *)(lemma_data + 1 + *lemma_data), (parent_offset << 8) | parent.size());
 
           unsigned lemma_offset = lemma_data - lemma.size() - derinet.data_start(lemma.size());
           assert(lemma.size() < (1<<8) && lemma_offset < (1<<24));
-          auto children_len = *(uint16_t*)(parent_data + 1 + *parent_data + 4);
+          auto children_len = unaligned_load<uint16_t>(parent_data + 1 + *parent_data + 4);
           auto children = (uint32_t*)(parent_data + 1 + *parent_data + 4 + 2);
-          auto child_index = children[children_len-1];
-          children[child_index] = (lemma_offset << 8) | lemma.size();
-          if (child_index+1 < children_len) children[children_len-1]++;
+          auto child_index = unaligned_load<uint32_t>(children + children_len - 1);
+          unaligned_store<uint32_t>(children + child_index, (lemma_offset << 8) | lemma.size());
+          if (child_index+1 < children_len)
+            unaligned_store<uint32_t>(children + children_len - 1, unaligned_load<uint32_t>(children + children_len - 1) + 1);
         }
       }
 
@@ -3895,12 +3996,12 @@ class tag_filter {
 
  private:
   struct char_filter {
-    char_filter(int pos, bool negate, const char* chars, int len) : pos(pos), negate(negate), chars(chars), len(len) {}
+    char_filter(int pos, bool negate, int chars_offset, int chars_len)
+        : pos(pos), negate(negate), chars_offset(chars_offset), chars_len(chars_len) {}
 
     int pos;
     bool negate;
-    const char* chars;
-    int len;
+    int chars_offset, chars_len;
   };
 
   string wildcard;
@@ -3917,10 +4018,10 @@ inline bool tag_filter::matches(const char* tag) const {
       if (!tag[tag_pos++])
         return true;
 
-    // We assume filter.len >= 1.
-    bool matched = (*filter.chars == tag[tag_pos]) ^ filter.negate;
-    for (int i = 1; i < filter.len && !matched; i++)
-      matched = (filter.chars[i] == tag[tag_pos]) ^ filter.negate;
+    // We assume filter.chars_len >= 1.
+    bool matched = (wildcard[filter.chars_offset] == tag[tag_pos]) ^ filter.negate;
+    for (int i = 1; i < filter.chars_len && ((!matched) ^ filter.negate); i++)
+      matched = (wildcard[filter.chars_offset + i] == tag[tag_pos]) ^ filter.negate;
     if (!matched) return false;
   }
   return true;
@@ -4020,14 +4121,14 @@ void morpho_dictionary<LemmaAddinfo>::load(binary_decoder& data) {
           unsigned char* root_data = roots.fill(root.data(), root_len, sizeof(uint16_t) + sizeof(uint32_t) + sizeof(uint8_t));
           unsigned root_offset = root_data - root_len - roots.data_start(root_len);
 
-          *(uint16_t*)(root_data) = clas; root_data += sizeof(uint16_t);
-          *(uint32_t*)(root_data) = lemma_offset; root_data += sizeof(uint32_t);
-          *(uint8_t*)(root_data) = lemma_len; root_data += sizeof(uint8_t);
+          unaligned_store_inc<uint16_t>(root_data, clas);
+          unaligned_store_inc<uint32_t>(root_data, lemma_offset);
+          unaligned_store_inc<uint8_t>(root_data, lemma_len);
           assert(uint8_t(lemma_len) == lemma_len);
 
-          *(uint32_t*)(lemma_data) = root_offset; lemma_data += sizeof(uint32_t);
-          *(uint8_t*)(lemma_data) = root_len; lemma_data += sizeof(uint8_t);
-          *(uint16_t*)(lemma_data) = clas; lemma_data += sizeof(uint16_t);
+          unaligned_store_inc<uint32_t>(lemma_data, root_offset);
+          unaligned_store_inc<uint8_t>(lemma_data, root_len);
+          unaligned_store_inc<uint16_t>(lemma_data, clas);
           assert(uint8_t(root_len) == root_len);
         }
       }
@@ -4057,20 +4158,22 @@ void morpho_dictionary<LemmaAddinfo>::load(binary_decoder& data) {
   suffixes.iter_all([this](const char* suffix, int len, pointer_decoder& data) mutable {
     unsigned classes_len = data.next_2B();
     const uint16_t* classes_ptr = data.next<uint16_t>(classes_len);
-    // Following volatile is needed to overcome vectorizer bug in g++ 6.3.0 (among other versions).
-    volatile const uint16_t* indices_ptr = data.next<uint16_t>(classes_len + 1);
-    uint32_t tags_len = indices_ptr[0];
+    const uint16_t* indices_ptr = data.next<uint16_t>(classes_len + 1);
+    uint32_t tags_len = unaligned_load<uint16_t>(indices_ptr);
     for (unsigned i = 0; i < classes_len; i++)
-      tags_len += uint16_t(indices_ptr[i + 1] - indices_ptr[i]);
+      tags_len += uint16_t(unaligned_load<uint16_t>(indices_ptr + i + 1) - unaligned_load<uint16_t>(indices_ptr + i));
     const uint16_t* tags_ptr = data.next<uint16_t>(tags_len);
 
     string suffix_str(suffix, len);
-    uint32_t index = indices_ptr[0], prev_index = 0;
+    uint32_t index = unaligned_load<uint16_t>(indices_ptr), prev_index = 0;
     for (unsigned i = 0; i < classes_len; i++) {
-      if (classes_ptr[i] >= classes.size()) classes.resize(classes_ptr[i] + 1);
+      auto classes_ptr_i = unaligned_load<uint16_t>(classes_ptr + i);
+      if (classes_ptr_i >= classes.size()) classes.resize(classes_ptr_i + 1);
       prev_index = index;
-      index += uint16_t(indices_ptr[i + 1] - indices_ptr[i]);
-      classes[classes_ptr[i]].emplace_back(suffix_str, vector<uint16_t>(tags_ptr + prev_index, tags_ptr + index));
+      index += uint16_t(unaligned_load<uint16_t>(indices_ptr + i + 1) - unaligned_load<uint16_t>(indices_ptr + i));
+      classes[classes_ptr_i].emplace_back(suffix_str, vector<uint16_t>());
+      for (const uint16_t* ptr = tags_ptr + prev_index; ptr < tags_ptr + index; ptr++)
+        classes[classes_ptr_i].back().second.emplace_back(unaligned_load<uint16_t>(ptr));
     }
   });
 }
@@ -4091,26 +4194,27 @@ void morpho_dictionary<LemmaAddinfo>::analyze(string_piece form, vector<tagged_l
   }
 
   for (int root_len = int(form.len) - --suff_len; suff_len >= 0 && root_len < int(roots.max_length()); suff_len--, root_len++)
-    if (*suff[suff_len]) {
-      unsigned suff_classes = *suff[suff_len];
+    if (unaligned_load<uint16_t>(suff[suff_len])) {
+      unsigned suff_classes = unaligned_load<uint16_t>(suff[suff_len]);
       uint16_t* suff_data = suff[suff_len] + 1;
 
       roots.iter(form.str, root_len, [&](const char* root, pointer_decoder& root_data) {
-        unsigned root_class = root_data.next_2B();
+        uint16_t root_class = root_data.next_2B();
         unsigned lemma_offset = root_data.next_4B();
         unsigned lemma_len = root_data.next_1B();
 
         if (small_memeq(form.str, root, root_len)) {
-          uint16_t* suffix_class_ptr = lower_bound(suff_data, suff_data + suff_classes, root_class);
-          if (suffix_class_ptr < suff_data + suff_classes && *suffix_class_ptr == root_class) {
+          uint16_t* suffix_class_ptr = unaligned_lower_bound(suff_data, suff_classes, root_class);
+          if (suffix_class_ptr < suff_data + suff_classes && unaligned_load<uint16_t>(suffix_class_ptr) == root_class) {
             const unsigned char* lemma_data = this->lemmas.data_start(lemma_len) + lemma_offset;
             string lemma((const char*)lemma_data, lemma_len);
             if (lemma_data[lemma_len]) lemma += LemmaAddinfo::format(lemma_data + lemma_len + 1, lemma_data[lemma_len]);
 
             uint16_t* suff_tag_indices = suff_data + suff_classes;
             uint16_t* suff_tags = suff_tag_indices + suff_classes + 1;
-            for (unsigned i = suff_tag_indices[suffix_class_ptr - suff_data]; i < suff_tag_indices[suffix_class_ptr - suff_data + 1]; i++)
-              lemmas.emplace_back(lemma, tags[suff_tags[i]]);
+            for (unsigned i = unaligned_load<uint16_t>(suff_tag_indices + (suffix_class_ptr - suff_data));
+                 i < unaligned_load<uint16_t>(suff_tag_indices + (suffix_class_ptr - suff_data) + 1); i++)
+              lemmas.emplace_back(lemma, tags[unaligned_load<uint16_t>(suff_tags + i)]);
           }
         }
       });
@@ -4229,7 +4333,7 @@ void morpho_prefix_guesser<MorphoDictionary>::analyze(string_piece form, vector<
     if (initial) {
       auto found = prefixes_initial.at_typed<uint32_t>(form.str, initial);
       if (!found) break;
-      initial_mask = *found;
+      initial_mask = unaligned_load<uint32_t>(found);
     }
 
     // If we have found an initial prefix (including the empty one), match middle prefixes.
@@ -4242,9 +4346,9 @@ void morpho_prefix_guesser<MorphoDictionary>::analyze(string_piece form, vector<
         for (unsigned i = middle + 1; i < form.len; i++) {
           auto found = prefixes_middle.at_typed<uint32_t>(form.str + middle, i - middle);
           if (!found) break;
-          if (*found) {
+          if (unaligned_load<uint32_t>(found)) {
             if (i + 1 > middle_masks.size()) middle_masks.resize(i + 1);
-            middle_masks[i] |= middle_masks[middle] & *found;
+            middle_masks[i] |= middle_masks[middle] & unaligned_load<uint32_t>(found);
           }
         }
 
@@ -8616,7 +8720,7 @@ void morpho_statistical_guesser::analyze(string_piece form, vector<tagged_lemma>
           if (pref_del_len + suff_del_len < form.len) lemma.append(form.str + pref_del_len, form.len - pref_del_len - suff_del_len);
           if (suff_add_len) lemma.append(suff_add, suff_add_len);
           while (tags_len--)
-            lemmas.emplace_back(lemma, this->tags[*tags++]);
+            lemmas.emplace_back(lemma, this->tags[unaligned_load_inc<uint16_t>(tags)]);
         }
       }
       break;
@@ -9087,21 +9191,22 @@ tag_filter::tag_filter(const char* filter) {
   wildcard.assign(filter);
   filter = wildcard.c_str();
 
-  for (int tag_pos = 0; *filter; tag_pos++, filter++) {
-    if (*filter == '?') continue;
-    if (*filter == '[') {
-      filter++;
+  for (int tag_pos = 0, filter_pos = 0; filter[filter_pos]; tag_pos++, filter_pos++) {
+    if (filter[filter_pos] == '?') continue;
+    if (filter[filter_pos] == '[') {
+      filter_pos++;
 
       bool negate = false;
-      if (*filter == '^') negate = true, filter++;
+      if (filter[filter_pos] == '^') negate = true, filter_pos++;
 
-      const char* chars = filter;
-      for (bool first = true; *filter && (first || *filter != ']'); first = false) filter++;
+      int chars_start = filter_pos;
+      for (bool first = true; filter[filter_pos] && (first || filter[filter_pos] != ']'); first = false)
+        filter_pos++;
 
-      filters.emplace_back(tag_pos, negate, chars, filter - chars);
-      if (!*filter) break;
+      filters.emplace_back(tag_pos, negate, chars_start, filter_pos - chars_start);
+      if (!filter[filter_pos]) break;
     } else {
-      filters.emplace_back(tag_pos, false, filter, 1);
+      filters.emplace_back(tag_pos, false, filter_pos, 1);
     }
   }
 }
@@ -9154,7 +9259,7 @@ class persistent_elementary_feature_map : public persistent_unordered_map {
 
   elementary_feature_value value(const char* feature, int len) const {
     auto* it = at_typed<elementary_feature_value>(feature, len);
-    return it ? *it : elementary_feature_unknown;
+    return it ? unaligned_load<elementary_feature_value>(it) : elementary_feature_unknown;
   }
 };
 
@@ -9289,7 +9394,7 @@ class persistent_feature_sequence_map : public persistent_unordered_map {
 
   feature_sequence_score score(const char* feature, int len) const {
     auto* it = at_typed<feature_sequence_score>(feature, len);
-    return it ? *it : 0;
+    return it ? unaligned_load<feature_sequence_score>(it) : 0;
   }
 };
 
@@ -12598,7 +12703,7 @@ void gru_tokenizer_network_implementation<D>::cache_embeddings() {
     auto& e = embedding.second.e;
     auto& cache = embedding.second.cache;
 
-    fill_n(cache.w[0], 6*D, 0.f);
+    for (int i = 0; i < 6; i++) fill_n(cache.w[i], D, 0.f);
     for (int i = 0; i < D; i++) for (int j = 0; j < D; j++) cache.w[0][i] += e.w[0][j] * gru_fwd.X.w[i][j];
     for (int i = 0; i < D; i++) for (int j = 0; j < D; j++) cache.w[1][i] += e.w[0][j] * gru_fwd.X_r.w[i][j];
     for (int i = 0; i < D; i++) for (int j = 0; j < D; j++) cache.w[2][i] += e.w[0][j] * gru_fwd.X_z.w[i][j];
@@ -12606,7 +12711,7 @@ void gru_tokenizer_network_implementation<D>::cache_embeddings() {
     for (int i = 0; i < D; i++) for (int j = 0; j < D; j++) cache.w[4][i] += e.w[0][j] * gru_bwd.X_r.w[i][j];
     for (int i = 0; i < D; i++) for (int j = 0; j < D; j++) cache.w[5][i] += e.w[0][j] * gru_bwd.X_z.w[i][j];
   }
-  fill_n(empty_embedding.cache.w[0], 6*D, 0.f);
+  for (int i = 0; i < 6; i++) fill_n(empty_embedding.cache.w[i], D, 0.f);
 }
 
 } // namespace morphodita
@@ -19776,16 +19881,16 @@ void multiword_splitter::append_token(string_piece token, string_piece misc, sen
   //enum casing_t { UC_FIRST, UC_ALL, OTHER };
   //casing_t casing = OTHER;
   //enum { UC_FIRST, UC_ALL, OTHER } casing = OTHER;
-
+  
   if (unicode::category(utf8::first(token.str, token.len)) & unicode::Lut) {
     casing = uc_all;
     for (auto&& chr : utf8::decoder(token.str, token.len))
       if (unicode::category(chr) & (unicode::L & ~unicode::Lut)) { casing = uc_first; break; }
   }
-
+  
   // Fill the multiword token
   s.multiword_tokens.emplace_back(s.words.back().id, s.words.back().id + it->second.words.size() - 1, token, misc);
-
+  
   s.words.back().form.clear();
   if (prefix_len) {
     // Note that prefix_len is measured in byte length of lowercased characters
@@ -19796,7 +19901,7 @@ void multiword_splitter::append_token(string_piece token, string_piece misc, sen
   }
   for (auto&& chr : utf8::decoder(it->second.words[0]))
     utf8::append(s.words.back().form, casing == uc_all || (casing == uc_first && s.words.back().form.empty()) ? unicode::uppercase(chr) : chr);
-
+  
   for (size_t i = 1; i < it->second.words.size(); i++)
     if (casing != uc_all) {
       s.add_word(it->second.words[i]);
@@ -20558,7 +20663,7 @@ double tagger_trainer<TaggerTrainer>::load_data(istream& is, const morpho& d, bo
     }
   }
   if (!sentences.empty() && sentences.back().words.empty()) sentences.pop_back();
-  
+
   // Fill the forms string_pieces now that the sentences will not reallocate
   for (auto&& sentence : sentences)
     for (auto&& word : sentence.words)
@@ -23851,12 +23956,12 @@ Conditions:
   Mf_GetPointerToCurrentPos_Func's result must be used only before any other function
 */
 
-typedef void (*Mf_Init_Func)(void *object);
-typedef uint8_t (*Mf_GetIndexByte_Func)(void *object, int32_t index);
-typedef uint32_t (*Mf_GetNumAvailableBytes_Func)(void *object);
-typedef const uint8_t * (*Mf_GetPointerToCurrentPos_Func)(void *object);
-typedef uint32_t (*Mf_GetMatches_Func)(void *object, uint32_t *distances);
-typedef void (*Mf_Skip_Func)(void *object, uint32_t);
+typedef void (*Mf_Init_Func)(CMatchFinder *object);
+typedef uint8_t (*Mf_GetIndexByte_Func)(CMatchFinder *object, int32_t index);
+typedef uint32_t (*Mf_GetNumAvailableBytes_Func)(CMatchFinder *object);
+typedef uint8_t * (*Mf_GetPointerToCurrentPos_Func)(CMatchFinder *object);
+typedef uint32_t (*Mf_GetMatches_Func)(CMatchFinder *object, uint32_t *distances);
+typedef void (*Mf_Skip_Func)(CMatchFinder *object, uint32_t);
 
 struct IMatchFinder
 {
@@ -24928,7 +25033,7 @@ struct CSaveState
 struct CLzmaEnc
 {
   IMatchFinder matchFinder;
-  void *matchFinderObj;
+  CMatchFinder *matchFinderObj;
 
   CMatchFinder matchFinderBase;
 
