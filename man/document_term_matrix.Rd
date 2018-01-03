@@ -67,6 +67,7 @@ dtm <- document_term_matrix(head(x, 1000), vocabulary = allterms)
 
 ##
 ## Example adding bigrams/trigrams to the document term matrix
+## Mark that this can also be done using ?dtm_cbind
 ##
 library(data.table)
 x <- as.data.table(brussels_reviews_anno)

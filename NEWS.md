@@ -1,7 +1,9 @@
 # CHANGES IN udpipe VERSION 0.3
 
 - Add udpipe_accuracy 
+- Add dtm_rbind and dtm_cbind 
 - Allow to provide several fields in document_term_frequencies to easily allow to include bigrams/trigrams/... for topic modelling purposes e.g. alongside the textrank package or alongside collocation
+- Fixing UBSAN messages (misaligned addresses)
  
 # CHANGES IN udpipe VERSION 0.2.2
 

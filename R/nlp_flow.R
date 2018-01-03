@@ -134,6 +134,7 @@ document_term_frequencies.character <- function(x, document=paste("doc", seq_alo
 #' 
 #' ##
 #' ## Example adding bigrams/trigrams to the document term matrix
+#' ## Mark that this can also be done using ?dtm_cbind
 #' ##
 #' library(data.table)
 #' x <- as.data.table(brussels_reviews_anno)
@@ -388,4 +389,92 @@ dtm_cor <- function(x) {
   covmat <- (as.matrix(Matrix::crossprod(x)) - n * Matrix::tcrossprod(Matrix::colMeans(x))) / (n - 1)
   cormat <- covmat / Matrix::tcrossprod(sqrt(Matrix::diag(covmat)))
   cormat
+}
+
+
+#' @title Combine 2 document term matrices either by rows or by columns
+#' @description These 2 methods provide \code{\link{cbind}} and \code{\link{rbind}} functionality 
+#' for sparse matrix objects which are returned by \code{\link{document_term_matrix}}. \cr
+#' 
+#' In case of \code{dtm_cbind}, if the rows are not ordered in the same way in x and y, it will order them based on the rownames. 
+#' If there are missing rows these will be filled with NA values. \cr
+#' In case of \code{dtm_rbind}, if the columns are not ordered in the same way in x and y, it will order them based on the colnames. 
+#' If there are missing columns these will be filled with NA values.
+#' @param x a sparse matrix such as a "dgTMatrix" object which is returned by \code{\link{document_term_matrix}}
+#' @param y a sparse matrix such as a "dgTMatrix" object which is returned by \code{\link{document_term_matrix}}
+#' @return a sparse matrix where either rows are put below each other in case of \code{dtm_rbind}
+#' or columns are put next to each other in case of \code{dtm_cbind}
+#' @seealso \code{\link{document_term_matrix}}
+#' @usage dtm_rbind(x, y) \cr
+#' dtm_cbind(x, y) 
+#' @name dtm_bind
+#' @aliases dtm_rbind dtm_cbind
+#' @export
+#' @examples 
+#' data(brussels_reviews_anno)
+#' x <- brussels_reviews_anno
+#' 
+#' ## rbind
+#' dtm1 <- document_term_frequencies(x = subset(x, doc_id %in% c("10049756", "10284782")))
+#' dtm1 <- document_term_matrix(dtm1, document = "doc_id", term = c("token")))
+#' dtm2 <- document_term_frequencies(x = subset(x, doc_id %in% c("10789408", "12285061", "35509091"))
+#' dtm2 <- document_term_matrix(, document = "doc_id", term = c("token")))
+#' m <- dtm_rbind(dtm1, dtm2)
+#' dim(m)
+#' 
+#' ## cbind
+#' library(data.table)
+#' x <- as.data.table(brussels_reviews_anno)
+#' x <- x[, token_bigram := txt_nextgram(token, n = 2), by = list(doc_id, sentence_id)]
+#' dtm1 <- document_term_frequencies(x = x, document = "doc_id", term = c("token"))
+#' dtm1 <- document_term_matrix(dtm1)
+#' dtm2 <- document_term_frequencies(x = x, document = "doc_id", term = c("token_bigram"))
+#' dtm2 <- document_term_matrix()
+#' m <- dtm_cbind(dtm1, dtm2)
+#' dim(m)
+#' m <- dtm_cbind(dtm1[-c(100, 999), ], dtm2[-1000,])
+#' dim(m)
+dtm_cbind <- function(x, y){
+  if(is.null(rownames(x))) stop("x needs to have rownames")
+  if(is.null(rownames(y))) stop("y needs to have rownames")
+  if(length(intersect(colnames(x), colnames(y))) > 0) stop("x and y should not have overlapping column names")
+  rowsleft <- rownames(x)
+  rowsright <- rownames(y)
+  r <- union(rowsleft, rowsright)
+  addleft <- setdiff(rowsright, rowsleft)
+  if(length(addleft) > 0){
+    addleft <- Matrix::sparseMatrix(i = integer(), j = integer(), x = NA,
+                                    dims = c(length(addleft), ncol(x)), dimnames = list(addleft, colnames(x)))
+    x <- methods::rbind2(x, addleft)
+  }
+  addright <- setdiff(rowsleft, rowsright)
+  if(length(addright) > 0){
+    addright <- Matrix::sparseMatrix(i = integer(), j = integer(), x = NA,
+                                     dims = c(length(addright), ncol(y)), dimnames = list(addright, colnames(y)))
+    y <- methods::rbind2(y, addright)
+  }
+  cbind2(x[r, ], y[r, ])
+}
+
+#' @export
+dtm_rbind <- function(x, y){
+  if(is.null(colnames(x))) stop("x needs to have colnames")
+  if(is.null(colnames(y))) stop("y needs to have colnames")
+  if(length(intersect(rownames(x), rownames(y))) > 0) stop("x and y should not have overlapping row names")
+  colsleft <- colnames(x)
+  colsright <- colnames(y)
+  r <- union(colsleft, colsright)
+  addleft <- setdiff(colsright, colsleft)
+  if(length(addleft) > 0){
+    addleft <- Matrix::sparseMatrix(i = integer(), j = integer(), x = NA,
+                                    dims = c(nrow(x), length(addleft)), dimnames = list(rownames(x), addleft))
+    x <- methods::cbind2(x, addleft)
+  }
+  addright <- setdiff(colsleft, colsright)
+  if(length(addright) > 0){
+    addright <- Matrix::sparseMatrix(i = integer(), j = integer(), x = NA,
+                                     dims = c(nrow(y), length(addright)), dimnames = list(rownames(y), addright))
+    y <- methods::cbind2(y, addright)
+  }
+  rbind2(x[, r], y[, r])
 }
