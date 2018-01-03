@@ -4,10 +4,12 @@
 \alias{dtm_bind}
 \alias{dtm_cbind}
 \alias{dtm_rbind}
+\alias{dtm_rbind}
 \title{Combine 2 document term matrices either by rows or by columns}
 \usage{
-dtm_rbind(x, y) \cr
 dtm_cbind(x, y)
+
+dtm_rbind(x, y)
 }
 \arguments{
 \item{x}{a sparse matrix such as a "dgTMatrix" object which is returned by \code{\link{document_term_matrix}}}
@@ -34,8 +36,8 @@ x <- brussels_reviews_anno
 ## rbind
 dtm1 <- document_term_frequencies(x = subset(x, doc_id \%in\% c("10049756", "10284782")))
 dtm1 <- document_term_matrix(dtm1, document = "doc_id", term = c("token"))
-dtm2 <- document_term_frequencies(x = subset(x, doc_id \%in\% c("10789408", "12285061", "35509091"))
-dtm2 <- document_term_matrix(, document = "doc_id", term = c("token"))
+dtm2 <- document_term_frequencies(x = subset(x, doc_id \%in\% c("10789408", "12285061", "35509091")))
+dtm2 <- document_term_matrix(dtm2, document = "doc_id", term = c("token"))
 m <- dtm_rbind(dtm1, dtm2)
 dim(m)
 
@@ -46,7 +48,7 @@ x <- x[, token_bigram := txt_nextgram(token, n = 2), by = list(doc_id, sentence_
 dtm1 <- document_term_frequencies(x = x, document = "doc_id", term = c("token"))
 dtm1 <- document_term_matrix(dtm1)
 dtm2 <- document_term_frequencies(x = x, document = "doc_id", term = c("token_bigram"))
-dtm2 <- document_term_matrix()
+dtm2 <- document_term_matrix(dtm2)
 m <- dtm_cbind(dtm1, dtm2)
 dim(m)
 m <- dtm_cbind(dtm1[-c(100, 999), ], dtm2[-1000,])

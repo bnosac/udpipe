@@ -405,8 +405,6 @@ dtm_cor <- function(x) {
 #' @return a sparse matrix where either rows are put below each other in case of \code{dtm_rbind}
 #' or columns are put next to each other in case of \code{dtm_cbind}
 #' @seealso \code{\link{document_term_matrix}}
-#' @usage dtm_rbind(x, y) \cr
-#' dtm_cbind(x, y) 
 #' @name dtm_bind
 #' @aliases dtm_rbind dtm_cbind
 #' @export
@@ -417,8 +415,8 @@ dtm_cor <- function(x) {
 #' ## rbind
 #' dtm1 <- document_term_frequencies(x = subset(x, doc_id %in% c("10049756", "10284782")))
 #' dtm1 <- document_term_matrix(dtm1, document = "doc_id", term = c("token"))
-#' dtm2 <- document_term_frequencies(x = subset(x, doc_id %in% c("10789408", "12285061", "35509091"))
-#' dtm2 <- document_term_matrix(, document = "doc_id", term = c("token"))
+#' dtm2 <- document_term_frequencies(x = subset(x, doc_id %in% c("10789408", "12285061", "35509091")))
+#' dtm2 <- document_term_matrix(dtm2, document = "doc_id", term = c("token"))
 #' m <- dtm_rbind(dtm1, dtm2)
 #' dim(m)
 #' 
@@ -429,7 +427,7 @@ dtm_cor <- function(x) {
 #' dtm1 <- document_term_frequencies(x = x, document = "doc_id", term = c("token"))
 #' dtm1 <- document_term_matrix(dtm1)
 #' dtm2 <- document_term_frequencies(x = x, document = "doc_id", term = c("token_bigram"))
-#' dtm2 <- document_term_matrix()
+#' dtm2 <- document_term_matrix(dtm2)
 #' m <- dtm_cbind(dtm1, dtm2)
 #' dim(m)
 #' m <- dtm_cbind(dtm1[-c(100, 999), ], dtm2[-1000,])
@@ -457,6 +455,7 @@ dtm_cbind <- function(x, y){
 }
 
 #' @export
+#' @rdname dtm_bind
 dtm_rbind <- function(x, y){
   if(is.null(colnames(x))) stop("x needs to have colnames")
   if(is.null(colnames(y))) stop("y needs to have colnames")
