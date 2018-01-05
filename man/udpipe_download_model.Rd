@@ -4,49 +4,71 @@
 \alias{udpipe_download_model}
 \title{Download an UDPipe model provided by the UDPipe community for a specific language of choice}
 \usage{
-udpipe_download_model(language = c("ancient_greek-proiel", "ancient_greek",
-  "arabic", "basque", "belarusian", "bulgarian", "catalan", "chinese", "coptic",
-  "croatian", "czech-cac", "czech-cltt", "czech", "danish", "dutch-lassysmall",
-  "dutch", "english-lines", "english-partut", "english", "estonian",
-  "finnish-ftb", "finnish", "french-partut", "french-sequoia", "french",
-  "galician-treegal", "galician", "german", "gothic", "greek", "hebrew",
-  "hindi", "hungarian", "indonesian", "irish", "italian", "japanese", "kazakh",
-  "korean", "latin-ittb",      "latin-proiel", "latin", "latvian", "lithuanian",
-  "norwegian-bokmaal", "norwegian-nynorsk", "old_church_slavonic", "persian",
-  "polish", "portuguese-br", "portuguese", "romanian", "russian-syntagrus",
-  "russian", "sanskrit", "slovak", "slovenian-sst", "slovenian",
-  "spanish-ancora", "spanish", "swedish-lines", "swedish", "tamil", "turkish",
-  "ukrainian", "urdu", "uyghur", "vietnamese"), model_dir = getwd())
+udpipe_download_model(language = c("afrikaans", "ancient_greek-proiel",
+  "ancient_greek", "arabic", "basque", "belarusian", "bulgarian", "catalan",
+  "chinese", "coptic", "croatian", "czech-cac", "czech-cltt", "czech", "danish",
+  "dutch-lassysmall", "dutch", "english-lines", "english-partut", "english",
+  "estonian", "finnish-ftb", "finnish", "french-partut", "french-sequoia",
+  "french", "galician-treegal", "galician", "german", "gothic", "greek",
+  "hebrew", "hindi", "hungarian", "indonesian", "irish", "italian", "japanese",
+  "japanese-ktc",      "kazakh", "korean", "latin-ittb", "latin-proiel",
+  "latin", "latvian", "lithuanian", "norwegian-bokmaal", "norwegian-nynorsk",
+  "old_church_slavonic", "persian", "polish", "portuguese-br", "portuguese",
+  "romanian", "russian-syntagrus", "russian", "sanskrit", "serbian", "slovak",
+  "slovenian-sst", "slovenian", "spanish-ancora", "spanish", "swedish-lines",
+  "swedish", "tamil", "turkish", "ukrainian", "urdu", "uyghur", "vietnamese"),
+  model_dir = getwd(),
+  udpipe_model_repo = c("jwijffels/udpipe.models.ud.2.0",
+  "bnosac/udpipe.models.ud"))
 }
 \arguments{
-\item{language}{a character stirng with a language. Possible values are:
-ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, 
+\item{language}{a character string with a language. Possible values are:
+afrikaans, ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, 
 czech-cac, czech-cltt, czech, danish, dutch-lassysmall, dutch, english-lines, english-partut, english, estonian, 
 finnish-ftb, finnish, french-partut, french-sequoia, french, galician-treegal, galician, german, gothic, 
-greek, hebrew, hindi, hungarian, indonesian, irish, italian, japanese, kazakh, korean, latin-ittb, latin-proiel, 
+greek, hebrew, hindi, hungarian, indonesian, irish, italian, japanese, japanese-ktc, kazakh, korean, latin-ittb, latin-proiel, 
 latin, latvian, lithuanian, norwegian-bokmaal, norwegian-nynorsk, 
 old_church_slavonic, persian, polish, portuguese-br, 
-portuguese, romanian, russian-syntagrus, russian, sanskrit, slovak, slovenian-sst, slovenian, spanish-ancora, spanish, 
+portuguese, romanian, russian-syntagrus, russian, sanskrit, serbian, slovak, slovenian-sst, slovenian, spanish-ancora, spanish, 
 swedish-lines, swedish, tamil, turkish, ukrainian, 
-urdu, uyghur, vietnamese}
+urdu, uyghur, vietnamese. \cr \cr
+\itemize{
+  \item \code{udpipe_model_repo} 'jwijffels/udpipe.models.ud.2.0' contains models for all above enumerated languages except afrikaans, japanese-ktc and serbian
+  \item \code{udpipe_model_repo} 'bnosac/udpipe.models.ud' contains models for the following languages: afrikaans, croatian, czech-cac, dutch, english, finnish, french-sequoia, irish, japanese-ktc, norwegian-bokmaal, persian, polish, portuguese, romanian, serbian, slovak, spanish-ancora, swedish
+}}
 
 \item{model_dir}{a path where the model will be downloaded to. Defaults to the current working directory}
+
+\item{udpipe_model_repo}{location where the models will be downloaded from. 
+Either 'jwijffels/udpipe.models.ud.2.0' or 'bnosac/udpipe.models.ud'. \cr
+Defaults to 'jwijffels/udpipe.models.ud.2.0'. \cr
+\itemize{
+  \item 'jwijffels/udpipe.models.ud.2.0' contains models released under the CC-BY-NC-SA license
+  \item 'bnosac/udpipe.models.ud' contains models mainly released under the CC-BY-SA license
+}}
 }
 \value{
-A data.frame with 1 row and 2 columns: 
+A data.frame with 1 row and 3 columns: 
 \itemize{
  \item{language: }{The language as provided by the input parameter \code{language}}
  \item{file_model: }{The path to the file on disk where the model was downloaded to}
+ \item{url: }{The URL where the model was downloaded from}
 }
 }
 \description{
-Ready-made models for 50 languages trained on 67 treebanks are provided by UDPipe at \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
-in one zip file. You can either download these manually in order to use it for annotation purposes 
+Ready-made models for 52 languages trained on 70 treebanks are provided to you.
+Some or these models were provided by the UDPipe community. Other models were build using this R package.
+You can either download these models manually in order to use it for annotation purposes 
 or use \code{udpipe_download_model} to download these models for a specific language of choice. \cr
 
-For your convenience, these models are also made available at \url{https://github.com/jwijffels/udpipe.models.ud.2.0} under the CC-BY-NC-SA
-licence. This function downloads the models from that location, so if you use this function you are complying to that license.
-If you want to train models for commercial purposes, you can easily do this with \code{\link{udpipe_train}}
+The models provided by the UDPipe community are made available for your convenience at \url{https://github.com/jwijffels/udpipe.models.ud.2.0} under the CC-BY-NC-SA
+licence. This function downloads the models by default from that location, so if you use this function you are complying to that license.\cr
+
+If you are working in a commercial setting, you can also choose to download models from \url{https://github.com/bnosac/udpipe.models.ud}. That
+repository contains models build with this R package on open data which allows for commercial usage. 
+The license of these models is mostly CC-BY-SA. Visit that github repository for details on the licenses of the language of your choice. \cr
+
+If you want to train models for commercial purposes or to improve models, you can easily do this with \code{\link{udpipe_train}} which is explained in detail in the package vignette.
 }
 \details{
 Pre-trained Universal Dependencies 2.0 models on all UD treebanks are made available at 
@@ -57,9 +79,16 @@ english, estonian, finnish, french, galician, german, gothic, greek, hebrew, hin
 italian, japanese, kazakh, korean, latin, latvian, lithuanian, norwegian, old_church_slavonic, persian, polish, 
 portuguese, romanian, russian, sanskrit, slovak, slovenian, spanish, swedish, tamil, turkish, ukrainian, 
 urdu, uyghur, vietnamese. Mark that these models are made available under the CC BY-NC-SA 4.0 license. \cr
-
 These models are also provided in an R package for your convenience at 
-\url{https://github.com/jwijffels/udpipe.models.ud.2.0}
+\url{https://github.com/jwijffels/udpipe.models.ud.2.0} \cr 
+
+Pre-trained Universal Dependencies 2.1 models on UD treebanks which allow for commercial usage 
+(mainly by using data which is released under the CC-BY-SA license, but also some are released under the GPL-3 and LGPL-LR license) 
+are made available at \url{https://github.com/bnosac/udpipe.models.ud}.
+At the time of writing this consists of models made available on 18 languages, namely: 
+afrikaans, croatian, czech-cac, dutch, english, finnish, french-sequoia, irish, japanese-ktc, norwegian-bokmaal, 
+persian, polish, portuguese, romanian, serbian, slovak, spanish-ancora, swedish. 
+Visit that repository for more details on the license of these.
 }
 \examples{
 x <- udpipe_download_model(language = "sanskrit", model_dir = tempdir())
@@ -73,10 +102,16 @@ x <- udpipe_download_model(language = "french")
 x <- udpipe_download_model(language = "english")
 x <- udpipe_download_model(language = "german")
 x <- udpipe_download_model(language = "spanish")
+
+x <- udpipe_download_model(language = "spanish-ancora", udpipe_model_repo = "bnosac/udpipe.models.ud")
+x <- udpipe_download_model(language = "english", udpipe_model_repo = "bnosac/udpipe.models.ud")
+x <- udpipe_download_model(language = "dutch", udpipe_model_repo = "bnosac/udpipe.models.ud")
+x <- udpipe_download_model(language = "afrikaans", udpipe_model_repo = "bnosac/udpipe.models.ud")
 }
 }
 \references{
-\url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
+\url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364},
+\url{https://github.com/jwijffels/udpipe.models.ud.2.0}, \url{https://github.com/bnosac/udpipe.models.ud}
 }
 \seealso{
 \code{\link{udpipe_load_model}}
