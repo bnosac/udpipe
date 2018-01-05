@@ -59,7 +59,7 @@ For R users who want to use these open-sourced models provided by the UDPipe com
 ```{r}
 library(udpipe)
 dl <- udpipe_download_model(language = "dutch")
-dl
+str(dl)
 ```
 
 

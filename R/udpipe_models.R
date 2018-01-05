@@ -10,9 +10,11 @@
 #' 
 #' If you are working in a commercial setting, you can also choose to download models from \url{https://github.com/bnosac/udpipe.models.ud}. That
 #' repository contains models build with this R package on open data which allows for commercial usage. 
-#' The license of these models is mostly CC-BY-SA. Visit that github repository for details on the licenses of the language of your choice. \cr
+#' The license of these models is mostly CC-BY-SA. Visit that github repository for details on the licenses of the language of your choice. 
+#' And contact www.bnosac.be if you need support on these models or require models tuned to your needs. \cr
 #' 
-#' If you want to train models for commercial purposes or to improve models, you can easily do this with \code{\link{udpipe_train}} which is explained in detail in the package vignette.
+#' If you need to train models yourself for commercial purposes or if you want to improve models, 
+#' you can easily do this with \code{\link{udpipe_train}} which is explained in detail in the package vignette.
 #' @param language a character string with a language. Possible values are:
 #' afrikaans, ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, 
 #' czech-cac, czech-cltt, czech, danish, dutch-lassysmall, dutch, english-lines, english-partut, english, estonian, 
