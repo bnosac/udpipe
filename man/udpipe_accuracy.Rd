@@ -37,6 +37,12 @@ file_conllu <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
 metrics <- udpipe_accuracy(ud_dutch, file_conllu)
 metrics$accuracy
 metrics <- udpipe_accuracy(ud_dutch, file_conllu, 
+                           tokenizer = "none", tagger = "default", parser = "default")
+metrics$accuracy
+metrics <- udpipe_accuracy(ud_dutch, file_conllu, 
+                           tokenizer = "none", tagger = "none", parser = "default")
+metrics$accuracy
+metrics <- udpipe_accuracy(ud_dutch, file_conllu, 
                            tokenizer = "default", tagger = "none", parser = "none")
 metrics$accuracy
 

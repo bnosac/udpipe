@@ -161,6 +161,12 @@ udpipe_train <- function(file = file.path(getwd(), "my_annotator.udpipe"),
 #' metrics <- udpipe_accuracy(ud_dutch, file_conllu)
 #' metrics$accuracy
 #' metrics <- udpipe_accuracy(ud_dutch, file_conllu, 
+#'                            tokenizer = "none", tagger = "default", parser = "default")
+#' metrics$accuracy
+#' metrics <- udpipe_accuracy(ud_dutch, file_conllu, 
+#'                            tokenizer = "none", tagger = "none", parser = "default")
+#' metrics$accuracy
+#' metrics <- udpipe_accuracy(ud_dutch, file_conllu, 
 #'                            tokenizer = "default", tagger = "none", parser = "none")
 #' metrics$accuracy
 #' 
