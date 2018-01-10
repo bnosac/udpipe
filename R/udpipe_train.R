@@ -191,3 +191,21 @@ udpipe_accuracy <- function(object,
   class(out) <- "udpipe_accuracy"
   out
 }
+
+
+
+#' @title Read in a CONLL-U file as a data.frame
+#' @description Read in a CONLL-U file as a data.frame
+#' @param file a connection object or a character string with the location of the file
+#' @return a data.frame with columns doc_id, paragraph_id, sentence_id, sentence, 
+#' token_id, token, lemma, upos, xpos, feats, head_token_id, deprel, dep_rel, misc
+#' @export
+#' @examples 
+#' file_conllu <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
+#' x <- udpipe_read_conllu(file_conllu)
+#' head(x)
+udpipe_read_conllu <- function(file){
+  x <- list(conllu = paste(readLines(file, encoding = "UTF-8"), collapse = "\n"),
+            error = "")
+  read_connlu(x, is_udpipe_annotation = FALSE)
+}
