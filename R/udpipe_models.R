@@ -115,7 +115,7 @@ udpipe_download_model <- function(language = c("afrikaans", "ancient_greek-proie
                      filename)
     to <- file.path(model_dir, filename)
   }else if(udpipe_model_repo == "bnosac/udpipe.models.ud"){
-    filename <- sprintf("%s-ud-2.1-20180105.udpipe", language)
+    filename <- sprintf("%s-ud-2.1-20180111.udpipe", language)
     url <- file.path("https://raw.githubusercontent.com/bnosac/udpipe.models.ud/master", 
                      "models",
                      filename)
