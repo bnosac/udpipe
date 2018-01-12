@@ -37,12 +37,24 @@ a data.frame with columns term1, term2 and cooc indicating
 for the combination of term1 and term2 how many times this combination occurred
 }
 \description{
-A cooccurence data.frame indicates how many times each term co-occurs with another term.
-This type of dataset is a data.frame with fields term1, term2 and cooc where cooc indicates how many times
+A cooccurence data.frame indicates how many times each term co-occurs with another term.\cr
+
+There are 3 types of cooccurrences:
+\itemize{
+  \item Looking at which words are in the same document/sentence/paragraph.
+  \item Looking at which words are followed by the next word
+  \item Looking at which words are in the neighbourhood of the word (before or after also known as skipgrams)
+}
+The result is a data.frame with fields term1, term2 and cooc where cooc indicates how many times
 term1 and term2 co-occurred.\cr
-The dataset can be constructed based upon a data frame where you look within a group if 2 terms occurred.\cr
-It also can be constructed based upon a vector of words in which case we look how many times each word is 
-followed by another word.
+The dataset can be constructed 
+\itemize{
+  \item based upon a data frame where you look within a group if 2 terms occurred.
+  \item based upon a vector of words in which case we look how many times each word is followed by another word.
+  \item based upon a vector of words in which case we look how many times each word is followed or preceded by another word.
+}
+You can also aggregate cooccurrences if you decide to do any of these 3 by a certain group and next want to have
+an overall aggregate
 }
 \section{Methods (by class)}{
 \itemize{

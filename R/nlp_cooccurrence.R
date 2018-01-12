@@ -1,10 +1,22 @@
 #' @title Create a cooccurence data.frame
-#' @description A cooccurence data.frame indicates how many times each term co-occurs with another term.
-#' This type of dataset is a data.frame with fields term1, term2 and cooc where cooc indicates how many times
+#' @description A cooccurence data.frame indicates how many times each term co-occurs with another term.\cr
+#' 
+#' There are 3 types of cooccurrences:
+#' \itemize{
+#'   \item Looking at which words are in the same document/sentence/paragraph.
+#'   \item Looking at which words are followed by the next word
+#'   \item Looking at which words are in the neighbourhood of the word (before or after also known as skipgrams)
+#' }
+#' The result is a data.frame with fields term1, term2 and cooc where cooc indicates how many times
 #' term1 and term2 co-occurred.\cr
-#' The dataset can be constructed based upon a data frame where you look within a group if 2 terms occurred.\cr
-#' It also can be constructed based upon a vector of words in which case we look how many times each word is 
-#' followed by another word.
+#' The dataset can be constructed 
+#' \itemize{
+#'   \item based upon a data frame where you look within a group if 2 terms occurred.
+#'   \item based upon a vector of words in which case we look how many times each word is followed by another word.
+#'   \item based upon a vector of words in which case we look how many times each word is followed or preceded by another word.
+#' }
+#' You can also aggregate cooccurrences if you decide to do any of these 3 by a certain group and next want to have
+#' an overall aggregate
 #' @param x either
 #' \itemize{
 #'   \item a data.frame where the data.frame contains 1 row per document/term,
@@ -121,4 +133,29 @@ cooccurrence.data.frame <- function(x, order = TRUE, ..., group, term) {
 
 
 
+#' @title Convert the result of cooccurrence to a sparse matrix
+#' @description Convert the result of \code{\link{cooccurrence}} to a sparse matrix.
+#' @param x an object of class \code{cooccurrence} as returned by  \code{\link{cooccurrence}}
+#' @param ... not used
+#' @return a sparse matrix with in the rows and columns the terms and in the cells how many times
+#' the cooccurrence occurred
+#' @export
+#' @seealso \code{\link{cooccurrence}}
+#' @examples 
+#' data(brussels_reviews_anno)
+#' ## By document, which lemma's co-occur
+#' x <- subset(brussels_reviews_anno, xpos %in% c("NN", "JJ") & language %in% "fr")
+#' x <- cooccurrence(x, group = "doc_id", term = "lemma")
+#' x <- as.matrix(x)
+#' dim(x)
+#' x[1:3, 1:3]
+as.matrix.cooccurrence <- function(x, ...){
+  terms <- unique(c(unique(x$term1), unique(x$term2)))
+  result <- Matrix::sparseMatrix(i=match(x=x$term1, table=terms), 
+                              j = match(x=x$term2, table=terms), 
+                              x = x$cooc, 
+                              dims = c(length(terms), length(terms)),
+                              dimnames = list(terms, terms))
+  result
+}
 
