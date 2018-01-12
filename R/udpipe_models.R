@@ -15,7 +15,8 @@
 #' 
 #' If you need to train models yourself for commercial purposes or if you want to improve models, 
 #' you can easily do this with \code{\link{udpipe_train}} which is explained in detail in the package vignette.
-#' @param language a character string with a language. Possible values are:
+#' @param language a character string with a language. \cr
+#' Possible values are:
 #' afrikaans, ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, 
 #' czech-cac, czech-cltt, czech, danish, dutch-lassysmall, dutch, english-lines, english-partut, english, estonian, 
 #' finnish-ftb, finnish, french-partut, french-sequoia, french, galician-treegal, galician, german, gothic, 
@@ -24,7 +25,9 @@
 #' old_church_slavonic, persian, polish, portuguese-br, 
 #' portuguese, romanian, russian-syntagrus, russian, sanskrit, serbian, slovak, slovenian-sst, slovenian, spanish-ancora, spanish, 
 #' swedish-lines, swedish, tamil, turkish, ukrainian, 
-#' urdu, uyghur, vietnamese. \cr \cr
+#' urdu, uyghur, vietnamese. \cr 
+#' The models are downloaded from the location specified in argument \code{udpipe_model_repo}. Namely:
+#' \cr
 #' \itemize{
 #'   \item \code{udpipe_model_repo} 'jwijffels/udpipe.models.ud.2.0' contains models for all above enumerated languages except afrikaans and serbian
 #'   \item \code{udpipe_model_repo} 'bnosac/udpipe.models.ud' contains models for the following languages: afrikaans, croatian, czech-cac, dutch, english, finnish, french-sequoia, irish, norwegian-bokmaal, persian, polish, portuguese, romanian, serbian, slovak, spanish-ancora, swedish
@@ -37,6 +40,7 @@
 #'   \item 'jwijffels/udpipe.models.ud.2.0' contains models released under the CC-BY-NC-SA license
 #'   \item 'bnosac/udpipe.models.ud' contains models mainly released under the CC-BY-SA license
 #' }
+#' Visit \url{https://github.com/jwijffels/udpipe.models.ud.2.0} and \url{https://github.com/bnosac/udpipe.models.ud} for further details.
 #' @return A data.frame with 1 row and 3 columns: 
 #' \itemize{
 #'  \item{language: }{The language as provided by the input parameter \code{language}}
