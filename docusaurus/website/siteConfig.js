@@ -35,6 +35,7 @@ const siteConfig = {
   headerLinks: [
     {doc: 'doc0', label: 'Docs'},
     {page: 'help', label: 'Support'},
+    {href: 'https://github.com/bnosac/udpipe', label: 'GitHub' },
     {blog: true, label: 'Blog'},
   ],
   users,

@@ -45,7 +45,7 @@ class Help extends React.Component {
           target="_blank"
           className="fbOpenSource">
           <img
-            src="http://www.bnosac.be/images/bnosac/logo-bnosac.png"
+            src="img/logo-bnosac.png"
             alt="BNOSAC Open Source"
             width="170"
             height="45"
