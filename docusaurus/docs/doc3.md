@@ -1,0 +1,562 @@
+---
+id: doc3
+title: Build models
+sidebar_label: Model building
+---
+
+## General
+
+This package vignette shows how to build your own text annotation models based on UDPipe, allowing you to have full control over how you like that the model will execute: Tokenization (1), Parts of Speech tagging (2), Lemmatization (3) and Dependency Parsing (4). 
+
+This section is also relevant if you work in a commercial setting where you would like to use your models to annotate text but you are not allowed to use the pre-trained models which you can download with `udpipe_download_model` as these models are provided under the CC-BY-NC-SA license.
+
+In order to train annotation models, you need to have data in **CONLL-U format**, a format which is described at http://universaldependencies.org/format.html. At the time of writing this, for more than 50 languages, open treebanks in CONLL-U format are made available for download at http://universaldependencies.org/#ud-treebanks. Most of these treebanks are distributed under the CC-BY-SA license which allows commercial use.
+
+Mark that if you will build your own models, you will probably be interested in reading the paper with the details of the techniques used by UDPipe: "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>. 
+
+
+## Model building
+
+### Basic example
+
+Currently the package allows you to fit a text annotation model by using the function `udpipe_train`. You have to give it a character vector of files which are in CONLL-U format (which you might have downloaded at http://universaldependencies.org/#ud-treebanks).
+
+Such at file basically looks like this, or has a similar format. You can just download these from http://universaldependencies.org for the language of your choice.
+
+
+```r
+file_conllu <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
+file_conllu
+```
+
+```
+[1] "C:/Users/Jan/Documents/R/win-library/3.4/udpipe/dummydata/traindata.conllu"
+```
+
+```r
+cat(head(readLines(file_conllu), 3), sep="\n")
+```
+
+```
+# newdoc id = doc1
+# newpar
+# sent_id = 1
+```
+
+If you have this type of file and you provide it to `udpipe_train`, a model is saved on disk in a binary format which can then be used to annotate your text data using `udpipe_annotate` in order to Tokenize, get Parts of Speech tags, find Lemma's or to extract Dependency relationships.
+Let's show how this training works on the toy CONLL-U file we just showed:
+
+
+
+```r
+library(udpipe)
+m <- udpipe_train(file = "toymodel.udpipe", files_conllu_training = file_conllu, 
+                  annotation_tokenizer = list(dimension = 16, 
+                                              epochs = 1, 
+                                              batch_size = 100, 
+                                              dropout = 0.7),
+                  annotation_tagger = list(iterations = 1, 
+                                           models = 1, 
+                                           provide_xpostag = 1, 
+                                           provide_lemma = 0, 
+                                           provide_feats = 0), 
+                  annotation_parser = "none")
+```
+
+```
+Training tokenizer with the following options: tokenize_url=1, allow_spaces=0, dimension=16
+  epochs=1, batch_size=100, learning_rate=0.0050, dropout=0.7000, early_stopping=0
+Epoch 1, logprob: -2.1721e+005, training acc: 84.20%
+Tagger model 1 columns: lemma use=1/provide=0, xpostag use=1/provide=1, feats use=1/provide=0
+Creating morphological dictionary for tagger model 1.
+Tagger model 1 dictionary options: max_form_analyses=0, custom dictionary_file=none
+Tagger model 1 guesser options: suffix_rules=8, prefixes_max=0, prefix_min_count=10, enrich_dictionary=6
+Tagger model 1 options: iterations=1, early_stopping=0, templates=tagger
+Training tagger model 1.
+Iteration 1: done, accuracy 44.44%
+```
+
+```r
+m$file_model
+```
+
+```
+[1] "toymodel.udpipe"
+```
+
+```r
+## The model is now trained and saved in file toymodel.udpipe in the current working directory
+## Now we can use the model to annotate some text
+mymodel <- udpipe_load_model("toymodel.udpipe")
+x <- udpipe_annotate(
+  object = mymodel, 
+  x = "Dit is een tokenizer met POS tagging, 
+       zonder lemmatisation noch laat deze dependency parsing toe.", 
+  parser = "none")
+str(as.data.frame(x))
+```
+
+```
+'data.frame':	15 obs. of  14 variables:
+ $ doc_id       : chr  "doc1" "doc1" "doc1" "doc1" ...
+ $ paragraph_id : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ sentence_id  : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ sentence     : chr  "Dit is een tokenizer met POS tagging, zonder lemmatisation noch laat deze dependency parsing toe." "Dit is een tokenizer met POS tagging, zonder lemmatisation noch laat deze dependency parsing toe." "Dit is een tokenizer met POS tagging, zonder lemmatisation noch laat deze dependency parsing toe." "Dit is een tokenizer met POS tagging, zonder lemmatisation noch laat deze dependency parsing toe." ...
+ $ token_id     : chr  "1" "2" "3" "4" ...
+ $ token        : chr  "Dit" "is" "een" "tokenizer" ...
+ $ lemma        : chr  NA NA NA NA ...
+ $ upos         : chr  "PRON" "VERB" "AUX" "NOUN" ...
+ $ xpos         : chr  "Pron|onbep|neut|zelfst" "V|intrans|ott|3|ev" "V|hulpofkopp|ott|1|ev" "N|soort|ev|neut" ...
+ $ feats        : chr  NA NA NA NA ...
+ $ head_token_id: chr  NA NA NA NA ...
+ $ dep_rel      : chr  NA NA NA NA ...
+ $ deps         : chr  NA NA NA NA ...
+ $ misc         : chr  NA NA NA NA ...
+```
+
+In the above example, we trained only a tokenizer and POS tagger, excluding lemmatisation and feature tagging and without dependency parsing. This was done by setting the `annotation_parser` argument to 'none' and setting `provide_lemma` and `provide_feats` to 0. The other arguments were merely set to reduce computation time in this package vignette. 
+
+### Providing more details on the model annotation process
+
+If you want to create a tagger which is capable of executing tokenisation, tagging as well as dependency parsing with the default settings of the algorithm, you just proceed as follows.
+
+
+```r
+m <- udpipe_train(file = "toymodel.udpipe", files_conllu_training = file_conllu, 
+                  annotation_tokenizer = "default",
+                  annotation_tagger = "default",
+                  annotation_parser = "default")
+```
+
+When you want to train the model with specific tokenizer/tagger/parser settings, you need to provide these settings as a list to the respective arguments `annotation_tokenizer`, `annotation_tagger` and `annotation_parser`. The possible options for each of these settings are explained in detail below and their logic is detailed in the paper "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>.
+
+
+```r
+params <- list()
+
+## Tokenizer training parameters
+params$tokenizer <- list(dimension = 24, 
+                         epochs = 1, #epochs = 100, 
+                         initialization_range = 0.1, 
+                         batch_size = 100, learning_rate = 0.005, 
+                         dropout = 0.1, early_stopping = 1)
+
+## Tagger training parameters
+params$tagger <- list(models = 2, 
+  templates_1 = "tagger", 
+      guesser_suffix_rules_1 = 8, guesser_enrich_dictionary_1 = 6, 
+      guesser_prefixes_max_1 = 0, 
+      use_lemma_1 = 0, use_xpostag_1 = 1, use_feats_1 = 1, 
+      provide_lemma_1 = 0, provide_xpostag_1 = 1, 
+      provide_feats_1 = 1, prune_features_1 = 0, 
+  templates_2 = "lemmatizer", 
+      guesser_suffix_rules_2 = 6, guesser_enrich_dictionary_2 = 4, 
+      guesser_prefixes_max_2 = 4, 
+      use_lemma_2 = 1, use_xpostag_2 = 0, use_feats_2 = 0, 
+      provide_lemma_2 = 1, provide_xpostag_2 = 0, 
+      provide_feats_2 = 0, prune_features_2 = 0)
+
+## Dependency parser training parameters
+params$parser <- list(iterations = 1, 
+  #iterations = 30, 
+  embedding_upostag = 20, embedding_feats = 20, embedding_xpostag = 0, 
+  embedding_form = 50, 
+  #embedding_form_file = "../ud-2.0-embeddings/nl.skip.forms.50.vectors", 
+  embedding_lemma = 0, embedding_deprel = 20, 
+  learning_rate = 0.01, learning_rate_final = 0.001, l2 = 0.5, hidden_layer = 200, 
+  batch_size = 10, transition_system = "projective", transition_oracle = "dynamic", 
+  structured_interval = 10)
+
+## Train the model
+m <- udpipe_train(file = "toymodel.udpipe", 
+                  files_conllu_training = file_conllu, 
+                  annotation_tokenizer = params$tokenizer,
+                  annotation_tagger = params$tagger,
+                  annotation_parser = params$parser)
+```
+
+```
+Training tokenizer with the following options: tokenize_url=1, allow_spaces=0, dimension=24
+  epochs=1, batch_size=100, learning_rate=0.0050, dropout=0.1000, early_stopping=1
+Epoch 1, logprob: -1.4653e+005, training acc: 89.57%
+Tagger model 1 columns: lemma use=0/provide=0, xpostag use=1/provide=1, feats use=1/provide=1
+Creating morphological dictionary for tagger model 1.
+Tagger model 1 dictionary options: max_form_analyses=0, custom dictionary_file=none
+Tagger model 1 guesser options: suffix_rules=8, prefixes_max=0, prefix_min_count=10, enrich_dictionary=6
+Tagger model 1 options: iterations=20, early_stopping=0, templates=tagger
+Training tagger model 1.
+Iteration 1: done, accuracy 37.04%
+Iteration 2: done, accuracy 81.48%
+Iteration 3: done, accuracy 100.00%
+Iteration 4: done, accuracy 100.00%
+Iteration 5: done, accuracy 100.00%
+Iteration 6: done, accuracy 100.00%
+Iteration 7: done, accuracy 100.00%
+Iteration 8: done, accuracy 100.00%
+Iteration 9: done, accuracy 100.00%
+Iteration 10: done, accuracy 100.00%
+Iteration 11: done, accuracy 100.00%
+Iteration 12: done, accuracy 100.00%
+Iteration 13: done, accuracy 100.00%
+Iteration 14: done, accuracy 100.00%
+Iteration 15: done, accuracy 100.00%
+Iteration 16: done, accuracy 100.00%
+Iteration 17: done, accuracy 100.00%
+Iteration 18: done, accuracy 100.00%
+Iteration 19: done, accuracy 100.00%
+Iteration 20: done, accuracy 100.00%
+Tagger model 2 columns: lemma use=1/provide=1, xpostag use=0/provide=0, feats use=0/provide=0
+Creating morphological dictionary for tagger model 2.
+Tagger model 2 dictionary options: max_form_analyses=0, custom dictionary_file=none
+Tagger model 2 guesser options: suffix_rules=6, prefixes_max=4, prefix_min_count=10, enrich_dictionary=4
+Tagger model 2 options: iterations=20, early_stopping=0, templates=lemmatizer
+Training tagger model 2.
+Iteration 1: done, accuracy 48.15%
+Iteration 2: done, accuracy 77.78%
+Iteration 3: done, accuracy 100.00%
+Iteration 4: done, accuracy 100.00%
+Iteration 5: done, accuracy 100.00%
+Iteration 6: done, accuracy 100.00%
+Iteration 7: done, accuracy 100.00%
+Iteration 8: done, accuracy 100.00%
+Iteration 9: done, accuracy 100.00%
+Iteration 10: done, accuracy 100.00%
+Iteration 11: done, accuracy 100.00%
+Iteration 12: done, accuracy 100.00%
+Iteration 13: done, accuracy 100.00%
+Iteration 14: done, accuracy 100.00%
+Iteration 15: done, accuracy 100.00%
+Iteration 16: done, accuracy 100.00%
+Iteration 17: done, accuracy 100.00%
+Iteration 18: done, accuracy 100.00%
+Iteration 19: done, accuracy 100.00%
+Iteration 20: done, accuracy 100.00%
+Parser transition options: system=projective, oracle=dynamic, structured_interval=10, single_root=1
+Parser uses lemmas/upos/xpos/feats: automatically generated by tagger
+Parser embeddings options: upostag=20, feats=20, xpostag=0, form=50, lemma=0, deprel=20
+  form mincount=2, precomputed form embeddings=none
+  lemma mincount=2, precomputed lemma embeddings=none
+Parser network options: iterations=1, hidden_layer=200, batch_size=10,
+  learning_rate=0.0100, learning_rate_final=0.0010, l2=0.5000, early_stopping=0
+Initialized 'universal_tag' embedding with 0,9 words and 0.0%,100.0% coverage.
+Initialized 'feats' embedding with 0,17 words and 0.0%,100.0% coverage.
+Initialized 'form' embedding with 0,4 words and 0.0%,29.6% coverage.
+Initialized 'deprel' embedding with 0,16 words and 0.0%,100.0% coverage.
+Iteration 1: training logprob -1.8848e+002
+```
+
+As you have seen above in the example, if you want to train the dependency parser, you can also provide pre-trained word embeddings which you can provide in the `embedding_form_file` argument. Example training data can be found at https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364. If you also have a holdout file in CONLL-U format which you can provide in the `files_conllu_holdout` argument, the training is stopped before model performance decreases on the holdout CONLL-U file.
+
+
+Mark. Before you embark in starting to train your own models with more realistic learning parameters, consider that training can take a while. 
+
+## Settings for the tokenizer:
+
+The tokenizer recognizes the following options:
+
+- `tokenize_url` (default 1): tokenize URLs and emails using a manually implemented recognizer
+- `allow_spaces` (default 1 if any token contains a space, 0 otherwise): allow tokens to contain spaces
+- `dimension` (default 24): dimension of character embeddings and of the per-character bidirectional GRU. Note that inference time is quadratic in this parameter. Supported values are only 16, 24 and 64, with 64 needed only for languages with complicated tokenization like Japanese, Chinese or Vietnamese.
+- `epochs` (default 100): the number of epochs to train the tokenizer for
+- `batch_size` (default 50): batch size used during tokenizer training
+- `learning_rate` (default 0.005): the learning rate used during tokenizer training
+- `dropout` (default 0.1): dropout used during tokenizer training
+- `early_stopping` (default 1 if heldout is given, 0 otherwise): perform early stopping, choosing training iteration maximizing sentences F1 score plus tokens F1 score on heldout data
+
+During random hyperparameter search, `batch_size` is chosen uniformly from {50,100} and `learning_rate` logarithmically from <0.0005, 0.01). 
+
+The tokenizer is trained using the SpaceAfter=No features in the CoNLL-U files. If the feature is not present, a detokenizer can be used to guess the SpaceAfter=No features according to a supplied plain text (which typically does not overlap with the texts in the CoNLL-U files).
+
+In order to use the detokenizer, use the `detokenizer=file:filename_with_plaintext` option. In UD 1.2 models, the optimal performance is achieved with very small plain texts â€“ only 500kB.
+
+In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the tokenizer settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at http://universaldependencies.org/#ud-treebanks.
+
+
+```r
+data(udpipe_annotation_params)
+str(udpipe_annotation_params$tokenizer)
+```
+
+```
+'data.frame':	68 obs. of  9 variables:
+ $ language_treebank   : chr  "ar" "be" "bg" "ca" ...
+ $ dimension           : num  24 24 64 64 24 64 24 24 64 24 ...
+ $ epochs              : num  100 100 100 100 100 100 100 100 100 100 ...
+ $ initialization_range: num  0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 ...
+ $ batch_size          : num  100 100 100 50 50 50 50 50 50 50 ...
+ $ learning_rate       : num  0.002 0.01 0.005 0.002 0.01 0.002 0.005 0.002 0.002 0.01 ...
+ $ dropout             : num  0.3 0.2 0.2 0.1 0.2 0.1 0.1 0.1 0.3 0.2 ...
+ $ early_stopping      : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ detokenize          : chr  NA NA NA NA ...
+```
+
+```r
+## Example for training the tokenizer on the Dutch treebank
+hyperparams_nl <- subset(udpipe_annotation_params$tokenizer, language_treebank == "nl")
+as.list(hyperparams_nl)
+```
+
+```
+$language_treebank
+[1] "nl"
+
+$dimension
+[1] 24
+
+$epochs
+[1] 100
+
+$initialization_range
+[1] 0.1
+
+$batch_size
+[1] 100
+
+$learning_rate
+[1] 0.005
+
+$dropout
+[1] 0.1
+
+$early_stopping
+[1] 1
+
+$detokenize
+[1] NA
+```
+
+## Settings for the tagger:
+
+The tagging is currently performed using MorphoDiTa (http://ufal.mff.cuni.cz/morphodita). The UDPipe tagger consists of possibly several MorphoDiTa models, each tagging some of the POS tags and/or lemmas.
+
+By default, only one model is constructed, which generates all available tags (UPOS, XPOS, Feats and Lemma). However, we found out during the UD 1.2 models training that performance improves if one model tags the UPOS, XPOS and Feats tags, while the other is performing lemmatization. Therefore, if you utilize two MorphoDiTa models, by default the first one generates all tags (except lemmas) and the second one performs lemmatization.
+
+The number of MorphoDiTa models can be specified using the models=number parameter. All other parameters may be either generic for all models (guesser_suffix_rules=5), or specific for a given model (guesser_suffix_rules_2=6), including the from_model option (therefore, MorphoDiTa models can be trained separately and then combined together into one UDPipe model).
+
+Every model utilizes UPOS for disambiguation and the first model is the one producing the UPOS tags on output.
+
+The tagger recognizes the following options:
+
+- `use_lemma` (default for the second model and also if there is only one model): use the lemma field internally to perform disambiguation; the lemma may be not outputted
+- `provide_lemma` (default for the second model and also if there is only one model): produce the disambiguated lemma on output
+- `use_xpostag` (default for the first model): use the XPOS tags internally to perform disambiguation; it may not be outputted
+- `provide_xpostag` (default for the first model): produce the disambiguated XPOS tag on output
+- `use_feats` (default for the first model): use the Feats internally to perform disambiguation; it may not be outputted
+- `provide_feats` (default for the first model): produce the disambiguated Feats field on output
+- `dictionary_max_form_analyses` (default 0 - unlimited): the maximum number of (most frequent) form analyses from UD training data that are to be kept in the morphological dictionary
+- `dictionary_file` (default empty): use a given custom morphological dictionary, where each line contains 5 tab-separated fields FORM, LEMMA, UPOSTAG, XPOSTAG and FEATS. Note that this dictionary data is appended to the dictionary created from the UD training data, not replacing it.
+- `guesser_suffix_rules` (default 8): number of rules generated for every suffix
+- `guesser_prefixes_max` (default 4 if provide_lemma, 0 otherwise): maximum number of form-generating prefixes to use in the guesser
+- `guesser_prefix_min_count` (default 10): minimum number of occurrences of form-generating prefix to consider using it in the guesser
+- `guesser_enrich_dictionary` (default 6 if no dictionary_file is passed, 0 otherwise): number of rules generated for forms present in training data (assuming that the analyses from the training data may not be all)
+- `iterations` (default 20): number of training iterations to perform
+- `early_stopping` (default 1 if heldout is given, 0 otherwise): perform early stopping, choosing training iteration maximizing tagging accuracy on the heldout data
+- `templates` (default lemmatizer for second model, tagger otherwise): MorphoDiTa feature templates to use, either lemmatizer which focuses more on lemmas, or tagger which focuses more on UPOS/XPOS/FEATS
+
+During random hyperparameter search, guesser_suffix_rules is chosen uniformly from {5,6,7,8,9,10,11,12} and guesser_enrich_dictionary is chosen uniformly from {3,4,5,6,7,8,9,10}. 
+
+In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the tagger settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at http://universaldependencies.org/#ud-treebanks.
+
+
+```r
+## Example for training the tagger on the Dutch treebank
+hyperparams_nl <- subset(udpipe_annotation_params$tagger, language_treebank == "nl")
+as.list(hyperparams_nl)
+```
+
+```
+$language_treebank
+[1] "nl"
+
+$models
+[1] 2
+
+$templates_1
+[1] "tagger"
+
+$guesser_suffix_rules_1
+[1] 8
+
+$guesser_enrich_dictionary_1
+[1] 6
+
+$guesser_prefixes_max_1
+[1] 0
+
+$use_lemma_1
+[1] 0
+
+$use_xpostag_1
+[1] 1
+
+$use_feats_1
+[1] 1
+
+$provide_lemma_1
+[1] 0
+
+$provide_xpostag_1
+[1] 1
+
+$provide_feats_1
+[1] 1
+
+$prune_features_1
+[1] 0
+
+$templates_2
+[1] "lemmatizer"
+
+$guesser_suffix_rules_2
+[1] 6
+
+$guesser_enrich_dictionary_2
+[1] 4
+
+$guesser_prefixes_max_2
+[1] 4
+
+$use_lemma_2
+[1] 1
+
+$use_xpostag_2
+[1] 0
+
+$use_feats_2
+[1] 0
+
+$provide_lemma_2
+[1] 1
+
+$provide_xpostag_2
+[1] 0
+
+$provide_feats_2
+[1] 0
+
+$prune_features_2
+[1] 0
+
+$dictionary_max_form_analyses_2
+[1] NA
+
+$dictionary_max_form_analyses_1
+[1] NA
+```
+
+## Settings for the dependency parser:
+
+The parsing is performed using Parsito (http://ufal.mff.cuni.cz/parsito), which is a transition-based parser using a neural-network classifier.
+
+The transition-based systems can be configured by the following options:
+
+- `transition_system` (default projective): which transition system to use for parsing (language dependent, you can choose according to language properties or try all and choose the best one)
+        `projective`: projective stack-based arc standard system with shift, left_arc and right_arc transitions
+        `swap`: fully non-projective system which extends projective system by adding the swap transition
+        `link2`: partially non-projective system which extends projective system by adding left_arc2 and right_arc2 transitions
+- `transition_oracle` (default dynamic/static_lazy_static whichever first is applicable): which transition oracle to use for the chosen transition_system:
+        `transition_system=projective`: available oracles are static and dynamic (dynamic usually gives better results, but training time is slower)
+        `transition_system=swap`: available oracles are static_eager and static_lazy (static_lazy almost always gives better results)
+        `transition_system=link2`: only available oracle is static
+- `structured_interval` (default 8): use search-based oracle in addition to the translation_oracle specified. This almost always gives better results, but makes training 2-3 times slower. For details, see the paper Straka et al. 2015: Parsing Universal Dependency Treebanks using Neural Networks and Search-Based Oracle
+- `single_root` (default 1): allow only single root when parsing, and make sure only the root node has the root deprel (note that training data are checked to be in this format)
+
+The Lemmas/UPOS/XPOS/FEATS used by the parser are configured by:
+
+- `use_gold_tags` (default 0): if false and a tagger exists, the Lemmas/UPOS/XPOS/FEATS for both the training and heldout data are generated by the tagger, otherwise they are taken from the gold data
+
+The embeddings used by the parser can be specified as follows:
+
+- `embedding_upostag` (default 20): the dimension of the UPos embedding used in the parser
+- `embedding_feats` (default 20): the dimension of the Feats embedding used in the parser
+- `embedding_xpostag` (default 0): the dimension of the XPos embedding used in the parser
+- `embedding_form` (default 50): the dimension of the Form embedding used in the parser
+- `embedding_lemma` (default 0): the dimension of the Lemma embedding used in the parser
+- `embedding_deprel` (default 20): the dimension of the Deprel embedding used in the parser
+- `embedding_form_file`: pre-trained word embeddings in word2vec textual format
+- `embedding_lemma_file`: pre-trained lemma embeddings in word2vec textual format
+- `embedding_form_mincount` (default 2): for forms not present in the pre-trained embeddings, generate random embeddings if the form appears at least this number of times in the trainig data (forms not present in the pre-trained embeddings and appearing less number of times are considered OOV)
+- `embedding_lemma_mincount` (default 2): for lemmas not present in the pre-trained embeddings, generate random embeddings if the lemma appears at least this number of times in the trainig data (lemmas not present in the pre-trained embeddings and appearing less number of times are considered OOV)
+
+The neural-network training options:
+
+- `iterations` (default 10): number of training iterations to use
+- `hidden_layer` (default 200): the size of the hidden layer
+- `batch_size` (default 10): batch size used during neural-network training
+- `learning_rate` (default 0.02): the learning rate used during neural-network training
+- `learning_rate_final` (0.001): the final learning rate used during neural-network training
+- `l2` (0.5): the L2 regularization used during neural-network training
+- `early_stopping` (default 1 if heldout is given, 0 otherwise): perform early stopping, choosing training iteration maximizing LAS on heldout data
+
+During random hyperparameter search, structured_interval is chosen uniformly from {0,8,10}, learning_rate is chosen logarithmically from <0.005,0.04) and l2 is chosen uniformly from <0.2,0.6). 
+
+In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the parser settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at http://universaldependencies.org/#ud-treebanks.
+
+
+```r
+## Example for training the dependency parser on the Dutch treebank
+hyperparams_nl <- subset(udpipe_annotation_params$parser, language_treebank == "nl")
+as.list(hyperparams_nl)
+```
+
+```
+$language_treebank
+[1] "nl"
+
+$iterations
+[1] 30
+
+$embedding_upostag
+[1] 20
+
+$embedding_feats
+[1] 20
+
+$embedding_xpostag
+[1] 0
+
+$embedding_form
+[1] 50
+
+$embedding_form_file
+[1] "../ud-2.0-embeddings/nl.skip.forms.50.vectors"
+
+$embedding_lemma
+[1] 0
+
+$embedding_deprel
+[1] 20
+
+$learning_rate
+[1] 0.01
+
+$learning_rate_final
+[1] 0.001
+
+$l2
+[1] 0.5
+
+$hidden_layer
+[1] 200
+
+$batch_size
+[1] 10
+
+$transition_system
+[1] "projective"
+
+$transition_oracle
+[1] "dynamic"
+
+$structured_interval
+[1] 10
+```
+
+## Support in text mining
+
+Need support in text mining. 
+Contact BNOSAC: http://www.bnosac.be
+
+
+
+

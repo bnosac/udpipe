@@ -1,0 +1,474 @@
+<html lang="en"><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Build models · NLP with R and UDPipe</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta property="og:title" content="Build models · NLP with R and UDPipe"/><meta property="og:type" content="website"/><meta property="og:url" content="https://bnosac.github.io/udpipe/index.html"/><meta property="og:description" content="## General"/><link rel="shortcut icon" href="/udpipe/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://bnosac.github.io/blog/atom.xml" title="NLP with R and UDPipe Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://bnosac.github.io/blog/feed.xml" title="NLP with R and UDPipe Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><link rel="stylesheet" href="/udpipe/css/main.css"/></head><body class="sideNavVisible"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/udpipe/"><img class="logo" src="/udpipe/img/logo-udpipe-r.png"/><h2 class="headerTitle">NLP with R and UDPipe</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li><a href="/udpipe/docs/doc0.html" target="_self">Docs</a></li><li><a href="/udpipe/en/help.html" target="_self">Support</a></li><li><a href="/udpipe/blog" target="_self">Blog</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><i></i></div><h2><i>›</i><span>Annotation</span></h2></div><div class="navGroups"><div class="navGroup navGroupActive"><h3>Introduction</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc0.html">Try it out</a></li><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc1.html">Introduction</a></li></ul></div><div class="navGroup navGroupActive"><h3>Annotation</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc2.html">Text Annotation</a></li><li class="navListItem navListItemActive"><a class="navItem navItemActive" href="/udpipe/docs/doc3.html">Model building</a></li></ul></div></div></section></div><script>
+          var toggler = document.getElementById('navToggler');
+          var nav = document.getElementById('docsNav');
+          toggler.onclick = function() {
+            nav.classList.toggle('docsSliderActive');
+          };
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1>Build models</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" name="general"></a><a href="#general" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>General</h2>
+<p>This package vignette shows how to build your own text annotation models based on UDPipe, allowing you to have full control over how you like that the model will execute: Tokenization (1), Parts of Speech tagging (2), Lemmatization (3) and Dependency Parsing (4).</p>
+<p>This section is also relevant if you work in a commercial setting where you would like to use your models to annotate text but you are not allowed to use the pre-trained models which you can download with <code>udpipe_download_model</code> as these models are provided under the CC-BY-NC-SA license.</p>
+<p>In order to train annotation models, you need to have data in <strong>CONLL-U format</strong>, a format which is described at <a href="http://universaldependencies.org/format.html">http://universaldependencies.org/format.html</a>. At the time of writing this, for more than 50 languages, open treebanks in CONLL-U format are made available for download at <a href="http://universaldependencies.org/#ud-treebanks">http://universaldependencies.org/#ud-treebanks</a>. Most of these treebanks are distributed under the CC-BY-SA license which allows commercial use.</p>
+<p>Mark that if you will build your own models, you will probably be interested in reading the paper with the details of the techniques used by UDPipe: &quot;Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe&quot;, available at <a href="http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf">http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf</a>.</p>
+<h2><a class="anchor" aria-hidden="true" name="model-building"></a><a href="#model-building" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Model building</h2>
+<h3><a class="anchor" aria-hidden="true" name="basic-example"></a><a href="#basic-example" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Basic example</h3>
+<p>Currently the package allows you to fit a text annotation model by using the function <code>udpipe_train</code>. You have to give it a character vector of files which are in CONLL-U format (which you might have downloaded at <a href="http://universaldependencies.org/#ud-treebanks">http://universaldependencies.org/#ud-treebanks</a>).</p>
+<p>Such at file basically looks like this, or has a similar format. You can just download these from <a href="http://universaldependencies.org">http://universaldependencies.org</a> for the language of your choice.</p>
+<pre><code class="hljs css r">file_conllu &lt;- system.file(package = <span class="hljs-string">"udpipe"</span>, <span class="hljs-string">"dummydata"</span>, <span class="hljs-string">"traindata.conllu"</span>)
+file_conllu
+</code></pre>
+<pre><code class="hljs">[<span class="hljs-number">1</span>] <span class="hljs-string">"C:/Users/Jan/Documents/R/win-library/3.4/udpipe/dummydata/traindata.conllu"</span>
+</code></pre>
+<pre><code class="hljs css r">cat(head(readLines(file_conllu), <span class="hljs-number">3</span>), sep=<span class="hljs-string">"\n"</span>)
+</code></pre>
+<pre><code class="hljs"><span class="hljs-meta">#</span><span class="bash"> newdoc id = doc1</span>
+<span class="hljs-meta">#</span><span class="bash"> newpar</span>
+<span class="hljs-meta">#</span><span class="bash"> sent_id = 1</span>
+</code></pre>
+<p>If you have this type of file and you provide it to <code>udpipe_train</code>, a model is saved on disk in a binary format which can then be used to annotate your text data using <code>udpipe_annotate</code> in order to Tokenize, get Parts of Speech tags, find Lemma's or to extract Dependency relationships.
+Let's show how this training works on the toy CONLL-U file we just showed:</p>
+<pre><code class="hljs css r"><span class="hljs-keyword">library</span>(udpipe)
+m &lt;- udpipe_train(file = <span class="hljs-string">"toymodel.udpipe"</span>, files_conllu_training = file_conllu, 
+                  annotation_tokenizer = list(dimension = <span class="hljs-number">16</span>, 
+                                              epochs = <span class="hljs-number">1</span>, 
+                                              batch_size = <span class="hljs-number">100</span>, 
+                                              dropout = <span class="hljs-number">0.7</span>),
+                  annotation_tagger = list(iterations = <span class="hljs-number">1</span>, 
+                                           models = <span class="hljs-number">1</span>, 
+                                           provide_xpostag = <span class="hljs-number">1</span>, 
+                                           provide_lemma = <span class="hljs-number">0</span>, 
+                                           provide_feats = <span class="hljs-number">0</span>), 
+                  annotation_parser = <span class="hljs-string">"none"</span>)
+</code></pre>
+<pre><code class="hljs">Training tokenizer with the following options: <span class="hljs-attribute">tokenize_url</span>=1, <span class="hljs-attribute">allow_spaces</span>=0, <span class="hljs-attribute">dimension</span>=16
+  <span class="hljs-attribute">epochs</span>=1, <span class="hljs-attribute">batch_size</span>=100, <span class="hljs-attribute">learning_rate</span>=0.0050, <span class="hljs-attribute">dropout</span>=0.7000, <span class="hljs-attribute">early_stopping</span>=0
+Epoch 1, logprob: -2.1721e+005, training acc: 84.20%
+Tagger model 1 columns: lemma <span class="hljs-attribute">use</span>=1/provide=0, xpostag <span class="hljs-attribute">use</span>=1/provide=1, feats <span class="hljs-attribute">use</span>=1/provide=0
+Creating morphological dictionary <span class="hljs-keyword">for</span> tagger model 1.
+Tagger model 1 dictionary options: <span class="hljs-attribute">max_form_analyses</span>=0, custom <span class="hljs-attribute">dictionary_file</span>=none
+Tagger model 1 guesser options: <span class="hljs-attribute">suffix_rules</span>=8, <span class="hljs-attribute">prefixes_max</span>=0, <span class="hljs-attribute">prefix_min_count</span>=10, <span class="hljs-attribute">enrich_dictionary</span>=6
+Tagger model 1 options: <span class="hljs-attribute">iterations</span>=1, <span class="hljs-attribute">early_stopping</span>=0, <span class="hljs-attribute">templates</span>=tagger
+Training tagger model 1.
+Iteration 1: done, accuracy 44.44%
+</code></pre>
+<pre><code class="hljs css r">m$file_model
+</code></pre>
+<pre><code class="hljs">[<span class="hljs-number">1</span>] <span class="hljs-string">"toymodel.udpipe"</span>
+</code></pre>
+<pre><code class="hljs css r"><span class="hljs-comment">## The model is now trained and saved in file toymodel.udpipe in the current working directory</span>
+<span class="hljs-comment">## Now we can use the model to annotate some text</span>
+mymodel &lt;- udpipe_load_model(<span class="hljs-string">"toymodel.udpipe"</span>)
+x &lt;- udpipe_annotate(
+  object = mymodel, 
+  x = <span class="hljs-string">"Dit is een tokenizer met POS tagging, 
+       zonder lemmatisation noch laat deze dependency parsing toe."</span>, 
+  parser = <span class="hljs-string">"none"</span>)
+str(as.data.frame(x))
+</code></pre>
+<pre><code class="hljs"><span class="hljs-string">'data.frame'</span>:   <span class="hljs-number">15</span> obs. of  <span class="hljs-number">14</span> variables:
+ $ doc_id       : chr  <span class="hljs-string">"doc1"</span> <span class="hljs-string">"doc1"</span> <span class="hljs-string">"doc1"</span> <span class="hljs-string">"doc1"</span> <span class="hljs-keyword">...</span>
+ $ paragraph_id : int  <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-keyword">...</span>
+ $ sentence_id  : int  <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-keyword">...</span>
+ $ sentence     : chr  <span class="hljs-string">"Dit is een tokenizer met POS tagging, zonder lemmatisation noch laat deze dependency parsing toe."</span> <span class="hljs-string">"Dit is een tokenizer met POS tagging, zonder lemmatisation noch laat deze dependency parsing toe."</span> <span class="hljs-string">"Dit is een tokenizer met POS tagging, zonder lemmatisation noch laat deze dependency parsing toe."</span> <span class="hljs-string">"Dit is een tokenizer met POS tagging, zonder lemmatisation noch laat deze dependency parsing toe."</span> <span class="hljs-keyword">...</span>
+ $ token_id     : chr  <span class="hljs-string">"1"</span> <span class="hljs-string">"2"</span> <span class="hljs-string">"3"</span> <span class="hljs-string">"4"</span> <span class="hljs-keyword">...</span>
+ $ token        : chr  <span class="hljs-string">"Dit"</span> <span class="hljs-string">"is"</span> <span class="hljs-string">"een"</span> <span class="hljs-string">"tokenizer"</span> <span class="hljs-keyword">...</span>
+ $ lemma        : chr  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ upos         : chr  <span class="hljs-string">"PRON"</span> <span class="hljs-string">"VERB"</span> <span class="hljs-string">"AUX"</span> <span class="hljs-string">"NOUN"</span> <span class="hljs-keyword">...</span>
+ $ xpos         : chr  <span class="hljs-string">"Pron|onbep|neut|zelfst"</span> <span class="hljs-string">"V|intrans|ott|3|ev"</span> <span class="hljs-string">"V|hulpofkopp|ott|1|ev"</span> <span class="hljs-string">"N|soort|ev|neut"</span> <span class="hljs-keyword">...</span>
+ $ feats        : chr  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ head_token_id: chr  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ dep_rel      : chr  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ deps         : chr  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ misc         : chr  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+</code></pre>
+<p>In the above example, we trained only a tokenizer and POS tagger, excluding lemmatisation and feature tagging and without dependency parsing. This was done by setting the <code>annotation_parser</code> argument to 'none' and setting <code>provide_lemma</code> and <code>provide_feats</code> to 0. The other arguments were merely set to reduce computation time in this package vignette.</p>
+<h3><a class="anchor" aria-hidden="true" name="providing-more-details-on-the-model-annotation-process"></a><a href="#providing-more-details-on-the-model-annotation-process" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Providing more details on the model annotation process</h3>
+<p>If you want to create a tagger which is capable of executing tokenisation, tagging as well as dependency parsing with the default settings of the algorithm, you just proceed as follows.</p>
+<pre><code class="hljs css r">m &lt;- udpipe_train(file = <span class="hljs-string">"toymodel.udpipe"</span>, files_conllu_training = file_conllu, 
+                  annotation_tokenizer = <span class="hljs-string">"default"</span>,
+                  annotation_tagger = <span class="hljs-string">"default"</span>,
+                  annotation_parser = <span class="hljs-string">"default"</span>)
+</code></pre>
+<p>When you want to train the model with specific tokenizer/tagger/parser settings, you need to provide these settings as a list to the respective arguments <code>annotation_tokenizer</code>, <code>annotation_tagger</code> and <code>annotation_parser</code>. The possible options for each of these settings are explained in detail below and their logic is detailed in the paper &quot;Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe&quot;, available at <a href="http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf">http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf</a>.</p>
+<pre><code class="hljs css r">params &lt;- list()
+
+<span class="hljs-comment">## Tokenizer training parameters</span>
+params$tokenizer &lt;- list(dimension = <span class="hljs-number">24</span>, 
+                         epochs = <span class="hljs-number">1</span>, <span class="hljs-comment">#epochs = 100, </span>
+                         initialization_range = <span class="hljs-number">0.1</span>, 
+                         batch_size = <span class="hljs-number">100</span>, learning_rate = <span class="hljs-number">0.005</span>, 
+                         dropout = <span class="hljs-number">0.1</span>, early_stopping = <span class="hljs-number">1</span>)
+
+<span class="hljs-comment">## Tagger training parameters</span>
+params$tagger &lt;- list(models = <span class="hljs-number">2</span>, 
+  templates_1 = <span class="hljs-string">"tagger"</span>, 
+      guesser_suffix_rules_1 = <span class="hljs-number">8</span>, guesser_enrich_dictionary_1 = <span class="hljs-number">6</span>, 
+      guesser_prefixes_max_1 = <span class="hljs-number">0</span>, 
+      use_lemma_1 = <span class="hljs-number">0</span>, use_xpostag_1 = <span class="hljs-number">1</span>, use_feats_1 = <span class="hljs-number">1</span>, 
+      provide_lemma_1 = <span class="hljs-number">0</span>, provide_xpostag_1 = <span class="hljs-number">1</span>, 
+      provide_feats_1 = <span class="hljs-number">1</span>, prune_features_1 = <span class="hljs-number">0</span>, 
+  templates_2 = <span class="hljs-string">"lemmatizer"</span>, 
+      guesser_suffix_rules_2 = <span class="hljs-number">6</span>, guesser_enrich_dictionary_2 = <span class="hljs-number">4</span>, 
+      guesser_prefixes_max_2 = <span class="hljs-number">4</span>, 
+      use_lemma_2 = <span class="hljs-number">1</span>, use_xpostag_2 = <span class="hljs-number">0</span>, use_feats_2 = <span class="hljs-number">0</span>, 
+      provide_lemma_2 = <span class="hljs-number">1</span>, provide_xpostag_2 = <span class="hljs-number">0</span>, 
+      provide_feats_2 = <span class="hljs-number">0</span>, prune_features_2 = <span class="hljs-number">0</span>)
+
+<span class="hljs-comment">## Dependency parser training parameters</span>
+params$parser &lt;- list(iterations = <span class="hljs-number">1</span>, 
+  <span class="hljs-comment">#iterations = 30, </span>
+  embedding_upostag = <span class="hljs-number">20</span>, embedding_feats = <span class="hljs-number">20</span>, embedding_xpostag = <span class="hljs-number">0</span>, 
+  embedding_form = <span class="hljs-number">50</span>, 
+  <span class="hljs-comment">#embedding_form_file = "../ud-2.0-embeddings/nl.skip.forms.50.vectors", </span>
+  embedding_lemma = <span class="hljs-number">0</span>, embedding_deprel = <span class="hljs-number">20</span>, 
+  learning_rate = <span class="hljs-number">0.01</span>, learning_rate_final = <span class="hljs-number">0.001</span>, l2 = <span class="hljs-number">0.5</span>, hidden_layer = <span class="hljs-number">200</span>, 
+  batch_size = <span class="hljs-number">10</span>, transition_system = <span class="hljs-string">"projective"</span>, transition_oracle = <span class="hljs-string">"dynamic"</span>, 
+  structured_interval = <span class="hljs-number">10</span>)
+
+<span class="hljs-comment">## Train the model</span>
+m &lt;- udpipe_train(file = <span class="hljs-string">"toymodel.udpipe"</span>, 
+                  files_conllu_training = file_conllu, 
+                  annotation_tokenizer = params$tokenizer,
+                  annotation_tagger = params$tagger,
+                  annotation_parser = params$parser)
+</code></pre>
+<pre><code class="hljs">Training tokenizer <span class="hljs-keyword">with</span> the following options: <span class="hljs-attr">tokenize_url=1,</span> <span class="hljs-attr">allow_spaces=0,</span> <span class="hljs-attr">dimension=24</span>
+  <span class="hljs-attr">epochs=1,</span> <span class="hljs-attr">batch_size=100,</span> <span class="hljs-attr">learning_rate=0.0050,</span> <span class="hljs-attr">dropout=0.1000,</span> <span class="hljs-attr">early_stopping=1</span>
+Epoch <span class="hljs-number">1</span>, logprob: -<span class="hljs-number">1.4653</span>e+<span class="hljs-number">005</span>, training acc: <span class="hljs-number">89.57</span>%
+Tagger model <span class="hljs-number">1</span> columns: lemma <span class="hljs-attr">use=0/provide=0,</span> xpostag <span class="hljs-attr">use=1/provide=1,</span> feats <span class="hljs-attr">use=1/provide=1</span>
+Creating morphological dictionary for tagger model <span class="hljs-number">1</span>.
+Tagger model <span class="hljs-number">1</span> dictionary options: <span class="hljs-attr">max_form_analyses=0,</span> custom <span class="hljs-attr">dictionary_file=none</span>
+Tagger model <span class="hljs-number">1</span> guesser options: <span class="hljs-attr">suffix_rules=8,</span> <span class="hljs-attr">prefixes_max=0,</span> <span class="hljs-attr">prefix_min_count=10,</span> <span class="hljs-attr">enrich_dictionary=6</span>
+Tagger model <span class="hljs-number">1</span> options: <span class="hljs-attr">iterations=20,</span> <span class="hljs-attr">early_stopping=0,</span> <span class="hljs-attr">templates=tagger</span>
+Training tagger model <span class="hljs-number">1</span>.
+Iteration <span class="hljs-number">1</span>: done, accuracy <span class="hljs-number">37.04</span>%
+Iteration <span class="hljs-number">2</span>: done, accuracy <span class="hljs-number">81.48</span>%
+Iteration <span class="hljs-number">3</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">4</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">5</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">6</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">7</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">8</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">9</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">10</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">11</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">12</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">13</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">14</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">15</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">16</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">17</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">18</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">19</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">20</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Tagger model <span class="hljs-number">2</span> columns: lemma <span class="hljs-attr">use=1/provide=1,</span> xpostag <span class="hljs-attr">use=0/provide=0,</span> feats <span class="hljs-attr">use=0/provide=0</span>
+Creating morphological dictionary for tagger model <span class="hljs-number">2</span>.
+Tagger model <span class="hljs-number">2</span> dictionary options: <span class="hljs-attr">max_form_analyses=0,</span> custom <span class="hljs-attr">dictionary_file=none</span>
+Tagger model <span class="hljs-number">2</span> guesser options: <span class="hljs-attr">suffix_rules=6,</span> <span class="hljs-attr">prefixes_max=4,</span> <span class="hljs-attr">prefix_min_count=10,</span> <span class="hljs-attr">enrich_dictionary=4</span>
+Tagger model <span class="hljs-number">2</span> options: <span class="hljs-attr">iterations=20,</span> <span class="hljs-attr">early_stopping=0,</span> <span class="hljs-attr">templates=lemmatizer</span>
+Training tagger model <span class="hljs-number">2</span>.
+Iteration <span class="hljs-number">1</span>: done, accuracy <span class="hljs-number">48.15</span>%
+Iteration <span class="hljs-number">2</span>: done, accuracy <span class="hljs-number">77.78</span>%
+Iteration <span class="hljs-number">3</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">4</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">5</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">6</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">7</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">8</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">9</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">10</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">11</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">12</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">13</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">14</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">15</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">16</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">17</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">18</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">19</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Iteration <span class="hljs-number">20</span>: done, accuracy <span class="hljs-number">100.00</span>%
+Parser transition options: <span class="hljs-attr">system=projective,</span> <span class="hljs-attr">oracle=dynamic,</span> <span class="hljs-attr">structured_interval=10,</span> <span class="hljs-attr">single_root=1</span>
+Parser uses lemmas/upos/xpos/feats: automatically generated by tagger
+Parser embeddings options: <span class="hljs-attr">upostag=20,</span> <span class="hljs-attr">feats=20,</span> <span class="hljs-attr">xpostag=0,</span> <span class="hljs-attr">form=50,</span> <span class="hljs-attr">lemma=0,</span> <span class="hljs-attr">deprel=20</span>
+  form <span class="hljs-attr">mincount=2,</span> precomputed form <span class="hljs-attr">embeddings=none</span>
+  lemma <span class="hljs-attr">mincount=2,</span> precomputed lemma <span class="hljs-attr">embeddings=none</span>
+Parser network options: <span class="hljs-attr">iterations=1,</span> <span class="hljs-attr">hidden_layer=200,</span> <span class="hljs-attr">batch_size=10,</span>
+  <span class="hljs-attr">learning_rate=0.0100,</span> <span class="hljs-attr">learning_rate_final=0.0010,</span> <span class="hljs-attr">l2=0.5000,</span> <span class="hljs-attr">early_stopping=0</span>
+Initialized 'universal_tag' embedding <span class="hljs-keyword">with</span> <span class="hljs-number">0</span>,<span class="hljs-number">9</span> words <span class="hljs-literal">and</span> <span class="hljs-number">0.0</span>%,<span class="hljs-number">100.0</span>% coverage.
+Initialized 'feats' embedding <span class="hljs-keyword">with</span> <span class="hljs-number">0</span>,<span class="hljs-number">17</span> words <span class="hljs-literal">and</span> <span class="hljs-number">0.0</span>%,<span class="hljs-number">100.0</span>% coverage.
+Initialized 'form' embedding <span class="hljs-keyword">with</span> <span class="hljs-number">0</span>,<span class="hljs-number">4</span> words <span class="hljs-literal">and</span> <span class="hljs-number">0.0</span>%,<span class="hljs-number">29.6</span>% coverage.
+Initialized 'deprel' embedding <span class="hljs-keyword">with</span> <span class="hljs-number">0</span>,<span class="hljs-number">16</span> words <span class="hljs-literal">and</span> <span class="hljs-number">0.0</span>%,<span class="hljs-number">100.0</span>% coverage.
+Iteration <span class="hljs-number">1</span>: training logprob -<span class="hljs-number">1.8848</span>e+<span class="hljs-number">002</span>
+</code></pre>
+<p>As you have seen above in the example, if you want to train the dependency parser, you can also provide pre-trained word embeddings which you can provide in the <code>embedding_form_file</code> argument. Example training data can be found at <a href="https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364">https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364</a>. If you also have a holdout file in CONLL-U format which you can provide in the <code>files_conllu_holdout</code> argument, the training is stopped before model performance decreases on the holdout CONLL-U file.</p>
+<p>Mark. Before you embark in starting to train your own models with more realistic learning parameters, consider that training can take a while.</p>
+<h2><a class="anchor" aria-hidden="true" name="settings-for-the-tokenizer"></a><a href="#settings-for-the-tokenizer" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Settings for the tokenizer:</h2>
+<p>The tokenizer recognizes the following options:</p>
+<ul>
+<li><code>tokenize_url</code> (default 1): tokenize URLs and emails using a manually implemented recognizer</li>
+<li><code>allow_spaces</code> (default 1 if any token contains a space, 0 otherwise): allow tokens to contain spaces</li>
+<li><code>dimension</code> (default 24): dimension of character embeddings and of the per-character bidirectional GRU. Note that inference time is quadratic in this parameter. Supported values are only 16, 24 and 64, with 64 needed only for languages with complicated tokenization like Japanese, Chinese or Vietnamese.</li>
+<li><code>epochs</code> (default 100): the number of epochs to train the tokenizer for</li>
+<li><code>batch_size</code> (default 50): batch size used during tokenizer training</li>
+<li><code>learning_rate</code> (default 0.005): the learning rate used during tokenizer training</li>
+<li><code>dropout</code> (default 0.1): dropout used during tokenizer training</li>
+<li><code>early_stopping</code> (default 1 if heldout is given, 0 otherwise): perform early stopping, choosing training iteration maximizing sentences F1 score plus tokens F1 score on heldout data</li>
+</ul>
+<p>During random hyperparameter search, <code>batch_size</code> is chosen uniformly from {50,100} and <code>learning_rate</code> logarithmically from &lt;0.0005, 0.01).</p>
+<p>The tokenizer is trained using the SpaceAfter=No features in the CoNLL-U files. If the feature is not present, a detokenizer can be used to guess the SpaceAfter=No features according to a supplied plain text (which typically does not overlap with the texts in the CoNLL-U files).</p>
+<p>In order to use the detokenizer, use the <code>detokenizer=file:filename_with_plaintext</code> option. In UD 1.2 models, the optimal performance is achieved with very small plain texts â€“ only 500kB.</p>
+<p>In order to show the settings which were used by the UDPipe community when building the models made available when using <code>udpipe_download_model</code>, the tokenizer settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at <a href="http://universaldependencies.org/#ud-treebanks">http://universaldependencies.org/#ud-treebanks</a>.</p>
+<pre><code class="hljs css r">data(udpipe_annotation_params)
+str(udpipe_annotation_params$tokenizer)
+</code></pre>
+<pre><code class="hljs">'data.frame':   <span class="hljs-number">68</span> obs. of  <span class="hljs-number">9</span> variables:
+ $ language_treebank   : chr  "ar" "be" "bg" "ca" ...
+ $ dimension           : num  <span class="hljs-number">24 24 64 64</span> <span class="hljs-number">24 64 24 24</span> <span class="hljs-number">64</span> <span class="hljs-number">24</span> ...
+ $ epochs              : num  <span class="hljs-number">100 100 100 100</span> <span class="hljs-number">100 100 100 100</span> <span class="hljs-number">100 100</span> ...
+ $ initialization_range: num  <span class="hljs-number">0.1 0.1</span> <span class="hljs-number">0.1 0.1</span> <span class="hljs-number">0.1 0.1</span> <span class="hljs-number">0.1 0.1</span> <span class="hljs-number">0.1 0.1</span> ...
+ $ batch_size          : num  <span class="hljs-number">100 100 100 50</span> <span class="hljs-number">50 50 50 50</span> <span class="hljs-number">50</span> <span class="hljs-number">50</span> ...
+ $ learning_rate       : num  <span class="hljs-number">0.002 0</span>.<span class="hljs-number">01 0.005</span> <span class="hljs-number">0.002 0</span>.<span class="hljs-number">01 0.002</span> <span class="hljs-number">0.005 0</span>.<span class="hljs-number">002</span> <span class="hljs-number">0.002 0</span>.<span class="hljs-number">01</span> ...
+ $ dropout             : num  <span class="hljs-number">0.3 0.2</span> <span class="hljs-number">0.2 0.1</span> <span class="hljs-number">0.2 0.1</span> <span class="hljs-number">0.1 0.1</span> <span class="hljs-number">0.3 0.2</span> ...
+ $ early_stopping      : num  <span class="hljs-number">1 1 1 1</span> <span class="hljs-number">1 1 1 1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> ...
+ $ detokenize          : chr  NA NA NA NA ...
+</code></pre>
+<pre><code class="hljs css r"><span class="hljs-comment">## Example for training the tokenizer on the Dutch treebank</span>
+hyperparams_nl &lt;- subset(udpipe_annotation_params$tokenizer, language_treebank == <span class="hljs-string">"nl"</span>)
+as.list(hyperparams_nl)
+</code></pre>
+<pre><code class="hljs"><span class="hljs-meta"><span class="hljs-meta-keyword">$language</span>_treebank</span>
+[<span class="hljs-number">1</span>] <span class="hljs-string">"nl"</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$dimension</span></span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">24</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$epochs</span></span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">100</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$initialization</span>_range</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0.1</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$batch</span>_size</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">100</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$learning</span>_rate</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0.005</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$dropout</span></span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0.1</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$early</span>_stopping</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">1</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$detokenize</span></span>
+[<span class="hljs-number">1</span>] <span class="hljs-literal">NA</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" name="settings-for-the-tagger"></a><a href="#settings-for-the-tagger" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Settings for the tagger:</h2>
+<p>The tagging is currently performed using MorphoDiTa (<a href="http://ufal.mff.cuni.cz/morphodita">http://ufal.mff.cuni.cz/morphodita</a>). The UDPipe tagger consists of possibly several MorphoDiTa models, each tagging some of the POS tags and/or lemmas.</p>
+<p>By default, only one model is constructed, which generates all available tags (UPOS, XPOS, Feats and Lemma). However, we found out during the UD 1.2 models training that performance improves if one model tags the UPOS, XPOS and Feats tags, while the other is performing lemmatization. Therefore, if you utilize two MorphoDiTa models, by default the first one generates all tags (except lemmas) and the second one performs lemmatization.</p>
+<p>The number of MorphoDiTa models can be specified using the models=number parameter. All other parameters may be either generic for all models (guesser_suffix_rules=5), or specific for a given model (guesser_suffix_rules_2=6), including the from_model option (therefore, MorphoDiTa models can be trained separately and then combined together into one UDPipe model).</p>
+<p>Every model utilizes UPOS for disambiguation and the first model is the one producing the UPOS tags on output.</p>
+<p>The tagger recognizes the following options:</p>
+<ul>
+<li><code>use_lemma</code> (default for the second model and also if there is only one model): use the lemma field internally to perform disambiguation; the lemma may be not outputted</li>
+<li><code>provide_lemma</code> (default for the second model and also if there is only one model): produce the disambiguated lemma on output</li>
+<li><code>use_xpostag</code> (default for the first model): use the XPOS tags internally to perform disambiguation; it may not be outputted</li>
+<li><code>provide_xpostag</code> (default for the first model): produce the disambiguated XPOS tag on output</li>
+<li><code>use_feats</code> (default for the first model): use the Feats internally to perform disambiguation; it may not be outputted</li>
+<li><code>provide_feats</code> (default for the first model): produce the disambiguated Feats field on output</li>
+<li><code>dictionary_max_form_analyses</code> (default 0 - unlimited): the maximum number of (most frequent) form analyses from UD training data that are to be kept in the morphological dictionary</li>
+<li><code>dictionary_file</code> (default empty): use a given custom morphological dictionary, where each line contains 5 tab-separated fields FORM, LEMMA, UPOSTAG, XPOSTAG and FEATS. Note that this dictionary data is appended to the dictionary created from the UD training data, not replacing it.</li>
+<li><code>guesser_suffix_rules</code> (default 8): number of rules generated for every suffix</li>
+<li><code>guesser_prefixes_max</code> (default 4 if provide_lemma, 0 otherwise): maximum number of form-generating prefixes to use in the guesser</li>
+<li><code>guesser_prefix_min_count</code> (default 10): minimum number of occurrences of form-generating prefix to consider using it in the guesser</li>
+<li><code>guesser_enrich_dictionary</code> (default 6 if no dictionary_file is passed, 0 otherwise): number of rules generated for forms present in training data (assuming that the analyses from the training data may not be all)</li>
+<li><code>iterations</code> (default 20): number of training iterations to perform</li>
+<li><code>early_stopping</code> (default 1 if heldout is given, 0 otherwise): perform early stopping, choosing training iteration maximizing tagging accuracy on the heldout data</li>
+<li><code>templates</code> (default lemmatizer for second model, tagger otherwise): MorphoDiTa feature templates to use, either lemmatizer which focuses more on lemmas, or tagger which focuses more on UPOS/XPOS/FEATS</li>
+</ul>
+<p>During random hyperparameter search, guesser_suffix_rules is chosen uniformly from {5,6,7,8,9,10,11,12} and guesser_enrich_dictionary is chosen uniformly from {3,4,5,6,7,8,9,10}.</p>
+<p>In order to show the settings which were used by the UDPipe community when building the models made available when using <code>udpipe_download_model</code>, the tagger settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at <a href="http://universaldependencies.org/#ud-treebanks">http://universaldependencies.org/#ud-treebanks</a>.</p>
+<pre><code class="hljs css r"><span class="hljs-comment">## Example for training the tagger on the Dutch treebank</span>
+hyperparams_nl &lt;- subset(udpipe_annotation_params$tagger, language_treebank == <span class="hljs-string">"nl"</span>)
+as.list(hyperparams_nl)
+</code></pre>
+<pre><code class="hljs"><span class="hljs-meta"><span class="hljs-meta-keyword">$language</span>_treebank</span>
+[<span class="hljs-number">1</span>] <span class="hljs-string">"nl"</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$models</span></span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">2</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$templates</span>_1</span>
+[<span class="hljs-number">1</span>] <span class="hljs-string">"tagger"</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$guesser</span>_suffix_rules_1</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">8</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$guesser</span>_enrich_dictionary_1</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">6</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$guesser</span>_prefixes_max_1</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$use</span>_lemma_1</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$use</span>_xpostag_1</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">1</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$use</span>_feats_1</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">1</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$provide</span>_lemma_1</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$provide</span>_xpostag_1</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">1</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$provide</span>_feats_1</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">1</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$prune</span>_features_1</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$templates</span>_2</span>
+[<span class="hljs-number">1</span>] <span class="hljs-string">"lemmatizer"</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$guesser</span>_suffix_rules_2</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">6</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$guesser</span>_enrich_dictionary_2</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">4</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$guesser</span>_prefixes_max_2</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">4</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$use</span>_lemma_2</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">1</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$use</span>_xpostag_2</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$use</span>_feats_2</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$provide</span>_lemma_2</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">1</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$provide</span>_xpostag_2</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$provide</span>_feats_2</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$prune</span>_features_2</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$dictionary</span>_max_form_analyses_2</span>
+[<span class="hljs-number">1</span>] <span class="hljs-literal">NA</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$dictionary</span>_max_form_analyses_1</span>
+[<span class="hljs-number">1</span>] <span class="hljs-literal">NA</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" name="settings-for-the-dependency-parser"></a><a href="#settings-for-the-dependency-parser" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Settings for the dependency parser:</h2>
+<p>The parsing is performed using Parsito (<a href="http://ufal.mff.cuni.cz/parsito">http://ufal.mff.cuni.cz/parsito</a>), which is a transition-based parser using a neural-network classifier.</p>
+<p>The transition-based systems can be configured by the following options:</p>
+<ul>
+<li><code>transition_system</code> (default projective): which transition system to use for parsing (language dependent, you can choose according to language properties or try all and choose the best one)
+<code>projective</code>: projective stack-based arc standard system with shift, left_arc and right_arc transitions
+<code>swap</code>: fully non-projective system which extends projective system by adding the swap transition
+<code>link2</code>: partially non-projective system which extends projective system by adding left_arc2 and right_arc2 transitions</li>
+<li><code>transition_oracle</code> (default dynamic/static_lazy_static whichever first is applicable): which transition oracle to use for the chosen transition_system:
+<code>transition_system=projective</code>: available oracles are static and dynamic (dynamic usually gives better results, but training time is slower)
+<code>transition_system=swap</code>: available oracles are static_eager and static_lazy (static_lazy almost always gives better results)
+<code>transition_system=link2</code>: only available oracle is static</li>
+<li><code>structured_interval</code> (default 8): use search-based oracle in addition to the translation_oracle specified. This almost always gives better results, but makes training 2-3 times slower. For details, see the paper Straka et al. 2015: Parsing Universal Dependency Treebanks using Neural Networks and Search-Based Oracle</li>
+<li><code>single_root</code> (default 1): allow only single root when parsing, and make sure only the root node has the root deprel (note that training data are checked to be in this format)</li>
+</ul>
+<p>The Lemmas/UPOS/XPOS/FEATS used by the parser are configured by:</p>
+<ul>
+<li><code>use_gold_tags</code> (default 0): if false and a tagger exists, the Lemmas/UPOS/XPOS/FEATS for both the training and heldout data are generated by the tagger, otherwise they are taken from the gold data</li>
+</ul>
+<p>The embeddings used by the parser can be specified as follows:</p>
+<ul>
+<li><code>embedding_upostag</code> (default 20): the dimension of the UPos embedding used in the parser</li>
+<li><code>embedding_feats</code> (default 20): the dimension of the Feats embedding used in the parser</li>
+<li><code>embedding_xpostag</code> (default 0): the dimension of the XPos embedding used in the parser</li>
+<li><code>embedding_form</code> (default 50): the dimension of the Form embedding used in the parser</li>
+<li><code>embedding_lemma</code> (default 0): the dimension of the Lemma embedding used in the parser</li>
+<li><code>embedding_deprel</code> (default 20): the dimension of the Deprel embedding used in the parser</li>
+<li><code>embedding_form_file</code>: pre-trained word embeddings in word2vec textual format</li>
+<li><code>embedding_lemma_file</code>: pre-trained lemma embeddings in word2vec textual format</li>
+<li><code>embedding_form_mincount</code> (default 2): for forms not present in the pre-trained embeddings, generate random embeddings if the form appears at least this number of times in the trainig data (forms not present in the pre-trained embeddings and appearing less number of times are considered OOV)</li>
+<li><code>embedding_lemma_mincount</code> (default 2): for lemmas not present in the pre-trained embeddings, generate random embeddings if the lemma appears at least this number of times in the trainig data (lemmas not present in the pre-trained embeddings and appearing less number of times are considered OOV)</li>
+</ul>
+<p>The neural-network training options:</p>
+<ul>
+<li><code>iterations</code> (default 10): number of training iterations to use</li>
+<li><code>hidden_layer</code> (default 200): the size of the hidden layer</li>
+<li><code>batch_size</code> (default 10): batch size used during neural-network training</li>
+<li><code>learning_rate</code> (default 0.02): the learning rate used during neural-network training</li>
+<li><code>learning_rate_final</code> (0.001): the final learning rate used during neural-network training</li>
+<li><code>l2</code> (0.5): the L2 regularization used during neural-network training</li>
+<li><code>early_stopping</code> (default 1 if heldout is given, 0 otherwise): perform early stopping, choosing training iteration maximizing LAS on heldout data</li>
+</ul>
+<p>During random hyperparameter search, structured_interval is chosen uniformly from {0,8,10}, learning_rate is chosen logarithmically from &lt;0.005,0.04) and l2 is chosen uniformly from &lt;0.2,0.6).</p>
+<p>In order to show the settings which were used by the UDPipe community when building the models made available when using <code>udpipe_download_model</code>, the parser settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at <a href="http://universaldependencies.org/#ud-treebanks">http://universaldependencies.org/#ud-treebanks</a>.</p>
+<pre><code class="hljs css r"><span class="hljs-comment">## Example for training the dependency parser on the Dutch treebank</span>
+hyperparams_nl &lt;- subset(udpipe_annotation_params$parser, language_treebank == <span class="hljs-string">"nl"</span>)
+as.list(hyperparams_nl)
+</code></pre>
+<pre><code class="hljs"><span class="hljs-meta"><span class="hljs-meta-keyword">$language</span>_treebank</span>
+[<span class="hljs-number">1</span>] <span class="hljs-string">"nl"</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$iterations</span></span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">30</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$embedding</span>_upostag</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">20</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$embedding</span>_feats</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">20</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$embedding</span>_xpostag</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$embedding</span>_form</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">50</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$embedding</span>_form_file</span>
+[<span class="hljs-number">1</span>] <span class="hljs-string">"../ud-2.0-embeddings/nl.skip.forms.50.vectors"</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$embedding</span>_lemma</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$embedding</span>_deprel</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">20</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$learning</span>_rate</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0.01</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$learning</span>_rate_final</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0.001</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$l2</span></span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">0.5</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$hidden</span>_layer</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">200</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$batch</span>_size</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">10</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$transition</span>_system</span>
+[<span class="hljs-number">1</span>] <span class="hljs-string">"projective"</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$transition</span>_oracle</span>
+[<span class="hljs-number">1</span>] <span class="hljs-string">"dynamic"</span>
+
+<span class="hljs-meta"><span class="hljs-meta-keyword">$structured</span>_interval</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">10</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" name="support-in-text-mining"></a><a href="#support-in-text-mining" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Support in text mining</h2>
+<p>Need support in text mining.
+Contact BNOSAC: <a href="http://www.bnosac.be">http://www.bnosac.be</a></p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="doc2.html">← Text Annotation</a></div></div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/udpipe/" class="nav-home"><img src="/udpipe/img/logo-udpipe-r.png" alt="NLP with R and UDPipe" width="66" height="58"/></a><div><h5>Docs</h5><a href="/udpipe/docs/en/doc1.html">Getting Started</a><a href="/udpipe/docs/en/doc2.html">Natural Language Processing</a></div><div><h5>Community</h5><a href="/udpipe/en/users.html">User Showcase</a><a href="https://github.com/bnosac/udpipe/issues">Report issue</a></div><div><h5>More</h5><a href="/udpipe/blog">Blog</a><a href="https://github.com/bnosac/udpipe">GitHub</a><a class="github-button" href="https://github.com/bnosac/udpipe" data-icon="octicon-star" data-count-href="/bnosac/udpipe/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><a href="http://www.bnosac.be" target="_blank" class="fbOpenSource"><img src="/udpipe/img/logo-bnosac.png" alt="BNOSAC Open Source" width="170" height="45"/></a><section class="copyright">Copyright © 2018 BNOSAC</section></footer></div></body></html>
