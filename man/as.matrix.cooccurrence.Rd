@@ -4,7 +4,7 @@
 \alias{as.matrix.cooccurrence}
 \title{Convert the result of cooccurrence to a sparse matrix}
 \usage{
-as.matrix.cooccurrence(x, ...)
+as.matrix(x, ...)
 }
 \arguments{
 \item{x}{an object of class \code{cooccurrence} as returned by  \code{\link{cooccurrence}}}

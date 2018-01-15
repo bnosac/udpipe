@@ -83,10 +83,11 @@
 #' x <- udpipe_download_model(language = "german")
 #' x <- udpipe_download_model(language = "spanish")
 #' 
-#' x <- udpipe_download_model(language = "spanish-ancora", udpipe_model_repo = "bnosac/udpipe.models.ud")
 #' x <- udpipe_download_model(language = "english", udpipe_model_repo = "bnosac/udpipe.models.ud")
 #' x <- udpipe_download_model(language = "dutch", udpipe_model_repo = "bnosac/udpipe.models.ud")
 #' x <- udpipe_download_model(language = "afrikaans", udpipe_model_repo = "bnosac/udpipe.models.ud")
+#' x <- udpipe_download_model(language = "spanish-ancora", 
+#'                            udpipe_model_repo = "bnosac/udpipe.models.ud")
 #' }
 udpipe_download_model <- function(language = c("afrikaans", "ancient_greek-proiel", "ancient_greek", "arabic", "basque", 
                                                "belarusian", "bulgarian", "catalan", "chinese", "coptic", "croatian", 
