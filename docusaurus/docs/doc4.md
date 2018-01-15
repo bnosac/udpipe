@@ -1,7 +1,7 @@
 ---
 id: doc4
-title: R docs
-sidebar_label: R docs
+title: Further documentation
+sidebar_label: More docs
 ---
 
 ## R package documentation
@@ -15,5 +15,7 @@ More documentation can be found at
   * https://cran.r-project.org/web/packages/udpipe/vignettes/udpipe-train.html
 - The R package webstie: https://cran.r-project.org/web/packages/udpipe
 
+## Model background
   
-  
+The modelling is explained in the paper 'Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe', available at http://dx.doi.org/10.18653/v1/K17-3009
+
