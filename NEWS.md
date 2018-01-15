@@ -8,6 +8,7 @@
 - Allow to provide several fields in document_term_frequencies to easily allow to include bigrams/trigrams/... for topic modelling purposes e.g. alongside the textrank package or alongside collocation
 - Adding Serbian + Afrikaans
 - Fixing UBSAN messages (misaligned addresses)
+- If user has R version < 3.3.0, use own startsWith function instead of base::startsWith
  
 # CHANGES IN udpipe VERSION 0.2.2
 

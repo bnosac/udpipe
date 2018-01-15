@@ -164,6 +164,13 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE){
   }
   
   ## Parse format of all lines in the CONLL-U format
+  if(!exists("startsWith", envir = baseenv())){
+    ## Function only from R version 3.3.0
+    startsWith <- function(x, prefix){
+      prefix <- paste("^", prefix, sep = "")
+      grepl(pattern = prefix, x = x)
+    }
+  }
   txt <- strsplit(x$conllu, "\n")[[1]]
   is_sentence_boundary <- txt == ""
   is_comment <- startsWith(txt, "#")
