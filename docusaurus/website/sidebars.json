@@ -1,6 +1,7 @@
 {
   "docs": {
     "Introduction": ["doc0", "doc1"],
-    "Annotation": ["doc2", "doc3"]
+    "Annotation": ["doc2", "doc3"],
+    "MoreDocs": ["doc4"]
   }
 }

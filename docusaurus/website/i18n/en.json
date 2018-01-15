@@ -12,12 +12,15 @@
     "Text Annotation": "Text Annotation",
     "doc3": "Build models",
     "Model building": "Model building",
+    "doc4": "R docs",
+    "R docs": "R docs",
     "Home": "Home",
     "Docs": "Docs",
     "Support": "Support",
     "GitHub": "GitHub",
     "Blog": "Blog",
-    "Annotation": "Annotation"
+    "Annotation": "Annotation",
+    "MoreDocs": "MoreDocs"
   },
   "pages-strings": {
     "Help Translate|recruit community translators for your project": "Help Translate",
