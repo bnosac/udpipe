@@ -139,7 +139,7 @@ cooccurrence.data.frame <- function(x, order = TRUE, ..., group, term) {
 #' @param ... not used
 #' @return a sparse matrix with in the rows and columns the terms and in the cells how many times
 #' the cooccurrence occurred
-#' @export
+#' @S3method as.matrix cooccurrence
 #' @seealso \code{\link{cooccurrence}}
 #' @examples 
 #' data(brussels_reviews_anno)
