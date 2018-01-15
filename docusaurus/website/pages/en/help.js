@@ -37,7 +37,7 @@ class Help extends React.Component {
             </header>
 
              <ul>
-              <li>This project is maintained by a BNOSAC.</li>
+              <li>This project is maintained by BNOSAC.</li>
               <li>Need support in text mining? Contact us at <a href="http://www.bnosac.be">http://www.bnosac.be</a></li>
              </ul> 
         <a

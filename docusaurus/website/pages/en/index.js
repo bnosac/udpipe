@@ -107,7 +107,7 @@ const Features = props => (
         content: 'Quick and simple annnotations giving rich output: tokenization, tagging, lemmatization and dependency parsing',
         image: imgUrl('gem.svg'),
         imageAlign: 'top',
-        title: 'Easy annotation',
+        title: 'Rich & Easy annotation',
       },
       {
         content: 'Multi-language support. From raw text to parsed output for more than 50 languages. Load pre-trained models build on CONLL-U data from universaldependencies.org',
