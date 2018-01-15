@@ -21,7 +21,6 @@ x <- as.data.frame(x)
 x
 ```
 
-
 The annotation returns paragraphs, sentences, tokens, morphology elements like the lemma, the universal part of speech tag and the treebank-specific parts of speech tag, morphosyntactic features and returns as well the dependency relationship. More information at http://universaldependencies.org/guidelines.html
 
 ```

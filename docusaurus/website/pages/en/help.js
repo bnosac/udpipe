@@ -18,7 +18,7 @@ class Help extends React.Component {
     const supportLinks = [
       {
         content:
-          'Learn more using the [documentation on this site.](/test-site/docs/en/doc1.html)',
+          'Learn more using the [documentation on this site.](/udpipe/docs/doc0.html)',
         title: 'Browse Docs',
       },
       {
@@ -45,7 +45,7 @@ class Help extends React.Component {
           target="_blank"
           className="fbOpenSource">
           <img
-            src="img/logo-bnosac.png"
+            src="http://www.bnosac.be/images/bnosac/logo-bnosac.png"
             alt="BNOSAC Open Source"
             width="170"
             height="45"

@@ -28,6 +28,7 @@ Installation can be done as follows. Please visit the package documentation and 
 
 ```
 install.packages("udpipe")
+vignette("udpipe-tryitout", package = "udpipe")
 vignette("udpipe-annotation", package = "udpipe")
 vignette("udpipe-train", package = "udpipe")
 ```
@@ -66,19 +67,18 @@ x
 
 ## Pre-trained models
 
-Pre-trained Universal Dependencies 2.0 models on all UD treebanks are made available at 
-https://ufal.mff.cuni.cz/udpipe, namely at https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364.
+Pre-trained Universal Dependencies 2.0 models on all UD treebanks are made available for more than 50 languages, namely:
 
-At the time of writing this consists of models made available on 50 languages, namely: 
-ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, czech, danish, dutch, english, estonian, finnish, french, galician, german, gothic, greek, hebrew, hindi, hungarian, indonesian, irish, italian, japanese, kazakh, korean, latin, latvian, lithuanian, norwegian, old_church_slavonic, persian, polish, portuguese, romanian, russian, sanskrit, slovak, slovenian, spanish, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese. 
+afrikaans, ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, czech-cac, czech-cltt, czech, danish, dutch-lassysmall, dutch, english-lines, english-partut, english, estonian, finnish-ftb, finnish, french-partut, french-sequoia, french, galician-treegal, galician, german, gothic, greek, hebrew, hindi, hungarian, indonesian, irish, italian, japanese, kazakh, korean, latin-ittb, latin-proiel, latin, latvian, lithuanian, norwegian-bokmaal, norwegian-nynorsk, old_church_slavonic, persian, polish, portuguese-br, portuguese, romanian, russian-syntagrus, russian, sanskrit, serbian, slovak, slovenian-sst, slovenian, spanish-ancora, spanish, swedish-lines, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese. 
 
 These have been made available easily to users of the package by using `udpipe_download_model`
+
 
 ## Train your own models based on CONLL-U data
 
 The package also allows you to build your own annotation model. For this, you need to provide data in CONLL-U format.
 These are provided for many languages at http://universaldependencies.org/#ud-treebanks, mostly under the CC-BY-SA license.
-How this is done is detailed in the package vignette.
+How this is done is detailed in the package vignette. 
 
 ```
 vignette("udpipe-train", package = "udpipe")

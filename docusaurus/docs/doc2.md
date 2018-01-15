@@ -8,12 +8,12 @@ sidebar_label: Text Annotation
 
 ### Pre-trained models
 
-Before you can start on performing the annotation, you need a model. Pre-trained Universal Dependencies 2.0 models on all UD treebanks are made available at https://ufal.mff.cuni.cz/udpipe, namely at https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364. These models are made available under the CC BY-NC-SA 4.0 license.
+Before you can start on performing the annotation, you need a model. Pre-trained Universal Dependencies 2.0 models on all UD treebanks are made available for more than 50 languages trained on 69 treebanks, namely: 
 
-At the time of writing this consists of models made available on 50 languages trained on 67 treebanks, namely: 
-**ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, czech-cac, czech-cltt, czech, danish, dutch-lassysmall, dutch, english-lines, english-partut, english, estonian, finnish-ftb, finnish, french-partut, french-sequoia, french, galician-treegal, galician, german, gothic, greek, hebrew, hindi, hungarian, indonesian, irish, italian, japanese, kazakh, korean, latin-ittb, latin-proiel, latin, latvian, lithuanian, norwegian-bokmaal, norwegian-nynorsk, old_church_slavonic, persian, polish, portuguese-br, portuguese, romanian, russian-syntagrus, russian, sanskrit, slovak, slovenian-sst, slovenian, spanish-ancora, spanish, swedish-lines, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese**.
+**afrikaans, ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, czech-cac, czech-cltt, czech, danish, dutch-lassysmall, dutch, english-lines, english-partut, english, estonian, finnish-ftb, finnish, french-partut, french-sequoia, french, galician-treegal, galician, german, gothic, greek, hebrew, hindi, hungarian, indonesian, irish, italian, japanese, kazakh, korean, latin-ittb, latin-proiel, latin, latvian, lithuanian, norwegian-bokmaal, norwegian-nynorsk, old_church_slavonic, persian, polish, portuguese-br, portuguese, romanian, russian-syntagrus, russian, sanskrit, serbian, slovak, slovenian-sst, slovenian, spanish-ancora, spanish, swedish-lines, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese**.
 
-For R users who want to use these open-sourced models provided by the UDPipe community and start on tagging, you can proceed as follows to download the model of the language of your choice.
+For R users who want to use these open-sourced models provided by the UDPipe community and start on tagging, you can proceed as follows to download the model of the language of your choice. 
+
 
 ```{r}
 library(udpipe)

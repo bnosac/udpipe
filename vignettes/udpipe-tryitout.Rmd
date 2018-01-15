@@ -1,0 +1,41 @@
+---
+title: "UDPipe Natural Language Processing - Try it out"
+author: "Jan Wijffels"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_caption: false
+    toc: false
+vignette: >
+  %\VignetteIndexEntry{UDPipe Natural Language Processing - Try it out}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+options(width = 1000)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, comment = NA, eval = TRUE)
+```
+
+Install the R package. 
+
+```{eval=FALSE}
+install.packages("udpipe")
+```
+
+Get your language model and start annotating.
+
+```{r, results='hide'}
+library(udpipe)
+udmodel_dutch <- udpipe_download_model(language = "dutch")
+udmodel_dutch <- udpipe_load_model(file = udmodel_dutch$file_model)
+x <- udpipe_annotate(udmodel_dutch, 
+                     x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.")
+x <- as.data.frame(x)
+```
+
+The annotation returns paragraphs, sentences, tokens, morphology elements like the lemma, the universal part of speech tag and the treebank-specific parts of speech tag, morphosyntactic features and returns as well the dependency relationship. More information at http://universaldependencies.org/guidelines.html
+
+```
+str(x)
+```
