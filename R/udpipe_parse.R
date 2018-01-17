@@ -90,6 +90,7 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
   tagger <- tagger[1]
   parser <- parser[1]
 
+  x = iconv(x, to = "UTF-8")
   x_conllu <- udp_tokenise_tag_parse(object$model, x, doc_id, tokenizer, tagger, parser)
   Encoding(x_conllu$conllu) <- "UTF-8"
   class(x_conllu) <- "udpipe_connlu"
