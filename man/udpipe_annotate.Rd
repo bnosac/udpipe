@@ -83,6 +83,9 @@ x <- udpipe_annotate(ud_dutch, x = txt, doc_id = c("id1", "feedbackabc"),
                      tagger = "none", parser = "none")
 as.data.frame(x)
 
+## Mark on encodings: if your data is not in UTF-8 encoding, make sure you convert it to UTF-8 
+## This can be done using iconv as follows for example
+udpipe_annotate(ud_dutch, x = iconv('Ik drink melk bij mijn koffie.', to = "UTF-8"))
 
 ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
 file.remove("dutch-lassysmall-ud-2.0-170801.udpipe")

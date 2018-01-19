@@ -1,6 +1,7 @@
 # CHANGES IN udpipe VERSION 0.3.1
 
 - Fix R CMD check on clang-UBSAN: UndefinedBehaviorSanitizer (runtime error: reference binding to misaligned address)
+- Add more documentation on required UTF-8 encoding
 
 # CHANGES IN udpipe VERSION 0.3
 
