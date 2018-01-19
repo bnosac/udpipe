@@ -12593,8 +12593,8 @@ void gru_tokenizer_network::matrix<R, C>::clear() {
 
 template <int R, int C>
 void gru_tokenizer_network::matrix<R, C>::load(binary_decoder& data) {
-  for (int i = 0; i < R; i++) copy_n(data.next<float>(C), C, w[i]);
-  copy_n(data.next<float>(R), R, b);
+  for (int i = 0; i < R; i++) memcpy(w[i], data.next<float>(C), sizeof(float) * C);
+  memcpy(b, data.next<float>(R), sizeof(float) * R);
 }
 
 template <int D>
@@ -14885,8 +14885,8 @@ void embedding::load(binary_decoder& data) {
   unknown_index = data.next_1B() ? dictionary.size() : -1;
 
   // Load weights
-  const float* weights_ptr = data.next<float>(dimension * (dictionary.size() + (unknown_index >= 0)));
-  weights.assign(weights_ptr, weights_ptr + dimension * (dictionary.size() + (unknown_index >= 0)));
+  weights.resize(dimension * (dictionary.size() + (unknown_index >= 0)));
+  memcpy(weights.data(), data.next<float>(weights.size()), sizeof(float) * weights.size());
 }
 
 } // namespace parsito
@@ -15057,8 +15057,8 @@ void neural_network::load_matrix(binary_decoder& data, vector<vector<float>>& m)
 
   m.resize(rows);
   for (auto&& row : m) {
-    const float* row_ptr = data.next<float>(columns);
-    row.assign(row_ptr, row_ptr + columns);
+    row.resize(columns);
+    memcpy(row.data(), data.next<float>(columns), sizeof(float) * columns);
   }
 }
 
