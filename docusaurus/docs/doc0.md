@@ -10,13 +10,15 @@ Install the R package.
 install.packages("udpipe")
 ```
 
+## Example
+
 Get your language model and start annotating.
 
 ```
 library(udpipe)
-udmodel_dutch <- udpipe_download_model(language = "dutch")
-udmodel_dutch <- udpipe_load_model(file = udmodel_dutch$file_model)
-x <- udpipe_annotate(udmodel_dutch, x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.")
+udmodel <- udpipe_download_model(language = "dutch")
+udmodel <- udpipe_load_model(file = udmodel$file_model)
+x <- udpipe_annotate(udmodel, x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.")
 x <- as.data.frame(x)
 x
 ```
@@ -34,3 +36,8 @@ The annotation returns paragraphs, sentences, tokens, morphology elements like t
    doc1            1           1        7   nam  neem  VERB   V|trans|ovt|1of2of3|ev Aspect=Imp|Mood=Ind|Number=Sing|Subcat=Tran|Tense=Past|VerbForm=Fin             2    conj <NA>
 ...
 ```
+
+## A small note on encodings
+
+Mark that it is important that the `x` argument to `udpipe_annotate` is in UTF-8 encoding. You can check the encoding of your text with `Encoding('your text')` and to convert your text to UTF-8, use standard R utilities to convert to the right encoding 
+as in `iconv('your text', from = 'latin1', to = 'UTF-8')` where you replace the from part with whichever encoding you have your text in, possible your computers default as defined in `localeToCharset()`. So annotation would look something like this: `udpipe_annotate(udmodel, x = iconv('your text', from = 'latin1', to = 'UTF-8'))` or like this `udpipe_annotate(udmodel, x = iconv('your text', to = 'UTF-8'))` if your text is in the encoding of the current locale of your computer.
