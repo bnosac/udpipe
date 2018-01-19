@@ -44,5 +44,10 @@ str(x)
 
 ## A small note on encodings
 
-Mark that it is important that the `x` argument to `udpipe_annotate` is in UTF-8 encoding. You can check the encoding of your text with `Encoding('your text')` and to convert your text to UTF-8, use standard R utilities to convert to the right encoding 
-as in `iconv('your text', from = 'latin1', to = 'UTF-8')` where you replace the from part with whichever encoding you have your text in, possible your computers default as defined in `localeToCharset()`. So annotation would look something like this: `udpipe_annotate(udmodel, x = iconv('your text', from = 'latin1', to = 'UTF-8'))` or like this `udpipe_annotate(udmodel, x = iconv('your text', to = 'UTF-8'))` if your text is in the encoding of the current locale of your computer.
+Mark that it is important that the `x` argument to `udpipe_annotate` is in UTF-8 encoding. 
+You can check the encoding of your text with `Encoding('your text')`. You can convert your text to UTF-8, using standard R utilities: as in `iconv('your text', from = 'latin1', to = 'UTF-8')` where you replace the `from` part with whichever encoding you have your text in, possible your computers default as defined in `localeToCharset()`. So annotation would look something like this if your text is not already in UTF-8 encoding: 
+
+- `udpipe_annotate(udmodel, x = iconv('your text', to = 'UTF-8'))` if your text is in the encoding of the current locale of your computer.
+- `udpipe_annotate(udmodel, x = iconv('your text', from = 'latin1', to = 'UTF-8'))` if your text is in latin1 encoding. 
+- `udpipe_annotate(udmodel, x = iconv('your text', from = 'CP949', to = 'UTF-8'))` if your text is in CP949 encoding. 
+
