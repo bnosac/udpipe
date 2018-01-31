@@ -3,26 +3,26 @@
 #' 
 #' There are 3 types of cooccurrences:
 #' \itemize{
-#'   \item Looking at which words are in the same document/sentence/paragraph.
-#'   \item Looking at which words are followed by the next word
-#'   \item Looking at which words are in the neighbourhood of the word (before or after also known as skipgrams)
+#'   \item Looking at which words are located in the same document/sentence/paragraph.
+#'   \item Looking at which words are followed by another word
+#'   \item Looking at which words are in the neighbourhood of the word as in follows the word within \code{skipgram} number of words
 #' }
-#' The result is a data.frame with fields term1, term2 and cooc where cooc indicates how many times
-#' term1 and term2 co-occurred.\cr
-#' The dataset can be constructed 
+#' The output of the function gives a cooccurrence data.frame which contains the fields term1, term2 and cooc where cooc indicates how many times
+#' term1 and term2 co-occurred. This dataset can be constructed 
 #' \itemize{
-#'   \item based upon a data frame where you look within a group if 2 terms occurred.
+#'   \item based upon a data frame where you look within a group (column of the data.frame) if 2 terms occurred in that group.
 #'   \item based upon a vector of words in which case we look how many times each word is followed by another word.
-#'   \item based upon a vector of words in which case we look how many times each word is followed or preceded by another word.
+#'   \item based upon a vector of words in which case we look how many times each word is followed by another word or is followed by another word if we skip a number of words in between.
 #' }
 #' You can also aggregate cooccurrences if you decide to do any of these 3 by a certain group and next want to have
-#' an overall aggregate
+#' an overall aggregate.
 #' @param x either
 #' \itemize{
 #'   \item a data.frame where the data.frame contains 1 row per document/term,
-#'   in which case you need to provide \code{group} and \code{term}. This uses cooccurrence.data.frame.
-#'   \item a character vector with terms. This uses cooccurrence.character.
-#'   \item an object of class \code{cooccurrence}.This uses cooccurrence.cooccurrence.
+#'   in which case you need to provide \code{group} and \code{term} where \code{term} is the column containing 1 term per row
+#'   and \code{group} indicates something like a document id or document + sentence id. This uses cooccurrence.data.frame.
+#'   \item a character vector with terms where one element contains 1 term. This uses cooccurrence.character.
+#'   \item an object of class \code{cooccurrence}. This uses cooccurrence.cooccurrence.
 #' }
 #' @param order logical indicating if we need to sort the output from high cooccurrences to low coccurrences. Defaults to TRUE.
 #' @param ... other arguments passed on to the methods
@@ -45,6 +45,9 @@
 #' x <- subset(brussels_reviews_anno, language == "es")
 #' x <- cooccurrence(x$lemma)
 #' head(x)
+#' x <- subset(brussels_reviews_anno, language == "es")
+#' x <- cooccurrence(x$lemma, relevant = x$xpos %in% c("NN", "JJ"), skipgram = 4)
+#' head(x)
 #' 
 #' ## Which nouns follow each other in the same document
 #' library(data.table)
@@ -61,18 +64,50 @@ cooccurrence <- function(x, order = TRUE, ...){
 }
 
 #' @describeIn cooccurrence Create a cooccurence data.frame based on a vector of terms
+#' @param relevant a logical vector of the same length as \code{x}, indicating if the word in \code{x} is relevant or not.
+#' This can be used to exclude stopwords from the cooccurrence calculation or selecting only nouns and adjectives to 
+#' find cooccurrences along with each other 
+#' (for example based on the Parts of Speech \code{upos} output from \code{udpipe_annotate}).\cr
+#' Only used if calculating cooccurrences on \code{x} which is a character vector of words.
+#' @param skipgram integer of length 1, indicating how far in the neighbourhood to look for words.\cr
+#' \code{skipgram} is considered the maximum skip distance between words to calculate co-occurrences 
+#' (where co-occurrences are of type skipgram-bigram, where a skipgram-bigram are 2 words which occur at a distance of at most \code{skipgram + 1} from each other). \cr
+#' Only used if calculating cooccurrences on \code{x} which is a character vector of words.
 #' @export
-cooccurrence.character <- function(x, order = TRUE, ...){
+cooccurrence.character <- function(x, order = TRUE, ..., relevant = rep(TRUE, length(x)), skipgram = 0){
+  stopifnot(all(skipdistances >= 0))
   cooc <- term1 <- term2 <- NULL
   
-  result <- data.table(term1 = x,
-             term2 = txt_next(x, n = 1),
-             cooc = 1L)
-  result <- subset(result, !is.na(term1) & !is.na(term2))
+  ## skipdistances if it is only 1 value, it is considered the maximum skip distance between words, compute all skip n-grams between 0 and skipgram
+  ## if there are several values, consider them as such
+  skipdistances <- as.integer(skipdistances)
+  if(length(skipdistances) == 1){
+    skipdistances <- seq(0, skipdistances, by = 1)
+  }else{
+    skipdistances <- union(0L, skipdistances)
+  }
+  
+  # look which word are followed with the next word, 
+  # look which word is followed by the 2nd next word, 3rd next word andsoforth
+  # but if the data is not considered relevant, do not use it
+  irrelevant <- !relevant
+  result <- lapply(skipdistances, FUN=function(n){
+    result <- data.table(term1 = x, 
+                         term2 = txt_next(x, n = n + 1L), 
+                         cooc = 1L)
+    not_relevant <- txt_next(relevant, n = n + 1L)
+    not_relevant <- irrelevant | (not_relevant %in% FALSE)
+    if(sum(not_relevant) > 0){
+      result[not_relevant, term1 := NA_character_] 
+      result[not_relevant, term2 := NA_character_]  
+    }
+    result <- subset(result, !is.na(term1) & !is.na(term2))
+    result <- result[, list(cooc = sum(cooc)), by = list(term1, term2)]
+    result
+  })
+  result <- rbindlist(result)
   result <- result[, list(cooc = sum(cooc)), by = list(term1, term2)]
   
-  terminology <- c(unique(result$term1), unique(result$term2))
-  terminology <- unique(terminology)
   if(order){
     setorder(result, -cooc)  
   }
@@ -97,7 +132,8 @@ cooccurrence.cooccurrence <- function(x, order = TRUE, ...){
 
 #' @describeIn cooccurrence Create a cooccurence data.frame based on a data.frame where you look within a document / sentence / paragraph / group 
 #' if terms co-occur
-#' @param group character string with a column in the data frame \code{x}. To be used if \code{x} is a data.frame.
+#' @param group character string with a column in the data frame \code{x} indicating to calculated cooccurrences with this column. This 
+#' is typically a field like document id or a sentence identifier. To be used if \code{x} is a data.frame.
 #' @param term character string with a column in the data frame \code{x}, containing 1 term per row. To be used if \code{x} is a data.frame.
 #' @export
 cooccurrence.data.frame <- function(x, order = TRUE, ..., group, term) {
@@ -108,7 +144,7 @@ cooccurrence.data.frame <- function(x, order = TRUE, ..., group, term) {
   .N <- NULL
 
   dtf <- setDT(x)[, list(freq = .N), by = c(group, term)]
-  setnames(dtf, old = c(group, term), new = c("doc_id", "term"))
+  dtf <- setnames(dtf, old = c(group, term), new = c("doc_id", "term"))
   dtf <- dtf[!is.na(term), ]
   
   x <- document_term_matrix(dtf)
