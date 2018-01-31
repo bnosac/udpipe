@@ -59,7 +59,6 @@ keywords_rake <- function(x, term, group, relevant = rep(TRUE, nrow(x)), ngram_m
   
   ## Define a keyword which is a contiguous sequence of words + remove the non-candidates
   x$keyword_id <- data.table::rleid(x[["group"]], x[[".relevant"]])
-  #x <- x[, keyword_id := rleid(.relevant), by = list(group)]
   x <- subset(x, .relevant != FALSE, select = c("keyword_id", "word"))
   x <- x[, keyword := paste(word, collapse = sep), by = list(keyword_id)]
   
