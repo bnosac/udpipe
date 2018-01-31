@@ -48,7 +48,7 @@
 #' head(keywords)
 keywords_rake <- function(x, term, group, relevant = rep(TRUE, nrow(x)), ngram_max = 2, n_min = 2, sep = " "){
   ## R CMD check happiness
-  .relevant <- .N <- keyword_id <- keyword <- degree <- word <- freq <- ngram <- rake <- NULL
+  .relevant <- .N <- keyword_id <- keyword <- degree <- word <- freq <- ngram <- rake <- rake_word_score <- NULL
   stopifnot(is.data.frame(x))
   stopifnot(term %in% colnames(x))
   stopifnot(group %in% colnames(x))
