@@ -3,6 +3,7 @@
 - Fix R CMD check on clang-UBSAN: UndefinedBehaviorSanitizer (runtime error: reference binding to misaligned address)
 - Add more documentation on required UTF-8 encoding
 - Add as_conllu
+- Add as_word2vec
 
 # CHANGES IN udpipe VERSION 0.3
 

@@ -303,3 +303,33 @@ as_conllu <- function(x){
   sprintf("%s\n", txt)
 }
 
+
+#' @title Convert a matrix of word vectors to word2vec format 
+#' @description The word2vec format provides in the first line the dimension of the word vectors and in the following lines one
+#' has the elements of the wordvector where each line covers one word or token.\cr
+#' 
+#' The function is basically a utility function which allows one to write wordvectors created with other R packages in 
+#' the well-known word2vec format which is used by \code{udpipe_train} to train the dependency parser.
+#' @param x a matrix with word vectors where the rownames indicate the word or token and the number of columns
+#' of the matrix indicate the side of the word vector
+#' @return a character string of length 1 containing the word vectors in word2vec format which can be written to a file on disk
+#' @export
+#' @examples
+#' wordvectors <- matrix(rnorm(1000), nrow = 100, ncol = 10)
+#' rownames(wordvectors) <- sprintf("word%s", seq_len(nrow(wordvectors)))
+#' wv <- as_word2vec(wordvectors)
+#' cat(wv)
+#' 
+#' f <- file(tempfile(fileext = ".txt"), encoding = "UTF-8")
+#' cat(wv, file = f)
+#' close(f)
+as_word2vec <- function(x){
+  stopifnot(is.matrix(x))
+  line1 <- sprintf("%s %s", nrow(x), ncol(x))
+  lines_rest <- mapply(token = rownames(x), i = seq_len(nrow(x)), FUN=function(token, i){
+    line <- sprintf("%s %s", token, paste(as.character(x[i, ]), collapse = " "))
+    line
+  })
+  x <- c(line1, lines_rest)
+  paste(x, collapse = "\n")
+}
