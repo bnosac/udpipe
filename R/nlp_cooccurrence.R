@@ -75,12 +75,12 @@ cooccurrence <- function(x, order = TRUE, ...){
 #' Only used if calculating cooccurrences on \code{x} which is a character vector of words.
 #' @export
 cooccurrence.character <- function(x, order = TRUE, ..., relevant = rep(TRUE, length(x)), skipgram = 0){
-  stopifnot(all(skipdistances >= 0))
+  stopifnot(all(skipgram >= 0))
   cooc <- term1 <- term2 <- NULL
   
   ## skipdistances if it is only 1 value, it is considered the maximum skip distance between words, compute all skip n-grams between 0 and skipgram
   ## if there are several values, consider them as such
-  skipdistances <- as.integer(skipdistances)
+  skipdistances <- as.integer(skipgram)
   if(length(skipdistances) == 1){
     skipdistances <- seq(0, skipdistances, by = 1)
   }else{
@@ -132,8 +132,8 @@ cooccurrence.cooccurrence <- function(x, order = TRUE, ...){
 
 #' @describeIn cooccurrence Create a cooccurence data.frame based on a data.frame where you look within a document / sentence / paragraph / group 
 #' if terms co-occur
-#' @param group character string with a column in the data frame \code{x} indicating to calculated cooccurrences with this column. This 
-#' is typically a field like document id or a sentence identifier. To be used if \code{x} is a data.frame.
+#' @param group character string with a column in the data frame \code{x} indicating to calculate cooccurrences within this column. \cr
+#' This is typically a field like document id or a sentence identifier. To be used if \code{x} is a data.frame.
 #' @param term character string with a column in the data frame \code{x}, containing 1 term per row. To be used if \code{x} is a data.frame.
 #' @export
 cooccurrence.data.frame <- function(x, order = TRUE, ..., group, term) {
