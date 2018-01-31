@@ -4,6 +4,8 @@
 - Add more documentation on required UTF-8 encoding
 - Add as_conllu
 - Add as_word2vec
+- Add keywords_rake and keywords_collocation
+- Exported also keywords_collocation and keywords_phrases
 
 # CHANGES IN udpipe VERSION 0.3
 
