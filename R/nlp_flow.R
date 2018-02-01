@@ -12,8 +12,9 @@
 #' @param term If \code{x} is a data.frame, the column in \code{x} which identifies a term. Defaults to the second column
 #' in \code{x}.
 #' @param ... further arguments passed on to the methods
-#' @return a data.table with columns document, term and the summed freq. If freq is not in the dataset,
-#' will assume that freq is 1 for each row in \code{x}.
+#' @return a data.table with columns doc_id, term, freq indicating how many times a term occurred in each document.
+#' If freq occurred in the input dataset the resulting data will have summed the freq. If freq is not in the dataset,
+#' will assume that freq is 1 for each row in the input dataset \code{x}.
 #' @export
 #' @examples 
 #' ##
@@ -99,6 +100,49 @@ document_term_frequencies.character <- function(x, document=paste("doc", seq_alo
 }
 
 
+#' @title Add Term Frequency, Inverse Document Frequency and Okapi BM25 statistics to the output of document_term_frequencies
+#' @description Term frequency Inverse Document Frequency (tfidf) is calculated as the multiplication of
+#' \itemize{
+#' \item Term Frequency (tf): how many times the word occurs in the document / how many words are in the document
+#' \item Inverse Document Frequency (idf): number of documents / number of documents where the term appears
+#' }
+#' The Okapi BM25 statistic is calculated as the multiplication of the inverse document frequency
+#' and the weighted term frequency as defined at \url{https://en.wikipedia.org/wiki/Okapi_BM25}.
+#' @param x a data.table as returned by \code{document_term_frequencies} containing the columns doc_id, term and freq.
+#' @param k parameter k1 of the Okapi BM25 ranking function as defined at \url{https://en.wikipedia.org/wiki/Okapi_BM25}. Defaults to 1.2.
+#' @param b parameter b of the Okapi BM25 ranking function as defined at \url{https://en.wikipedia.org/wiki/Okapi_BM25}. Defaults to 0.5.
+#' @return a data.table with columns doc_id, term, freq and added to that the computed statistics
+#' tf, idf, tfidf, tf_bm25 and bm25.
+#' @export
+#' @examples 
+#' data(brussels_reviews_anno)
+#' x <- document_term_frequencies(brussels_reviews_anno[, c("doc_id", "token")])
+#' x <- document_term_frequencies_statistics(x)
+#' head(x)
+document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
+  ## r cmd check happiness
+  doc_id <- term <- freq <- tf <- idf <- tf_idf <- tf_bm25 <- bm25 <- NULL
+
+  ##
+  ## Term Frequency Inverse Document Frequency
+  ##   - tf: how many times the word occurs in the document / how many words are in the document
+  ##   - idf: number of documents / number of documents where the term appears
+  ##
+  nr_docs <- length(unique(x$doc_id))
+  x <- x[, tf := freq / sum(freq), by = list(doc_id)]
+  x <- x[, idf := log(nr_docs / uniqueN(doc_id)), by = list(term)]
+  x <- x[, tf_idf := tf * idf, ]
+  
+  ##
+  ## Okapi BM25
+  ##   - See https://en.wikipedia.org/wiki/Okapi_BM25
+  ##
+  average_doc_length <- x[, list(nr_terms = sum(freq)), by = list(doc_id)]
+  average_doc_length <- mean(average_doc_length$nr_terms)
+  x <- x[, tf_bm25 := (freq * (k + 1)) / (freq + (k * (1 - b + b * (sum(freq) / average_doc_length)))), by = list(doc_id)]
+  x <- x[, bm25 := tf_bm25 * idf, ]
+  x
+}
 
 
 
@@ -476,4 +520,31 @@ dtm_rbind <- function(x, y){
     y <- methods::cbind2(y, addright)
   }
   rbind2(x[, r], y[, r])
+}
+
+
+#' @title Column sums and Row sums for document term matrices
+#' @description Column sums and Row sums for document term matrices
+#' @param dtm an object returned by \code{\link{document_term_matrix}}
+#' @return 
+#' @export
+#' @aliases dtm_colsums dtm_rowsums
+#' @examples 
+#' x <- data.frame(
+#'  doc_id = c(1, 1, 2, 3, 4), 
+#'  term = c("A", "C", "Z", "X", "G"), 
+#'  freq = c(1, 5, 7, 10, 0))
+#' dtm <- document_term_matrix(x)
+#' x <- dtm_colsums(dtm)
+#' x
+#' x <- dtm_rowsums(dtm)
+#' head(x)
+dtm_colsums <- function(dtm){
+  Matrix::colSums(dtm)
+}
+
+#' @export
+#' @rdname dtm_colsums
+dtm_rowsums <- function(dtm){
+  Matrix::rowSums(dtm)
 }

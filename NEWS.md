@@ -1,4 +1,4 @@
-# CHANGES IN udpipe VERSION 0.3.1
+# CHANGES IN udpipe VERSION 0.4
 
 - Fix R CMD check on clang-UBSAN: UndefinedBehaviorSanitizer (runtime error: reference binding to misaligned address)
 - Add more documentation on required UTF-8 encoding
@@ -6,6 +6,8 @@
 - Add as_word2vec
 - Add keywords_rake and keywords_collocation
 - Exported also keywords_collocation and keywords_phrases
+- Add document_term_frequencies_statistics
+- Add boilerplate functions dtm_rowsums and dtm_colsums
 
 # CHANGES IN udpipe VERSION 0.3
 

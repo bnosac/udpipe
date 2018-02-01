@@ -36,8 +36,9 @@ This will split the character vector \code{x} in pieces by the provides split ar
 Defaults to splitting according to spaces/punctuations/digits.}
 }
 \value{
-a data.table with columns document, term and the summed freq. If freq is not in the dataset,
-will assume that freq is 1 for each row in \code{x}.
+a data.table with columns doc_id, term, freq indicating how many times a term occurred in each document.
+If freq occurred in the input dataset the resulting data will have summed the freq. If freq is not in the dataset,
+will assume that freq is 1 for each row in the input dataset \code{x}.
 }
 \description{
 Aggregate a data.frame to the document/term level by calculating how many times a term occurs per document
