@@ -4,10 +4,14 @@
 - Add more documentation on required UTF-8 encoding
 - Add as_conllu
 - Add as_word2vec
+- Add as.data.table.udpipe_conllu for convenience
 - Add keywords_rake and keywords_collocation
 - Exported also keywords_collocation and keywords_phrases
 - Add document_term_frequencies_statistics
 - Add boilerplate functions dtm_rowsums and dtm_colsums
+- Make output of keywords_collocation, keywords_rake and keywords_phrases consistent
+- Allow cooccurrence.data.frame to provide a vector of groups
+- Added another vignette
 
 # CHANGES IN udpipe VERSION 0.3
 
