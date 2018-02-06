@@ -132,7 +132,7 @@ cooccurrence.cooccurrence <- function(x, order = TRUE, ...){
 
 #' @describeIn cooccurrence Create a cooccurence data.frame based on a data.frame where you look within a document / sentence / paragraph / group 
 #' if terms co-occur
-#' @param group character string with a column in the data frame \code{x} indicating to calculate cooccurrences within this column. \cr
+#' @param group character vector with a columns in the data frame \code{x} indicating to calculate cooccurrences within these columns. \cr
 #' This is typically a field like document id or a sentence identifier. To be used if \code{x} is a data.frame.
 #' @param term character string with a column in the data frame \code{x}, containing 1 term per row. To be used if \code{x} is a data.frame.
 #' @export
@@ -142,9 +142,15 @@ cooccurrence.data.frame <- function(x, order = TRUE, ..., group, term) {
   }
   ## make R CMD check happy
   .N <- NULL
-
+  
   dtf <- setDT(x)[, list(freq = .N), by = c(group, term)]
-  dtf <- setnames(dtf, old = c(group, term), new = c("doc_id", "term"))
+  dtf <- setnames(dtf, old = c(term), new = c("term"))
+  if(length(group) > 1){
+    dtf$doc_id <- unique_identifier(dtf, fields = group)
+    dtf <- dtf[, c("doc_id", "term", "freq"), with=FALSE]
+  }else{
+    dtf <- setnames(dtf, old = c(group), new = c("doc_id"))  
+  }
   dtf <- dtf[!is.na(term), ]
   
   x <- document_term_matrix(dtf)

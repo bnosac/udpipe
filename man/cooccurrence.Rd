@@ -41,7 +41,7 @@ Only used if calculating cooccurrences on \code{x} which is a character vector o
 (where co-occurrences are of type skipgram-bigram, where a skipgram-bigram are 2 words which occur at a distance of at most \code{skipgram + 1} from each other). \cr
 Only used if calculating cooccurrences on \code{x} which is a character vector of words.}
 
-\item{group}{character string with a column in the data frame \code{x} indicating to calculate cooccurrences within this column. \cr
+\item{group}{character vector with a columns in the data frame \code{x} indicating to calculate cooccurrences within these columns. \cr
 This is typically a field like document id or a sentence identifier. To be used if \code{x} is a data.frame.}
 
 \item{term}{character string with a column in the data frame \code{x}, containing 1 term per row. To be used if \code{x} is a data.frame.}
