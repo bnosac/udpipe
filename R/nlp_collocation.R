@@ -99,8 +99,10 @@ keywords_collocation <- function(x, term, group, ngram_max = 2, n_min = 2, sep =
   result <- rbindlist(result, fill = TRUE, idcol = "ngram")
   result$collocation <- paste(result$left, result$right, sep = sep)
   result$ngram <- result$ngram + 1
-  result <- result[order(result$pmi, decreasing = TRUE), c("ngram", "collocation", "left", "right", "n", "n_left", "n_right", "pmi", "md", "lfmd")]
-  result <- data.table::setnames(result, old = c("n", "n_left", "n_right"), new = c("freq_collocation", "freq_left", "freq_right"))
+  result <- result[order(result$pmi, decreasing = TRUE), c("collocation", "ngram", "left", "right", "n", "n_left", "n_right", "pmi", "md", "lfmd")]
+  result <- data.table::setnames(result, 
+                                 old = c("collocation", "n", "n_left", "n_right"), 
+                                 new = c("keyword", "freq", "freq_left", "freq_right"))
   result <- setDF(result)
   result
 }

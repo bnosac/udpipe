@@ -129,6 +129,14 @@ as.data.frame.udpipe_connlu <- function(x, ...){
   read_connlu(x, is_udpipe_annotation = TRUE)
 }
 
+#' @export
+#' @rdname as.data.table.udpipe_connlu
+as.data.table.udpipe_connlu <- function(x, ...){
+  out <- as.data.frame(x)
+  out <- data.table::setDT(out)
+  out
+}
+
 
 read_connlu <- function(x, is_udpipe_annotation = FALSE){
   ## R CMD check happyness

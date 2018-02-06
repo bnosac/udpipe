@@ -7,10 +7,10 @@
 \title{Extract phrases - a sequence of terms which follow each other based on a sequence of Parts of Speech tags}
 \usage{
 keywords_phrases(x, term = x, pattern, is_regex = FALSE, sep = " ",
-  ngram_max = 8)
+  ngram_max = 8, detailed = TRUE)
 
 phrases(x, term = x, pattern, is_regex = FALSE, sep = " ",
-  ngram_max = 8)
+  ngram_max = 8, detailed = TRUE)
 }
 \arguments{
 \item{x}{a character vector of Parts of Speech tags where we want to locate a relevant sequence of POS tags as defined in \code{pattern}}
@@ -29,15 +29,21 @@ a character vector of POS tags. Defaults to FALSE, indicating \code{pattern} is 
 
 \item{ngram_max}{an integer indicating to allow phrases to be found up to \code{ngram} maximum number of terms following each other. Only 
 used if is_regex is set to TRUE. Defaults to 8.}
+
+\item{detailed}{logical indicating to return the exact positions where the phrase was found (set to \code{TRUE}) or just how many times each phrase is occurring (set to \code{FALSE}). 
+Defaults to \code{TRUE}.}
 }
 \value{
-a data.frame with columns 
+If argument \code{detailed} is set to \code{TRUE} a data.frame with columns 
 \itemize{
+\item keyword: the phrase which corresponds to the collapsed terms of where the pattern was found
+\item ngram: the length of the phrase
+\item pattern: the pattern which was found
 \item start: the starting index of \code{x} where the pattern was found
 \item end: the ending index of \code{x} where the pattern was found
-\item pattern: the pattern which was found
-\item phrase: the phrase which corresponds to the collapsed terms of where the pattern was found
 }
+If argument \code{detailed} is set to \code{FALSE} will return aggregate frequency statistics in a data.frame containing the columns keyword, 
+ngram and freq (how many time it is occurring)
 }
 \description{
 This function allows to extract phrases, like simple noun phrases, complex noun phrases
@@ -73,9 +79,10 @@ head(np)
 x$phrase_tag <- as_phrasemachine(x$xpos, type = "penn-treebank")
 nounphrases <- keywords_phrases(x$phrase_tag, term = x$token, 
                                 pattern = "(A|N)+N(P+D*(A|N)*N)*", is_regex = TRUE, 
-                                ngram_max = 4)
+                                ngram_max = 4, 
+                                detailed = TRUE)
 head(nounphrases, 10)
-head(sort(table(nounphrases$phrase), decreasing=TRUE), 20)
+head(sort(table(nounphrases$keyword), decreasing=TRUE), 20)
 
 ## Find frequent sequences of POS tags
 library(data.table)

@@ -27,8 +27,8 @@
 #' @return a data.frame with columns keyword, ngram and rake which is ordered from low to high rake
 #' \itemize{
 #' \item keyword: the keyword
-#' \item freq: how many times did the keyword occur
 #' \item ngram: how many terms are in the keyword
+#' \item freq: how many times did the keyword occur
 #' \item rake: the ratio of the degree to the frequency as explained in the description, summed up for all words from the keyword
 #' }
 #' @references Rose, Stuart & Engel, Dave & Cramer, Nick & Cowley, Wendy. (2010). Automatic Keyword Extraction from Individual Documents. Text Mining: Applications and Theory. 1 - 20. 10.1002/9780470689646.ch1. 
@@ -80,6 +80,7 @@ keywords_rake <- function(x, term, group, relevant = rep(TRUE, nrow(x)), ngram_m
                               rake = sum(rake_word_score)), by = list(keyword, freq)]
   keywords <- subset(keywords, ngram <= ngram_max & freq >= n_min)
   setorder(keywords, -rake)  
+  keywords <- data.table::setcolorder(keywords, neworder = c("keyword", "ngram", "freq", "rake"))
   keywords <- setDF(keywords)
   keywords
 }

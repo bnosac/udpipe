@@ -31,8 +31,8 @@ the terms which define the keywords. Defaults to a space: ' '.}
 a data.frame with columns keyword, ngram and rake which is ordered from low to high rake
 \itemize{
 \item keyword: the keyword
-\item freq: how many times did the keyword occur
 \item ngram: how many terms are in the keyword
+\item freq: how many times did the keyword occur
 \item rake: the ratio of the degree to the frequency as explained in the description, summed up for all words from the keyword
 }
 }
