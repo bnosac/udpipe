@@ -202,3 +202,28 @@ as.matrix.cooccurrence <- function(x, ...){
   result
 }
 
+
+#' @title Convert a matrix to a co-occurrence data.frame
+#' @description Use this function to convert the cells of a matrix to a 
+#' co-occurrence data.frame containing fields term1, term2 and cooc where each row of the resulting
+#' data.frame contains the value of a cell in the matrix if the cell is not empty.
+#' @param x a matrix or sparseMatrix
+#' @return a data.frame with columns term1, term2 and cooc where the data in cooc contain 
+#' the content of the cells in the matrix for the combination of term1 and term2
+#' @export
+#' @examples 
+#' data(brussels_reviews_anno)
+#' x <- subset(brussels_reviews_anno, language == "nl")
+#' dtm <- document_term_frequencies(x = x, document = "doc_id", term = "token")
+#' dtm <- document_term_matrix(dtm)
+#' 
+#' correlation <- dtm_cor(dtm)
+#' cooc <- as_cooccurrence(correlation)
+#' head(cooc)
+as_cooccurrence <- function(x){
+  x <- as(x, "sparseMatrix")
+  x <- dtm_reverse(x)
+  x <- data.table::setnames(x, old = c("doc_id", "term", "freq"), new = c("term1", "term2", "cooc"))
+  x
+}
+
