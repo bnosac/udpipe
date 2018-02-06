@@ -83,6 +83,7 @@ class HomeSplash extends React.Component {
             <Button href={docUrl('doc0.html', language)}>Try it out</Button>
             <Button href={docUrl('doc1.html', language)}>Overview</Button>
             <Button href={docUrl('doc2.html', language)}>Detailed usage</Button>
+            <Button href={docUrl('doc5.html', language)}>Analytical use-cases</Button>
             <Button href={docUrl('doc3.html', language)}>Model building</Button>
           </PromoSection>
         </div>
