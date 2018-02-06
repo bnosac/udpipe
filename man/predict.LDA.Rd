@@ -2,6 +2,7 @@
 % Please edit documentation in R/topicmodels.R
 \name{predict.LDA_VEM}
 \alias{predict.LDA_VEM}
+\alias{predict.LDA}
 \alias{predict.LDA_Gibbs}
 \title{Predict method for an object of class LDA_VEM or class LDA_Gibbs}
 \usage{
