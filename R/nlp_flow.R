@@ -149,7 +149,7 @@ document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
 #' @title Create a document/term matrix from a data.frame with 1 row per document/term
 #' @description Create a document/term matrix from a data.frame with 1 row per document/term as returned
 #' by \code{\link{document_term_frequencies}}
-#' @param x a data.frame with columns document, term and freq indicating how many times a term occurred in that specific document.
+#' @param x a data.frame with columns doc_id, term and freq indicating how many times a term occurred in that specific document.
 #' This is what \code{\link{document_term_frequencies}} returns.
 #' @param vocabulary a character vector of terms which should be present in the document term matrix even if they did not occur in the \code{x}
 #' @param ... further arguments currently not used

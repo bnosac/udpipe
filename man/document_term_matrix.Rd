@@ -19,7 +19,7 @@ document_term_matrix(x, vocabulary, ...)
 \method{document_term_matrix}{simple_triplet_matrix}(x, ...)
 }
 \arguments{
-\item{x}{a data.frame with columns document, term and freq indicating how many times a term occurred in that specific document.
+\item{x}{a data.frame with columns doc_id, term and freq indicating how many times a term occurred in that specific document.
 This is what \code{\link{document_term_frequencies}} returns.}
 
 \item{vocabulary}{a character vector of terms which should be present in the document term matrix even if they did not occur in the \code{x}}
