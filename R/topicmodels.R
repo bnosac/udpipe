@@ -29,6 +29,7 @@
 #' }
 #' @S3method predict LDA_VEM
 #' @rdname predict.LDA
+#' @aliases predict.LDA
 #' @seealso \code{\link[topicmodels]{posterior-methods}}
 #' @examples 
 #' ## Build document/term matrix on dutch nouns
