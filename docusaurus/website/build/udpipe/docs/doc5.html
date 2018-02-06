@@ -1,0 +1,173 @@
+<html lang="en"><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Basic Analytical Use Cases I · NLP with R and UDPipe</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta property="og:title" content="Basic Analytical Use Cases I · NLP with R and UDPipe"/><meta property="og:type" content="website"/><meta property="og:url" content="https://bnosac.github.io/udpipe/index.html"/><meta property="og:description" content="## UDPipe - Basic Analytics"/><link rel="shortcut icon" href="/udpipe/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://bnosac.github.io/blog/atom.xml" title="NLP with R and UDPipe Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://bnosac.github.io/blog/feed.xml" title="NLP with R and UDPipe Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><link rel="stylesheet" href="/udpipe/css/main.css"/></head><body class="sideNavVisible"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/udpipe/"><img class="logo" src="/udpipe/img/logo-udpipe-r.png"/></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li><a href="https://bnosac.github.io/udpipe/en/index.html" target="_self">Home</a></li><li><a href="/udpipe/docs/doc0.html" target="_self">Docs</a></li><li><a href="/udpipe/en/help.html" target="_self">Support</a></li><li><a href="https://github.com/bnosac/udpipe" target="_self">GitHub</a></li><li><a href="/udpipe/blog" target="_self">Blog</a></li><li><a target="_self"></a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><i></i></div><h2><i>›</i><span>Analytical use cases</span></h2></div><div class="navGroups"><div class="navGroup navGroupActive"><h3>Introduction</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc0.html">Try it out</a></li><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc1.html">Introduction</a></li></ul></div><div class="navGroup navGroupActive"><h3>Annotation</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc2.html">Text Annotation</a></li><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc3.html">Model building</a></li></ul></div><div class="navGroup navGroupActive"><h3>Analytical use cases</h3><ul><li class="navListItem navListItemActive"><a class="navItem navItemActive" href="/udpipe/docs/doc5.html">Use Cases I</a></li></ul></div><div class="navGroup navGroupActive"><h3>MoreDocs</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc4.html">More docs</a></li></ul></div></div></section></div><script>
+          var toggler = document.getElementById('navToggler');
+          var nav = document.getElementById('docsNav');
+          toggler.onclick = function() {
+            nav.classList.toggle('docsSliderActive');
+          };
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1>Basic Analytical Use Cases I</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" name="udpipe-basic-analytics"></a><a href="#udpipe-basic-analytics" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>UDPipe - Basic Analytics</h2>
+<p>In order to get the most out of the package, let's enumerate a few things one can now easily do with your text annotated using the udpipe package using merely the Parts of Speech tags &amp; the Lemma of each word.</p>
+<ul>
+<li>Improved exploratory text visualisations
+<ul>
+<li>Due to richer features</li>
+<li>Allowing to select easily words which you like to plot (e.g. nouns/adjectives or the subject of the text)</li>
+<li>look for co-occurrences between words which are relevant based on the POS tag</li>
+</ul></li>
+<li>Easy summarisation of text
+<ul>
+<li>automatic keyword detection</li>
+<li>noun phrase extraction or chunking</li>
+<li>automatic text summarisation (e.g. using the textrank R package)</li>
+</ul></li>
+<li>Improved topic modelling by
+<ul>
+<li>taking only words with specific parts-of-speech tags in the topic model</li>
+<li>automation of topic modelling for all languages by using the right pos tags instead of working with stopwords</li>
+<li>using lemmatisation as a better replacement than stemming in topic modelling</li>
+</ul></li>
+<li>Further processing
+<ul>
+<li>Improved sentence or document similarities by using only the words of a specific POS tag</li>
+<li>Identification of authors based on grammatical patterns used</li>
+</ul></li>
+</ul>
+<p>In particular, in this report we focus on basic analytical use cases of pos tagging, lemmatisation and co-occurrences where we will show in this vignette some basic frequency statistics which can be extracted without any hassle once you have annotated your text.
+<strong>Furthermore, the logic accounts for all languages and is language-agnostic.</strong></p>
+<h3><a class="anchor" aria-hidden="true" name="start-with-annotating"></a><a href="#start-with-annotating" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Start with annotating</h3>
+<p>Let's start by annotating some text in Spanish. The annotated data.frame can next be used for basic text analytics.</p>
+<pre><code class="hljs css r"><span class="hljs-keyword">library</span>(udpipe)
+data(brussels_reviews)
+comments &lt;- subset(brussels_reviews, language %<span class="hljs-keyword">in</span>% <span class="hljs-string">"es"</span>)
+
+ud_model &lt;- udpipe_download_model(language = <span class="hljs-string">"spanish"</span>)
+ud_model &lt;- udpipe_load_model(ud_model$file_model)
+x &lt;- udpipe_annotate(ud_model, x = comments$feedback, doc_id = comments$id)
+x &lt;- as.data.frame(x)
+</code></pre>
+<p>The resulting data.frame has a field called <code>upos</code> which is the Universal Parts of Speech tag and also a field called <code>lemma</code> which is the root form of each token in the text. These 2 fields give us a broad range of analytical possibilities.</p>
+<h2><a class="anchor" aria-hidden="true" name="basic-frequency-statistics"></a><a href="#basic-frequency-statistics" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Basic frequency statistics</h2>
+<p>In most languages, nouns (NOUN) are the most common types of words, next to verbs (VERB) and these are the most relevant for analytical purposes, next to the adjectives (ADJ) and proper nouns (PROPN). For a detailed list of all POS tags: visit <a href="http://universaldependencies.org/u/pos/index.html">http://universaldependencies.org/u/pos/index.html</a>.</p>
+<pre><code class="hljs css r"><span class="hljs-keyword">library</span>(lattice)
+stats &lt;- txt_freq(x$upos)
+stats$key &lt;- factor(stats$key, levels = rev(stats$key))
+barchart(key ~ freq, data = stats, col = <span class="hljs-string">"cadetblue"</span>, 
+         main = <span class="hljs-string">"UPOS (Universal Parts of Speech)\n frequency of occurrence"</span>, 
+         xlab = <span class="hljs-string">"Freq"</span>)
+</code></pre>
+<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Parts of Speech tags are really interesting to extract easily the words you like to plot. You really don't need stopwords for doing this, just select nouns / verbs or adjectives and you have already the most relevant parts for basic frequency analysis.</p>
+<pre><code class="hljs css r"><span class="hljs-comment">## NOUNS</span>
+stats &lt;- subset(x, upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>)) 
+stats &lt;- txt_freq(stats$token)
+stats$key &lt;- factor(stats$key, levels = rev(stats$key))
+barchart(key ~ freq, data = head(stats, <span class="hljs-number">20</span>), col = <span class="hljs-string">"cadetblue"</span>, 
+         main = <span class="hljs-string">"Most occurring nouns"</span>, xlab = <span class="hljs-string">"Freq"</span>)
+</code></pre>
+<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre><code class="hljs css r"><span class="hljs-comment">## ADJECTIVES</span>
+stats &lt;- subset(x, upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"ADJ"</span>)) 
+stats &lt;- txt_freq(stats$token)
+stats$key &lt;- factor(stats$key, levels = rev(stats$key))
+barchart(key ~ freq, data = head(stats, <span class="hljs-number">20</span>), col = <span class="hljs-string">"cadetblue"</span>, 
+         main = <span class="hljs-string">"Most occurring adjectives"</span>, xlab = <span class="hljs-string">"Freq"</span>)
+</code></pre>
+<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<h2><a class="anchor" aria-hidden="true" name="finding-keywords"></a><a href="#finding-keywords" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Finding keywords</h2>
+<p>Frequency statistics of words are nice but most of the time, you are getting stuck in words which only make sense in combination with other words. Hence you want to find keywords which are a combination of words.</p>
+<p>Currently, this R package provides 3 methods to identify keywords in text</p>
+<ul>
+<li>RAKE (Rapid Automatic Keyword Extraction)</li>
+<li>Collocation ordering using Pointwise Mutual Information</li>
+<li>Parts of Speech phrase sequence detection</li>
+</ul>
+<pre><code class="hljs css r"><span class="hljs-comment">## Using RAKE</span>
+stats &lt;- keywords_rake(x = x, term = <span class="hljs-string">"lemma"</span>, group = <span class="hljs-string">"doc_id"</span>, 
+                       relevant = x$upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>, <span class="hljs-string">"ADJ"</span>))
+stats$key &lt;- factor(stats$keyword, levels = rev(stats$keyword))
+barchart(key ~ rake, data = head(subset(stats, freq &gt; <span class="hljs-number">3</span>), <span class="hljs-number">20</span>), col = <span class="hljs-string">"cadetblue"</span>, 
+         main = <span class="hljs-string">"Keywords identified by RAKE"</span>, 
+         xlab = <span class="hljs-string">"Rake"</span>)
+</code></pre>
+<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre><code class="hljs css r"><span class="hljs-comment">## Using Pointwise Mutual Information Collocations</span>
+x$word &lt;- tolower(x$token)
+stats &lt;- keywords_collocation(x = x, term = <span class="hljs-string">"word"</span>, group = <span class="hljs-string">"doc_id"</span>)
+stats$key &lt;- factor(stats$keyword, levels = rev(stats$keyword))
+barchart(key ~ pmi, data = head(subset(stats, freq &gt; <span class="hljs-number">3</span>), <span class="hljs-number">20</span>), col = <span class="hljs-string">"cadetblue"</span>, 
+         main = <span class="hljs-string">"Keywords identified by PMI Collocation"</span>, 
+         xlab = <span class="hljs-string">"PMI (Pointwise Mutual Information)"</span>)
+</code></pre>
+<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<pre><code class="hljs css r"><span class="hljs-comment">## Using a sequence of POS tags (noun phrases / verb phrases)</span>
+x$phrase_tag &lt;- as_phrasemachine(x$upos, type = <span class="hljs-string">"upos"</span>)
+stats &lt;- keywords_phrases(x = x$phrase_tag, term = tolower(x$token), 
+                          pattern = <span class="hljs-string">"(A|N)*N(P+D*(A|N)*N)*"</span>, 
+                          is_regex = <span class="hljs-literal">TRUE</span>, detailed = <span class="hljs-literal">FALSE</span>)
+stats &lt;- subset(stats, ngram &gt; <span class="hljs-number">1</span> &amp; freq &gt; <span class="hljs-number">3</span>)
+stats$key &lt;- factor(stats$keyword, levels = rev(stats$keyword))
+barchart(key ~ freq, data = head(stats, <span class="hljs-number">20</span>), col = <span class="hljs-string">"cadetblue"</span>, 
+         main = <span class="hljs-string">"Keywords - simple noun phrases"</span>, xlab = <span class="hljs-string">"Frequency"</span>)
+</code></pre>
+<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-4-3.png" width="672" /></p>
+<h2><a class="anchor" aria-hidden="true" name="co-occurrences"></a><a href="#co-occurrences" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Co-occurrences</h2>
+<p>Co-occurrences allow to see how words are used either in the same sentence or next to each other. This R package make creating co-occurrence graphs using the relevant Parts of Speech tags as easy as possible.</p>
+<h3><a class="anchor" aria-hidden="true" name="nouns-adjectives-used-in-same-sentence"></a><a href="#nouns-adjectives-used-in-same-sentence" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Nouns / adjectives used in same sentence</h3>
+<p>In this example we look how many times nouns and adjectives are used in the same sentence.</p>
+<pre><code class="hljs css r">cooc &lt;- cooccurrence(x = subset(x, upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>, <span class="hljs-string">"ADJ"</span>)), 
+                     term = <span class="hljs-string">"lemma"</span>, 
+                     group = c(<span class="hljs-string">"doc_id"</span>, <span class="hljs-string">"paragraph_id"</span>, <span class="hljs-string">"sentence_id"</span>))
+head(cooc)
+</code></pre>
+<pre><code class="hljs">        term1     term2 cooc
+<span class="hljs-number">1</span>      barrio tranquilo   <span class="hljs-number">46</span>
+<span class="hljs-number">2</span>      centro    minuto   <span class="hljs-number">43</span>
+<span class="hljs-number">3</span>    estacion      tren   <span class="hljs-number">37</span>
+<span class="hljs-number">4</span> apartamento    limpio   <span class="hljs-number">35</span>
+<span class="hljs-number">5</span>    estacion    minuto   <span class="hljs-number">35</span>
+<span class="hljs-number">6</span> apartamento    centro   <span class="hljs-number">34</span>
+</code></pre>
+<p>The result can be easily visualised using the ggraph R package which can visualise the word network.</p>
+<pre><code class="hljs css r"><span class="hljs-keyword">library</span>(igraph)
+<span class="hljs-keyword">library</span>(ggraph)
+<span class="hljs-keyword">library</span>(ggplot2)
+wordnetwork &lt;- head(cooc, <span class="hljs-number">30</span>)
+wordnetwork &lt;- graph_from_data_frame(wordnetwork)
+ggraph(wordnetwork, layout = <span class="hljs-string">"fr"</span>) +
+  geom_edge_link(aes(width = cooc, edge_alpha = cooc), edge_colour = <span class="hljs-string">"pink"</span>) +
+  geom_node_text(aes(label = name), col = <span class="hljs-string">"darkgreen"</span>, size = <span class="hljs-number">4</span>) +
+  theme_graph(base_family = <span class="hljs-string">"Arial Narrow"</span>) +
+  theme(legend.position = <span class="hljs-string">"none"</span>) +
+  labs(title = <span class="hljs-string">"Cooccurrences within sentence"</span>, subtitle = <span class="hljs-string">"Nouns &amp; Adjective"</span>)
+</code></pre>
+<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<h3><a class="anchor" aria-hidden="true" name="nouns-adjectives-which-follow-one-another"></a><a href="#nouns-adjectives-which-follow-one-another" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Nouns / adjectives which follow one another</h3>
+<p>If you are interested in visualising which words follow one another. This can be done by calculating word cooccurrences of a specific Parts of Speech type which follow one another where you can specify how far away you want to look regarding 'following one another' (in the example below we indicate skipgram = 1 which means look to the next word and the word after that).</p>
+<pre><code class="hljs css r">cooc &lt;- cooccurrence(x$lemma, relevant = x$upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>, <span class="hljs-string">"ADJ"</span>), skipgram = <span class="hljs-number">1</span>)
+head(cooc)
+</code></pre>
+<pre><code class="hljs">       term1     term2 cooc
+<span class="hljs-number">1</span>   estacion      tren   <span class="hljs-number">28</span>
+<span class="hljs-number">2</span>     barrio tranquilo   <span class="hljs-number">25</span>
+<span class="hljs-number">3</span> transporte   publico   <span class="hljs-number">23</span>
+<span class="hljs-number">4</span>      pleno    centro   <span class="hljs-number">20</span>
+<span class="hljs-number">5</span>   estacion   central   <span class="hljs-number">18</span>
+<span class="hljs-number">6</span>     parada     metro   <span class="hljs-number">15</span>
+</code></pre>
+<p>Once you have these coocccurrences, you can easily perform the same plotting as above.</p>
+<pre><code class="hljs css r"><span class="hljs-keyword">library</span>(igraph)
+<span class="hljs-keyword">library</span>(ggraph)
+<span class="hljs-keyword">library</span>(ggplot2)
+wordnetwork &lt;- head(cooc, <span class="hljs-number">15</span>)
+wordnetwork &lt;- graph_from_data_frame(wordnetwork)
+ggraph(wordnetwork, layout = <span class="hljs-string">"fr"</span>) +
+  geom_edge_link(aes(width = cooc, edge_alpha = cooc)) +
+  geom_node_text(aes(label = name), col = <span class="hljs-string">"darkgreen"</span>, size = <span class="hljs-number">4</span>) +
+  theme_graph(base_family = <span class="hljs-string">"Arial Narrow"</span>) +
+  labs(title = <span class="hljs-string">"Words following one another"</span>, subtitle = <span class="hljs-string">"Nouns &amp; Adjective"</span>)
+</code></pre>
+<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>For details on the visualisation of networks, visit the igraph and ggraph packages.</p>
+<h2><a class="anchor" aria-hidden="true" name="support-in-text-mining"></a><a href="#support-in-text-mining" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Support in text mining</h2>
+<p>Need support in text mining.
+Contact BNOSAC: <a href="http://www.bnosac.be">http://www.bnosac.be</a></p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="doc3.html">← Build models</a><a class="docs-next button" href="doc4.html">Further documentation →</a></div></div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/udpipe/" class="nav-home"><img src="/udpipe/img/logo-udpipe-r.png" alt="NLP with R and UDPipe" width="66" height="58"/></a><div><h5>Docs</h5><a href="/udpipe/docs/en/doc0.html">Getting Started</a><a href="/udpipe/docs/en/doc1.html">Introduction</a><a href="/udpipe/docs/en/doc2.html">Natural Language Processing</a></div><div><h5>Community</h5><a href="/udpipe/en/users.html">User Showcase</a><a href="https://github.com/bnosac/udpipe/issues">Report issue</a></div><div><h5>More</h5><a href="/udpipe/blog">Blog</a><a href="https://github.com/bnosac/udpipe">GitHub</a><a class="github-button" href="https://github.com/bnosac/udpipe" data-icon="octicon-star" data-count-href="/bnosac/udpipe/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><a href="http://www.bnosac.be" target="_blank" class="fbOpenSource"><img src="/udpipe/img/logo-bnosac.png" alt="BNOSAC Open Source" width="170" height="45"/></a><section class="copyright">Copyright © 2018 BNOSAC</section></footer></div></body></html>
