@@ -68,6 +68,8 @@
 #' np <- keywords_phrases(x$xpos, term = x$token, pattern = c("IN", "DT", "NN"))
 #' head(np)
 keywords_phrases <- function(x, term = x, pattern, is_regex = FALSE, sep = " ", ngram_max = 8, detailed = TRUE){
+  # R CMD check happiness
+  freq <- keyword <- ngram <- .N <- NULL
   stopifnot(length(x) == length(term))
   ngram_max <- as.integer(ngram_max)
   if(is_regex){
