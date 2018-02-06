@@ -13,6 +13,9 @@ dtm_rowsums(dtm)
 \arguments{
 \item{dtm}{an object returned by \code{\link{document_term_matrix}}}
 }
+\value{
+a vector of row/column sums with corresponding names
+}
 \description{
 Column sums and Row sums for document term matrices
 }
