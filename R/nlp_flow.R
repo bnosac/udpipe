@@ -526,7 +526,7 @@ dtm_rbind <- function(x, y){
 #' @title Column sums and Row sums for document term matrices
 #' @description Column sums and Row sums for document term matrices
 #' @param dtm an object returned by \code{\link{document_term_matrix}}
-#' @return 
+#' @return a vector of row/column sums with corresponding names
 #' @export
 #' @aliases dtm_colsums dtm_rowsums
 #' @examples 
