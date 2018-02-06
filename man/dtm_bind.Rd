@@ -34,10 +34,12 @@ data(brussels_reviews_anno)
 x <- brussels_reviews_anno
 
 ## rbind
-dtm1 <- document_term_frequencies(x = subset(x, doc_id \%in\% c("10049756", "10284782")))
-dtm1 <- document_term_matrix(dtm1, document = "doc_id", term = c("token"))
-dtm2 <- document_term_frequencies(x = subset(x, doc_id \%in\% c("10789408", "12285061", "35509091")))
-dtm2 <- document_term_matrix(dtm2, document = "doc_id", term = c("token"))
+dtm1 <- document_term_frequencies(x = subset(x, doc_id \%in\% c("10049756", "10284782")),
+                                  document = "doc_id", term = "token")
+dtm1 <- document_term_matrix(dtm1)
+dtm2 <- document_term_frequencies(x = subset(x, doc_id \%in\% c("10789408", "12285061", "35509091")),
+                                  document = "doc_id", term = "token")
+dtm2 <- document_term_matrix(dtm2)
 m <- dtm_rbind(dtm1, dtm2)
 dim(m)
 
