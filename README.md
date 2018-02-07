@@ -72,6 +72,12 @@ afrikaans, ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulg
 
 These have been made available easily to users of the package by using `udpipe_download_model`
 
+### How good are these models? 
+
+- Accuracy statistics of models provided by the UDPipe authors which you download with udpipe_download_model from the default repository are available at [this link](https://github.com/jwijffels/udpipe.models.ud.2.0/blob/master/inst/udpipe-ud-2.0-170801/README).
+- Accuracy statistics of models trained using this R package which you download with udpipe_download_model from the bnosac/udpipe.models.ud repository are available at https://github.com/bnosac/udpipe.models.ud.
+- For a comparison between UDPipe and spaCy visit https://github.com/jwijffels/udpipe-spacy-comparison
+
 ## Train your own models based on CONLL-U data
 
 The package also allows you to build your own annotation model. For this, you need to provide data in CONLL-U format.
