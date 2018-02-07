@@ -1,3 +1,7 @@
+# CHANGES IN udpipe VERSION 0.5
+
+- Added txt_recode_ngram for recoding tokens with compound multi-word expressions
+
 # CHANGES IN udpipe VERSION 0.4
 
 - Fix R CMD check on clang-UBSAN: UndefinedBehaviorSanitizer (runtime error: reference binding to misaligned address)

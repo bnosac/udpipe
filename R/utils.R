@@ -221,6 +221,67 @@ txt_highlight <- function(x, terms){
 
 
 
+#' @title Recode words with compound multi-word expressions
+#' @description Replace in a character vector of tokens, tokens with compound multi-word expressions.
+#' So that \code{c("New", "York")} will be \code{c("New York", NA)}. 
+#' @param x a character vector of words where you want to replace tokens with compound multi-word expressions.
+#' This is generally a character vector as returned by the token column of \code{as.data.frame(udpipe_annotate(txt))}
+#' @param compound a character vector of compound words multi-word expressions indicating terms which can be considered as one word. 
+#' For example \code{c('New York', 'Brussels Hoofdstedelijk Gewest')}.
+#' @param ngram a integer vector of the same length as \code{compound} indicating how many terms there are in the specific compound multi-word expressions
+#' given by \code{compound}, where \code{compound[i]} contains \code{ngram[i]} words. 
+#' So if \code{x} is \code{c('New York', 'Brussels Hoofdstedelijk Gewest')}, the ngram would be \code{c(2, 3)}
+#' @param sep separator used when the compounds were constructed by combining the words together into a compound multi-word expression. Defaults to a space: ' '.
+#' @return the same character vector \code{x} where elements in \code{x} will be replaced by compound multi-word expression. 
+#' If will give preference to replacing with compounds with higher ngrams if these occur. See the examples.
+#' @export
+#' @seealso \code{\link{txt_nextgram}}
+#' @examples 
+#' x <- c("I", "went", "to", "New", "York", "City", "on", "holiday", ".")
+#' y <- txt_recode_ngram(x, compound = "New York", ngram = 2, sep = " ")
+#' data.frame(x, y)
+#' 
+#' keyw <- data.frame(keyword = c("New-York", "New-York-City"), ngram = c(2, 3))
+#' y <- txt_recode_ngram(x, compound = keyw$keyword, ngram = keyw$ngram, sep = "-")
+#' data.frame(x, y)
+#' 
+#' ## Example replacing adjectives followed by a noun with the full compound word
+#' data(brussels_reviews_anno)
+#' x <- subset(brussels_reviews_anno, language == "nl")
+#' keyw <- keywords_phrases(x$xpos, term = x$token, pattern = "JJNN", 
+#'                          is_regex = TRUE, detailed = FALSE)
+#' head(keyw)
+#' x$term <- txt_recode_ngram(x$token, compound = keyw$keyword, ngram = keyw$ngram)
+#' head(x[, c("token", "term", "xpos")], 12)
+txt_recode_ngram <- function(x, compound, ngram, sep = " "){
+  ngram <- as.integer(ngram)
+  
+  if(length(ngram) != 1){
+    stopifnot(length(ngram) == length(compound))
+    keywords <- data.frame(keyword = compound, ngram = ngram, stringsAsFactors = FALSE)
+    
+    ## Loop over all ngrams, first replace the keywords with the most number of words in there
+    ngrams <- unique(keywords$ngram)
+    ngrams <- sort(ngrams, decreasing = TRUE)
+    for(i in ngrams){
+      x <- txt_recode_ngram(x, compound = keywords$keyword[keywords$ngram == i], ngram = i, sep = sep)
+    }
+  }else{
+    keywords <- as.character(compound)
+    if(length(keywords) == 0){
+      return(x)
+    }
+    y <- txt_nextgram(x, n = ngram, sep = sep)
+    idx <- which(y %in% keywords)
+    ## Overwrite word with bigram/trigram/n-gram
+    x[idx] <- y[idx]
+    ## Set the next values to NA
+    for(i in 1:(ngram - 1)){
+      x[idx + i] <- NA_character_
+    }  
+  }
+  x
+}
 
 #' @title Create a unique identifier for each combination of fields in a data frame
 #' @description Create a unique identifier for each combination of fields in a data frame. 
