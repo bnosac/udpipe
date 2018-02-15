@@ -186,6 +186,9 @@ txt_next <- function(x, n = 1){
 #' txt_freq(x, order = FALSE)
 txt_freq <- function(x, exclude = c(NA, NaN), order=TRUE){
   tab <- table(x, exclude = exclude)
+  if(length(tab) == 0){
+    return(data.frame(key = character(), freq = integer(), freq_pct = numeric(), stringsAsFactors = FALSE))
+  }
   tab <- as.data.frame.table(tab, responseName = "freq")
   setnames(tab, old = colnames(tab)[1], new = "key")
   if(is.factor(tab$key)){
