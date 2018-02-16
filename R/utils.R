@@ -185,21 +185,45 @@ txt_next <- function(x, n = 1){
 #' x <- factor(x, levels = LETTERS)
 #' txt_freq(x, order = FALSE)
 txt_freq <- function(x, exclude = c(NA, NaN), order=TRUE){
-  tab <- table(x, exclude = exclude)
-  if(length(tab) == 0){
-    return(data.frame(key = character(), freq = integer(), freq_pct = numeric(), stringsAsFactors = FALSE))
+  if(inherits(x, "data.frame")){
+    stop("x should be a vector")
   }
-  tab <- as.data.frame.table(tab, responseName = "freq")
-  setnames(tab, old = colnames(tab)[1], new = "key")
-  if(is.factor(tab$key)){
-    tab$key <- as.character(tab$key)
+  default <- data.frame(key = character(), freq = integer(), freq_pct = numeric(), stringsAsFactors = FALSE)
+  
+  if(is.factor(x)){
+    ## For factors, we want to keep all factor levels, even if they don't appear in the data
+    tab <- table(x, exclude = exclude)
+    if(length(tab) == 0){
+      return(default)
+    }
+    tab <- as.data.frame.table(tab, responseName = "freq")
+    setnames(tab, old = colnames(tab)[1], new = "key")
+    if(is.factor(tab$key)){
+      tab$key <- as.character(tab$key)
+    }
+    tab$freq_pct <- 100 * tab$freq / sum(tab$freq)
+    if(order){
+      tab <- tab[order(tab$freq, decreasing=TRUE), ]  
+    }
+    rownames(tab) <- NULL
+    return(tab)
+  }else{
+    ## For other non-factor data like characters, just calculate how many times each key is occurring
+    .N <- key <- freq <- freq_pct <- NULL
+    if(length(x) == 0){
+      return(default)
+    }
+    x <- data.table(content = x)
+    x <- setnames(x, old = "content", new = "key")
+    x <- x[, list(freq = .N), by = list(key)]
+    x <- x[, freq_pct := 100 * freq / sum(freq)]
+    x <- x[!(key %in% exclude), ]
+    if(order){
+      x <- setorder(x, -freq)
+    }
+    x <- setDF(x)
+    return(x)
   }
-  tab$freq_pct <- 100 * tab$freq / sum(tab$freq)
-  if(order){
-    tab <- tab[order(tab$freq, decreasing=TRUE), ]  
-  }
-  rownames(tab) <- NULL
-  tab
 }
 
 
