@@ -1,6 +1,7 @@
 # CHANGES IN udpipe VERSION 0.5
 
 - Added txt_recode_ngram for recoding tokens with compound multi-word expressions
+- Fix to make sure as.data.frame.udpipe_connlu also works with data.table version 1.9.6. Fixes issue #16
 
 # CHANGES IN udpipe VERSION 0.4
 

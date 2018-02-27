@@ -216,7 +216,7 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE){
   out[, deps := underscore_as_na(deps)]
   out[, misc := underscore_as_na(misc)]
   out <- out[, c("doc_id", "paragraph_id", "sentence_id", "sentence", 
-                 "token_id", "token", "lemma", "upos", "xpos", "feats", "head_token_id", "dep_rel", "deps", "misc")]
+                 "token_id", "token", "lemma", "upos", "xpos", "feats", "head_token_id", "dep_rel", "deps", "misc"), with = FALSE]
   data.table::setDF(out)
   out
 }
