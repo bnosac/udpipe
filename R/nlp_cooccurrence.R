@@ -132,9 +132,9 @@ cooccurrence.cooccurrence <- function(x, order = TRUE, ...){
 
 #' @describeIn cooccurrence Create a cooccurence data.frame based on a data.frame where you look within a document / sentence / paragraph / group 
 #' if terms co-occur
-#' @param group character vector with a columns in the data frame \code{x} indicating to calculate cooccurrences within these columns. \cr
+#' @param group character vector of columns in the data frame \code{x} indicating to calculate cooccurrences within these columns. \cr
 #' This is typically a field like document id or a sentence identifier. To be used if \code{x} is a data.frame.
-#' @param term character string with a column in the data frame \code{x}, containing 1 term per row. To be used if \code{x} is a data.frame.
+#' @param term character string of a column in the data frame \code{x}, containing 1 term per row. To be used if \code{x} is a data.frame.
 #' @export
 cooccurrence.data.frame <- function(x, order = TRUE, ..., group, term) {
   if(missing(group) & missing(term) & all(c("term1", "term2", "cooc") %in% colnames(x))){
