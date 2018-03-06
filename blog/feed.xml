@@ -2,23 +2,24 @@
 <rss version="2.0">
     <channel>
         <title>NLP with R and UDPipe Blog</title>
-        <link>https://bnosac.github.io/blog</link>
+        <link>https://bnosac.github.io/udpipe/blog</link>
         <description>The best place to stay up-to-date with the latest NLP with R and UDPipe news and events.</description>
         <lastBuildDate>Fri, 12 Jan 2018 06:00:00 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Feed for Node.js</generator>
         <image>
             <title>NLP with R and UDPipe Blog</title>
-            <url>https://bnosac.github.ioimg/logo-udpipe-r.png</url>
-            <link>https://bnosac.github.io/blog</link>
+            <url>https://bnosac.github.io/udpipe/img/logo-udpipe-r.png</url>
+            <link>https://bnosac.github.io/udpipe/blog</link>
         </image>
         <copyright>Copyright © 2018 BNOSAC</copyright>
         <item>
             <title><![CDATA[Under construction]]></title>
-            <link>https://bnosac.github.io/blog/2018/01/12/blog-post.html</link>
-            <guid>https://bnosac.github.io/blog/2018/01/12/blog-post.html</guid>
+            <link>https://bnosac.github.io/udpipe/blog/2018/01/12/blog-post.html</link>
+            <guid>https://bnosac.github.io/udpipe/blog/2018/01/12/blog-post.html</guid>
             <pubDate>Fri, 12 Jan 2018 06:00:00 GMT</pubDate>
-            <description><![CDATA[Under construction. Please be patient.]]></description>
+            <description><![CDATA[<p>Under construction. Please be patient.</p>
+]]></description>
         </item>
     </channel>
 </rss>
