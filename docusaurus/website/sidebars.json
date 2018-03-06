@@ -2,7 +2,7 @@
   "docs": {
     "Introduction": ["doc0", "doc1"],
     "Annotation": ["doc2", "doc3"],
-    "Analytical use cases": ["doc5"],
+    "Analytical use cases": ["doc5", "doc6"],
     "MoreDocs": ["doc4"]
   }
 }
