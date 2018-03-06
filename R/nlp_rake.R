@@ -13,8 +13,8 @@
 #' }
 #' The resulting keywords are returned as a data.frame together with their RAKE score.
 #' @param x a data.frame with one row per term as returned by \code{as.data.frame(udpipe_annotate(...))}
-#' @param group character string with a column in the data frame \code{x} indicating to calculate keywords within this column. This 
-#' is typically a field like document id or a sentence identifier. To be used if \code{x} is a data.frame.
+#' @param group a character vector with 1 or several columns from \code{x} which indicates for example a document id or a sentence id. 
+#' Keywords will be computed within this group in order not to find keywords across sentences or documents for example.
 #' @param term character string with a column in the data frame \code{x}, containing 1 term per row. To be used if \code{x} is a data.frame.
 #' @param relevant a logical vector of the same length as \code{nrow(x)}, indicating if the word in the corresponding row of \code{x} is relevant or not.
 #' This can be used to exclude stopwords from the keywords calculation or for selecting only nouns and adjectives to 
@@ -41,8 +41,7 @@
 #' head(keywords)
 #' 
 #' x <- subset(brussels_reviews_anno, language == "fr")
-#' x$id <- unique_identifier(x, fields = c("doc_id", "sentence_id"))
-#' keywords <- keywords_rake(x = x, term = "lemma", group = "id", 
+#' keywords <- keywords_rake(x = x, term = "lemma", group = c("doc_id", "sentence_id"), 
 #'                           relevant = x$xpos %in% c("NN", "JJ"), 
 #'                           ngram_max = 10, n_min = 2, sep = "-")
 #' head(keywords)
@@ -51,11 +50,17 @@ keywords_rake <- function(x, term, group, relevant = rep(TRUE, nrow(x)), ngram_m
   .relevant <- .N <- keyword_id <- keyword <- degree <- word <- freq <- ngram <- rake <- rake_word_score <- NULL
   stopifnot(is.data.frame(x))
   stopifnot(term %in% colnames(x))
-  stopifnot(group %in% colnames(x))
+  stopifnot(all(group %in% colnames(x)))
   stopifnot(length(relevant) == nrow(x))
   
   ## Put the data in a data.frame
-  x <- data.table(group = x[[group]], word = x[[term]], .relevant = relevant)
+  if(length(group) > 1){
+    x <- data.table(group = unique_identifier(x, fields = group), word = x[[term]], .relevant = relevant)
+  }else{
+    x <- data.table(group = x[[group]], word = x[[term]], .relevant = relevant)
+  }
+  
+  
   
   ## Define a keyword which is a contiguous sequence of words + remove the non-candidates
   x$keyword_id <- data.table::rleid(x[["group"]], x[[".relevant"]])
