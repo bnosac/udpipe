@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://bnosac.github.io/blog</id>
+    <id>https://bnosac.github.io/udpipe/blog</id>
     <title>NLP with R and UDPipe Blog</title>
     <updated>2018-01-12T06:00:00Z</updated>
     <generator>Feed for Node.js</generator>
-    <link rel="alternate" href="https://bnosac.github.io/blog"/>
+    <link rel="alternate" href="https://bnosac.github.io/udpipe/blog"/>
     <subtitle>The best place to stay up-to-date with the latest NLP with R and UDPipe news and events.</subtitle>
-    <logo>https://bnosac.github.ioimg/logo-udpipe-r.png</logo>
+    <logo>https://bnosac.github.io/udpipe/img/logo-udpipe-r.png</logo>
     <rights>Copyright © 2018 BNOSAC</rights>
     <entry>
         <title type="html"><![CDATA[Under construction]]></title>
-        <id>https://bnosac.github.io/blog/2018/01/12/blog-post.html</id>
-        <link href="https://bnosac.github.io/blog/2018/01/12/blog-post.html">
+        <id>https://bnosac.github.io/udpipe/blog/2018/01/12/blog-post.html</id>
+        <link href="https://bnosac.github.io/udpipe/blog/2018/01/12/blog-post.html">
         </link>
         <updated>2018-01-12T06:00:00Z</updated>
-        <summary type="html"><![CDATA[Under construction. Please be patient.]]></summary>
+        <summary type="html"><![CDATA[<p>Under construction. Please be patient.</p>
+]]></summary>
         <author>
             <name>Jan Wijffels</name>
             <uri>https://github.com/jwijffels</uri>
