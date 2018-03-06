@@ -1,0 +1,268 @@
+<html lang="en"><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Basic Analytical Use Cases II · NLP with R and UDPipe</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta property="og:title" content="Basic Analytical Use Cases II · NLP with R and UDPipe"/><meta property="og:type" content="website"/><meta property="og:url" content="https://bnosac.github.io/udpipe/index.html"/><meta property="og:description" content="## UDPipe for Topic Modelling"/><link rel="shortcut icon" href="/udpipe/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://bnosac.github.io/blog/atom.xml" title="NLP with R and UDPipe Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://bnosac.github.io/blog/feed.xml" title="NLP with R and UDPipe Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><link rel="stylesheet" href="/udpipe/css/main.css"/></head><body class="sideNavVisible"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/udpipe/"><img class="logo" src="/udpipe/img/logo-udpipe-r.png"/></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li><a href="https://bnosac.github.io/udpipe/en/index.html" target="_self">Home</a></li><li><a href="/udpipe/docs/doc0.html" target="_self">Docs</a></li><li><a href="/udpipe/en/help.html" target="_self">Support</a></li><li><a href="https://github.com/bnosac/udpipe" target="_self">GitHub</a></li><li><a href="/udpipe/blog" target="_self">Blog</a></li><li><a target="_self"></a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><i></i></div><h2><i>›</i><span>Analytical use cases</span></h2></div><div class="navGroups"><div class="navGroup navGroupActive"><h3>Introduction</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc0.html">Try it out</a></li><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc1.html">Introduction</a></li></ul></div><div class="navGroup navGroupActive"><h3>Annotation</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc2.html">Text Annotation</a></li><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc3.html">Model building</a></li></ul></div><div class="navGroup navGroupActive"><h3>Analytical use cases</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc5.html">Use Cases I</a></li><li class="navListItem navListItemActive"><a class="navItem navItemActive" href="/udpipe/docs/doc6.html">Use Cases II</a></li></ul></div><div class="navGroup navGroupActive"><h3>MoreDocs</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc4.html">More docs</a></li></ul></div></div></section></div><script>
+          var toggler = document.getElementById('navToggler');
+          var nav = document.getElementById('docsNav');
+          toggler.onclick = function() {
+            nav.classList.toggle('docsSliderActive');
+          };
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1>Basic Analytical Use Cases II</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" name="udpipe-for-topic-modelling"></a><a href="#udpipe-for-topic-modelling" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>UDPipe for Topic Modelling</h2>
+<p>In order to get the most out of the package, we will show how to use the outcome of the annotation to improve topic modelling. The main use cases of using the outcome of the annotation is to</p>
+<ul>
+<li><strong>build topic models only on specific parts of speech tags</strong></li>
+<li><strong>build topic models on compound keyword instead of just unigrams</strong></li>
+<li>allow to easily <strong>summarise topics</strong></li>
+</ul>
+<p>Let's show this.</p>
+<h3><a class="anchor" aria-hidden="true" name="start-with-annotating"></a><a href="#start-with-annotating" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Start with annotating</h3>
+<p>Let's start by annotating some text in French. The annotated data.frame can next be used for basic text analytics.</p>
+<pre><code class="hljs css r"><span class="hljs-keyword">library</span>(udpipe)
+data(brussels_reviews)
+comments &lt;- subset(brussels_reviews, language %<span class="hljs-keyword">in</span>% <span class="hljs-string">"fr"</span>)
+
+ud_model &lt;- udpipe_download_model(language = <span class="hljs-string">"french"</span>)
+ud_model &lt;- udpipe_load_model(ud_model$file_model)
+x &lt;- udpipe_annotate(ud_model, x = comments$feedback, doc_id = comments$id)
+x &lt;- as.data.frame(x)
+</code></pre>
+<p>The resulting data.frame has a field called <code>upos</code> which is the Universal Parts of Speech tag and also a field called <code>lemma</code> which is the root form of each token in the text. These 2 fields give us a broad range of topic modelling possibilities.</p>
+<pre><code class="hljs css r">str(x)
+</code></pre>
+<pre><code class="hljs">'data.frame':   30109 obs. of  14 variables:
+<span class="hljs-meta"> $</span><span class="bash"> doc_id       : chr  <span class="hljs-string">"47860059"</span> <span class="hljs-string">"47860059"</span> <span class="hljs-string">"47860059"</span> <span class="hljs-string">"47860059"</span> ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> paragraph_id : int  1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> sentence_id  : int  1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> sentence     : chr  <span class="hljs-string">"Quelle excellent week end - Merci a David pour sa confiance, merci a son appart d etre aussi chouette, merci au quartier d etre"</span>| __truncated__ <span class="hljs-string">"Quelle excellent week end - Merci a David pour sa confiance, merci a son appart d etre aussi chouette, merci au quartier d etre"</span>| __truncated__ <span class="hljs-string">"Quelle excellent week end - Merci a David pour sa confiance, merci a son appart d etre aussi chouette, merci au quartier d etre"</span>| __truncated__ <span class="hljs-string">"Quelle excellent week end - Merci a David pour sa confiance, merci a son appart d etre aussi chouette, merci au quartier d etre"</span>| __truncated__ ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> token_id     : chr  <span class="hljs-string">"1"</span> <span class="hljs-string">"2"</span> <span class="hljs-string">"3"</span> <span class="hljs-string">"4"</span> ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> token        : chr  <span class="hljs-string">"Quelle"</span> <span class="hljs-string">"excellent"</span> <span class="hljs-string">"week"</span> <span class="hljs-string">"end"</span> ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> lemma        : chr  <span class="hljs-string">"quel"</span> <span class="hljs-string">"excellent"</span> <span class="hljs-string">"weekend"</span> <span class="hljs-string">"end"</span> ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> upos         : chr  <span class="hljs-string">"DET"</span> <span class="hljs-string">"ADJ"</span> <span class="hljs-string">"NOUN"</span> <span class="hljs-string">"NOUN"</span> ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> xpos         : chr  NA NA NA NA ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> feats        : chr  <span class="hljs-string">"Gender=Fem|Number=Sing"</span> <span class="hljs-string">"Gender=Masc|Number=Sing"</span> <span class="hljs-string">"Gender=Masc|Number=Sing"</span> <span class="hljs-string">"Gender=Fem|Number=Sing"</span> ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> head_token_id: chr  <span class="hljs-string">"3"</span> <span class="hljs-string">"3"</span> <span class="hljs-string">"7"</span> <span class="hljs-string">"3"</span> ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> dep_rel      : chr  <span class="hljs-string">"det"</span> <span class="hljs-string">"amod"</span> <span class="hljs-string">"nsubj"</span> <span class="hljs-string">"appos"</span> ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> deps         : chr  NA NA NA NA ...</span>
+<span class="hljs-meta"> $</span><span class="bash"> misc         : chr  NA NA NA NA ...</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" name="basic-topic-modelling"></a><a href="#basic-topic-modelling" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Basic topic modelling</h2>
+<p>You can easily go from this annotated data.frame to a document-term-matrix which is used by a lot of other text mining R packages. In this case, we will build topics at the sentence level.</p>
+<p>The advantage of this package over other packages is that</p>
+<ul>
+<li>topic modelling can be done directly on the right terms as these can be easily identified with the Parts of Speech tag: mostly you are <strong>only interested in nouns and verbs</strong> or only in finding topics <strong>adjectives</strong> if you are interested in sentiment clustering.</li>
+<li>so you don't have to build a long list of stopwords any more</li>
+<li>and moreover you can work based on the lemma instead of the plain token, making the words resemble more each other</li>
+<li>you can easily include compound keywords (see later in this vignette)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" name="topic-modelling-only-on-specific-pos-tags"></a><a href="#topic-modelling-only-on-specific-pos-tags" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Topic modelling only on specific POS tags</h3>
+<p>Below we fit a topic model on the nouns only.</p>
+<pre><code class="hljs css r"><span class="hljs-comment">## Define the identifier at which we will build a topic model</span>
+x$topic_level_id &lt;- unique_identifier(x, fields = c(<span class="hljs-string">"doc_id"</span>, <span class="hljs-string">"paragraph_id"</span>, <span class="hljs-string">"sentence_id"</span>))
+<span class="hljs-comment">## Get a data.frame with 1 row per id/lemma</span>
+dtf &lt;- subset(x, upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>))
+dtf &lt;- document_term_frequencies(dtf, document = <span class="hljs-string">"topic_level_id"</span>, term = <span class="hljs-string">"lemma"</span>)
+head(dtf)
+</code></pre>
+<pre><code class="hljs">   doc_id      term freq
+<span class="hljs-attribute">1</span>:   1882   weekend    1
+<span class="hljs-attribute">2</span>:   1882       end    1
+<span class="hljs-attribute">3</span>:   1882 confiance    1
+<span class="hljs-attribute">4</span>:   1882     merci    2
+<span class="hljs-attribute">5</span>:   1882    appart    1
+<span class="hljs-attribute">6</span>:   1882  quartier    2
+</code></pre>
+<pre><code class="hljs css r"><span class="hljs-comment">## Create a document/term/matrix for building a topic model</span>
+dtm &lt;- document_term_matrix(x = dtf)
+<span class="hljs-comment">## Remove words which do not occur that much</span>
+dtm_clean &lt;- dtm_remove_lowfreq(dtm, minfreq = <span class="hljs-number">5</span>)
+head(dtm_colsums(dtm_clean))
+</code></pre>
+<pre><code class="hljs">   acce accueil adresse  airbnb    aise     ami 
+     <span class="hljs-number">12</span>     <span class="hljs-number">134</span>      <span class="hljs-number">40</span>       <span class="hljs-number">6</span>      <span class="hljs-number">13</span>      <span class="hljs-number">24</span> 
+</code></pre>
+<pre><code class="hljs css r"><span class="hljs-comment">## Remove nouns which you really do not like (mostly too common nouns)</span>
+dtm_clean &lt;- dtm_remove_terms(dtm_clean, terms = c(<span class="hljs-string">"appartement"</span>, <span class="hljs-string">"appart"</span>, <span class="hljs-string">"eter"</span>))
+<span class="hljs-comment">## Or keep of these nouns the top 50 based on mean term-frequency-inverse document frequency</span>
+dtm_clean &lt;- dtm_remove_tfidf(dtm_clean, top = <span class="hljs-number">50</span>)
+</code></pre>
+<p>Once we have our document/term/matrix, topic modelling is simple</p>
+<pre><code class="hljs css r"><span class="hljs-keyword">library</span>(topicmodels)
+m &lt;- LDA(dtm_clean, k = <span class="hljs-number">4</span>, method = <span class="hljs-string">"Gibbs"</span>, 
+         control = list(nstart = <span class="hljs-number">5</span>, burnin = <span class="hljs-number">2000</span>, best = <span class="hljs-literal">TRUE</span>, seed = <span class="hljs-number">1</span>:<span class="hljs-number">5</span>))
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" name="predict-new-documents"></a><a href="#predict-new-documents" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Predict new documents</h4>
+<p>Furthermore, we can also easily use the model to predict to which topic a new document belongs to. And the predict function will give correctly NA values for documents for which we don't have terms which are used in the model which is a pain in other R packages. It also allows to provide labels to each topic and gives the difference in topic probability to the next best topic which is usefull to see how clear-cut your topics are.</p>
+<pre><code class="hljs css r">scores &lt;- predict(m, newdata = dtm, type = <span class="hljs-string">"topics"</span>, 
+                  labels = c(<span class="hljs-string">"labela"</span>, <span class="hljs-string">"labelb"</span>, <span class="hljs-string">"labelc"</span>, <span class="hljs-string">"xyz"</span>))
+str(scores)
+</code></pre>
+<pre><code class="hljs"><span class="hljs-string">'data.frame'</span>:   <span class="hljs-number">1767</span> obs. of  <span class="hljs-number">9</span> variables:
+ $ doc_id            : chr  <span class="hljs-string">"1"</span> <span class="hljs-string">"10"</span> <span class="hljs-string">"100"</span> <span class="hljs-string">"1000"</span> <span class="hljs-keyword">...</span>
+ $ topic             : int  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">1</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">4</span> <span class="hljs-number">2</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic_label       : chr  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-string">"labela"</span> <span class="hljs-keyword">...</span>
+ $ topic_prob        : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.279</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic_probdiff_2nd: num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.0385</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic_labela      : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.279</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic_labelb      : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.24</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic_labelc      : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.24</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic_xyz         : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.24</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" name="interpret-topics"></a><a href="#interpret-topics" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Interpret topics</h4>
+<p>To interpret the topic model and to give appropriate labels, you can get the most emitted terms for each topic with a minimal term emittance probability and the minimum number of terms to show. It is also usefull to look at the textrank package (<a href="https://CRAN.R-project.org/package=textrank">https://CRAN.R-project.org/package=textrank</a>) which allows to summarise text and can be used to find the most relevant sentences within each topic.</p>
+<pre><code class="hljs css r">predict(m, type = <span class="hljs-string">"terms"</span>, min_posterior = <span class="hljs-number">0.05</span>, min_terms = <span class="hljs-number">3</span>)
+</code></pre>
+<pre><code class="hljs">$topic_001
+         term       prob
+<span class="hljs-number">1</span>        jour <span class="hljs-number">0.17218935</span>
+<span class="hljs-number">2</span>     plaisir <span class="hljs-number">0.16627219</span>
+<span class="hljs-number">3</span>         lit <span class="hljs-number">0.11893491</span>
+<span class="hljs-number">4</span>     endroit <span class="hljs-number">0.07751479</span>
+<span class="hljs-number">5</span>        deco <span class="hljs-number">0.07159763</span>
+<span class="hljs-number">6</span>        cafe <span class="hljs-number">0.05384615</span>
+<span class="hljs-number">7</span> emplacement <span class="hljs-number">0.05384615</span>
+
+$topic_002
+       term       prob
+<span class="hljs-number">1</span>       ami <span class="hljs-number">0.17214286</span>
+<span class="hljs-number">2</span>     temps <span class="hljs-number">0.10071429</span>
+<span class="hljs-number">3</span>    voyage <span class="hljs-number">0.09357143</span>
+<span class="hljs-number">4</span>     fille <span class="hljs-number">0.07928571</span>
+<span class="hljs-number">5</span>   semaine <span class="hljs-number">0.06500000</span>
+<span class="hljs-number">6</span>  dejeuner <span class="hljs-number">0.05785714</span>
+<span class="hljs-number">7</span>  occasion <span class="hljs-number">0.05785714</span>
+<span class="hljs-number">8</span>       lit <span class="hljs-number">0.05071429</span>
+<span class="hljs-number">9</span>      mail <span class="hljs-number">0.05071429</span>
+<span class="hljs-number">10</span> pratique <span class="hljs-number">0.05071429</span>
+
+$topic_003
+        term       prob
+<span class="hljs-number">1</span>   week-end <span class="hljs-number">0.12484472</span>
+<span class="hljs-number">2</span>       fois <span class="hljs-number">0.11242236</span>
+<span class="hljs-number">3</span>   probleme <span class="hljs-number">0.10621118</span>
+<span class="hljs-number">4</span>     couple <span class="hljs-number">0.08136646</span>
+<span class="hljs-number">5</span>     besoin <span class="hljs-number">0.06894410</span>
+<span class="hljs-number">6</span>     enfant <span class="hljs-number">0.06894410</span>
+<span class="hljs-number">7</span>        cas <span class="hljs-number">0.06273292</span>
+<span class="hljs-number">8</span> experience <span class="hljs-number">0.06273292</span>
+<span class="hljs-number">9</span>      chose <span class="hljs-number">0.05031056</span>
+
+$topic_004
+        term       prob
+<span class="hljs-number">1</span>       go?t <span class="hljs-number">0.12634731</span>
+<span class="hljs-number">2</span>   question <span class="hljs-number">0.10239521</span>
+<span class="hljs-number">3</span>     moment <span class="hljs-number">0.07844311</span>
+<span class="hljs-number">4</span> experience <span class="hljs-number">0.07245509</span>
+<span class="hljs-number">5</span>      heure <span class="hljs-number">0.06047904</span>
+<span class="hljs-number">6</span>      point <span class="hljs-number">0.06047904</span>
+<span class="hljs-number">7</span>      suite <span class="hljs-number">0.06047904</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" name="doing-the-same-on-the-adjectives-nouns"></a><a href="#doing-the-same-on-the-adjectives-nouns" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Doing the same on the adjectives + nouns</h3>
+<p>If you want to do the same on adjectives + nouns, just change the above code where it says <code>upos %in% c(&quot;NOUN&quot;)</code> in <code>upos %in% c(&quot;NOUN&quot;, &quot;ADJ&quot;)</code> and you are ready.</p>
+<pre><code class="hljs css r"><span class="hljs-comment">## Build document term matrix on nouns/adjectives only</span>
+dtf &lt;- subset(x, upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>, <span class="hljs-string">"ADJ"</span>) &amp; 
+                !lemma %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"appartement"</span>, <span class="hljs-string">"appart"</span>, <span class="hljs-string">"eter"</span>, <span class="hljs-string">"tres"</span>))
+dtf &lt;- document_term_frequencies(dtf, document = <span class="hljs-string">"topic_level_id"</span>, term = <span class="hljs-string">"lemma"</span>)
+dtm &lt;- document_term_matrix(x = dtf)
+dtm_clean &lt;- dtm_remove_lowfreq(dtm, minfreq = <span class="hljs-number">5</span>)
+<span class="hljs-comment">## Build topic model + get topic terminology</span>
+m &lt;- LDA(dtm_clean, k = <span class="hljs-number">4</span>, method = <span class="hljs-string">"Gibbs"</span>, 
+         control = list(nstart = <span class="hljs-number">5</span>, burnin = <span class="hljs-number">2000</span>, best = <span class="hljs-literal">TRUE</span>, seed = <span class="hljs-number">1</span>:<span class="hljs-number">5</span>))
+topicterminology &lt;- predict(m, type = <span class="hljs-string">"terms"</span>, min_posterior = <span class="hljs-number">0.025</span>, min_terms = <span class="hljs-number">5</span>)
+scores &lt;- predict(m, newdata = dtm, type = <span class="hljs-string">"topics"</span>)
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" name="topic-visualisation"></a><a href="#topic-visualisation" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Topic visualisation</h3>
+<p>Once you have topics, visualising these can also be easily done with the igraph and ggraph packages. Below one possible plot is shown.</p>
+<pre><code class="hljs css r"><span class="hljs-keyword">library</span>(igraph)
+<span class="hljs-keyword">library</span>(ggraph)
+<span class="hljs-keyword">library</span>(ggplot2)
+x_topics &lt;- merge(x, scores, by.x=<span class="hljs-string">"topic_level_id"</span>, by.y=<span class="hljs-string">"doc_id"</span>)
+wordnetwork &lt;- subset(x_topics, topic %<span class="hljs-keyword">in</span>% <span class="hljs-number">1</span> &amp; lemma %<span class="hljs-keyword">in</span>% topicterminology[[<span class="hljs-number">1</span>]]$term)
+wordnetwork &lt;- cooccurrence(wordnetwork, group = c(<span class="hljs-string">"topic_level_id"</span>), term = <span class="hljs-string">"lemma"</span>)
+wordnetwork &lt;- graph_from_data_frame(wordnetwork)
+ggraph(wordnetwork, layout = <span class="hljs-string">"fr"</span>) +
+  geom_edge_link(aes(width = cooc, edge_alpha = cooc), edge_colour = <span class="hljs-string">"pink"</span>)  +
+  geom_node_text(aes(label = name), col = <span class="hljs-string">"darkgreen"</span>, size = <span class="hljs-number">4</span>) +
+  theme_graph(base_family = <span class="hljs-string">"Arial Narrow"</span>) +
+  labs(title = <span class="hljs-string">"Words in topic 1 "</span>, subtitle = <span class="hljs-string">"Nouns &amp; Adjective cooccurrence"</span>)
+</code></pre>
+<p><img src="../docs/assets/doc6_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<h2><a class="anchor" aria-hidden="true" name="include-keywords-in-topic-models"></a><a href="#include-keywords-in-topic-models" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Include keywords in topic models</h2>
+<p>You mostly get better, more interpretable results in topic models if you include compound keywords in the model. Let's show the steps how you can accomplish this.</p>
+<ul>
+<li>First get keywords using either the <code>keywords_rake</code>, <code>keywords_phrases</code>, <code>keywords_collocation</code> functions or with functionality from the textrank R package.</li>
+<li>Use function <code>txt_recode_ngram</code> to recode words to keywords. This will replace a sequence of words with its compound multi-word expression by first starting with words which contain more terms.</li>
+<li>Build the document-term-matrix to build a topic model</li>
+</ul>
+<p>In the below example, we are building a topic model on all nouns, all compound keywords which consists of nouns and adjectives and on all identified noun phrases.</p>
+<pre><code class="hljs css r"><span class="hljs-comment">## Find keywords with RAKE </span>
+keyw_rake &lt;- keywords_rake(x, 
+                           term = <span class="hljs-string">"token"</span>, group = c(<span class="hljs-string">"doc_id"</span>, <span class="hljs-string">"paragraph_id"</span>, <span class="hljs-string">"sentence_id"</span>), 
+                           relevant = x$upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>, <span class="hljs-string">"ADJ"</span>), 
+                           ngram_max = <span class="hljs-number">3</span>, n_min = <span class="hljs-number">5</span>)
+<span class="hljs-comment">## Find simple noun phrases</span>
+x$phrase_tag &lt;- as_phrasemachine(x$upos, type = <span class="hljs-string">"upos"</span>)
+keyw_nounphrases &lt;- keywords_phrases(x$phrase_tag, term = x$token, 
+                                     pattern = <span class="hljs-string">"(A|N)*N(P+D*(A|N)*N)*"</span>, is_regex = <span class="hljs-literal">TRUE</span>, 
+                                     detailed = <span class="hljs-literal">FALSE</span>)
+keyw_nounphrases &lt;- subset(keyw_nounphrases, ngram &gt; <span class="hljs-number">1</span>)
+
+<span class="hljs-comment">## Recode terms to keywords</span>
+x$term &lt;- x$token
+x$term &lt;- txt_recode_ngram(x$term, 
+                           compound = keyw_rake$keyword, ngram = keyw_rake$ngram)
+x$term &lt;- txt_recode_ngram(x$term, 
+                           compound = keyw_nounphrases$keyword, ngram = keyw_nounphrases$ngram)
+<span class="hljs-comment">## Keep keyword or just plain nouns</span>
+x$term &lt;- ifelse(x$upos %<span class="hljs-keyword">in</span>% <span class="hljs-string">"NOUN"</span>, x$term,
+                 ifelse(x$term %<span class="hljs-keyword">in</span>% c(keyw_rake$keyword, keyw_nounphrases$keyword), x$term, <span class="hljs-literal">NA</span>))
+
+<span class="hljs-comment">## Build document/term/matrix</span>
+dtm &lt;- document_term_frequencies(x, document = <span class="hljs-string">"topic_level_id"</span>, term = <span class="hljs-string">"term"</span>)
+dtm &lt;- document_term_matrix(x = dtm)
+dtm &lt;- dtm_remove_lowfreq(dtm, minfreq = <span class="hljs-number">5</span>)
+</code></pre>
+<p>Once we have our document/term/matrix, topic modelling is simple. Keep in mind that you need to tune your topic model, which is not done below. See the topicmodels and ldatuning R package which show you how to do that.</p>
+<pre><code class="hljs css r">m &lt;- LDA(dtm, k = <span class="hljs-number">3</span>, method = <span class="hljs-string">"Gibbs"</span>, 
+         control = list(nstart = <span class="hljs-number">5</span>, burnin = <span class="hljs-number">2000</span>, best = <span class="hljs-literal">TRUE</span>, seed = <span class="hljs-number">1</span>:<span class="hljs-number">5</span>))
+</code></pre>
+<p>You'll see that the topic model now includes keywords</p>
+<pre><code class="hljs css r">topicterminology &lt;- predict(m, type = <span class="hljs-string">"terms"</span>, min_posterior = <span class="hljs-number">0.10</span>, min_terms = <span class="hljs-number">3</span>)
+topicterminology
+</code></pre>
+<pre><code class="hljs">$topic_001
+              term       prob
+<span class="hljs-number">1</span>         ete tres <span class="hljs-number">0.24256585</span>
+<span class="hljs-number">2</span>     centre ville <span class="hljs-number">0.12786746</span>
+<span class="hljs-number">3</span> tres confortable <span class="hljs-number">0.06414613</span>
+
+$topic_002
+           term       prob
+<span class="hljs-number">1</span> tres agreable <span class="hljs-number">0.29271583</span>
+<span class="hljs-number">2</span>      tres bon <span class="hljs-number">0.12634892</span>
+<span class="hljs-number">3</span>        ce qui <span class="hljs-number">0.05890288</span>
+
+$topic_003
+         term       prob
+<span class="hljs-number">1</span>  tres sympa <span class="hljs-number">0.12185252</span>
+<span class="hljs-number">2</span> tres propre <span class="hljs-number">0.10836331</span>
+<span class="hljs-number">3</span>     Accueil <span class="hljs-number">0.06339928</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" name="other-option-to-build-document-term-matricis"></a><a href="#other-option-to-build-document-term-matricis" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Other option to build document term matricis</h3>
+<p>In the above exercise, nouns which were part of a compound multi-word-expression (mwe) were replaced by the multi-word-expression. Sometimes however, you want to keep the noun as well as the multi-word expression in the topic model even if the noun is always part of a multi-word expression. You can do this as follows.</p>
+<pre><code class="hljs css r"><span class="hljs-comment">## Recode tokens to keywords, if it is not in the list of tokens, set to NA</span>
+x$mwe &lt;- txt_recode_ngram(x$token, compound = keyw_rake$keyword, ngram = keyw_rake$ngram)
+x$mwe &lt;- ifelse(x$mwe %<span class="hljs-keyword">in</span>% keyw_rake$keyword, x$mwe, <span class="hljs-literal">NA</span>)
+
+<span class="hljs-comment">## nouns</span>
+x$term_noun &lt;- ifelse(x$upos %<span class="hljs-keyword">in</span>% <span class="hljs-string">"NOUN"</span>, x$token, <span class="hljs-literal">NA</span>)
+
+<span class="hljs-comment">## Build document/term/matrix </span>
+dtm &lt;- document_term_frequencies(x, document = <span class="hljs-string">"topic_level_id"</span>, term = c(<span class="hljs-string">"term_noun"</span>, <span class="hljs-string">"mwe"</span>))
+dtm &lt;- document_term_matrix(x = dtm)
+dtm &lt;- dtm_remove_lowfreq(dtm, minfreq = <span class="hljs-number">3</span>)
+m &lt;- LDA(dtm, k = <span class="hljs-number">3</span>, method = <span class="hljs-string">"Gibbs"</span>, 
+         control = list(nstart = <span class="hljs-number">5</span>, burnin = <span class="hljs-number">2000</span>, best = <span class="hljs-literal">TRUE</span>, seed = <span class="hljs-number">1</span>:<span class="hljs-number">5</span>))
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" name="summarising-topics"></a><a href="#summarising-topics" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Summarising topics</h2>
+<p>The textrank R package allows you to easily summarise text, it integrates well with this udpipe R package. It's especially suited for finding a the most relevant sentences of documents of a certain (LDA) topic. More details on that package, see <a href="https://CRAN.R-project.org/package=textrank">https://CRAN.R-project.org/package=textrank</a>.</p>
+<h2><a class="anchor" aria-hidden="true" name="support-in-text-mining"></a><a href="#support-in-text-mining" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Support in text mining</h2>
+<p>Need support in text mining.
+Contact BNOSAC: <a href="http://www.bnosac.be">http://www.bnosac.be</a></p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="doc5.html">← Basic Analytical Use Cases I</a><a class="docs-next button" href="doc4.html">Further documentation →</a></div></div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/udpipe/" class="nav-home"><img src="/udpipe/img/logo-udpipe-r.png" alt="NLP with R and UDPipe" width="66" height="58"/></a><div><h5>Docs</h5><a href="/udpipe/docs/en/doc0.html">Getting Started</a><a href="/udpipe/docs/en/doc1.html">Introduction</a><a href="/udpipe/docs/en/doc2.html">Natural Language Processing</a></div><div><h5>Community</h5><a href="/udpipe/en/users.html">User Showcase</a><a href="https://github.com/bnosac/udpipe/issues">Report issue</a></div><div><h5>More</h5><a href="/udpipe/blog">Blog</a><a href="https://github.com/bnosac/udpipe">GitHub</a><a class="github-button" href="https://github.com/bnosac/udpipe" data-icon="octicon-star" data-count-href="/bnosac/udpipe/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><a href="http://www.bnosac.be" target="_blank" class="fbOpenSource"><img src="/udpipe/img/logo-bnosac.png" alt="BNOSAC Open Source" width="170" height="45"/></a><section class="copyright">Copyright © 2018 BNOSAC</section></footer></div></body></html>
