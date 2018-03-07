@@ -106,8 +106,8 @@ head(dtm_colsums(dtm_clean))
 ```
 
 ```
-   acce accueil adresse  airbnb    aise     ami 
-     12     134      40       6      13      24 
+  15min    acce accueil adresse  agence  airbnb 
+      5      12     134      40       5       6 
 ```
 
 ```r
@@ -140,14 +140,14 @@ str(scores)
 ```
 'data.frame':	1767 obs. of  9 variables:
  $ doc_id            : chr  "1" "10" "100" "1000" ...
- $ topic             : int  NA NA NA 1 NA NA 4 2 NA NA ...
- $ topic_label       : chr  NA NA NA "labela" ...
- $ topic_prob        : num  NA NA NA 0.279 NA ...
- $ topic_probdiff_2nd: num  NA NA NA 0.0385 NA ...
- $ topic_labela      : num  NA NA NA 0.279 NA ...
- $ topic_labelb      : num  NA NA NA 0.24 NA ...
- $ topic_labelc      : num  NA NA NA 0.24 NA ...
- $ topic_xyz         : num  NA NA NA 0.24 NA ...
+ $ topic             : int  NA NA NA 3 NA 4 2 4 NA NA ...
+ $ topic_label       : chr  NA NA NA "labelc" ...
+ $ topic_prob        : num  NA NA NA 0.265 NA ...
+ $ topic_probdiff_2nd: num  NA NA NA 0.0196 NA ...
+ $ topic_labela      : num  NA NA NA 0.245 NA ...
+ $ topic_labelb      : num  NA NA NA 0.245 NA ...
+ $ topic_labelc      : num  NA NA NA 0.265 NA ...
+ $ topic_xyz         : num  NA NA NA 0.245 NA ...
 ```
 
 #### Interpret topics
@@ -161,49 +161,43 @@ predict(m, type = "terms", min_posterior = 0.05, min_terms = 3)
 
 ```
 $topic_001
-         term       prob
-1        jour 0.17218935
-2     plaisir 0.16627219
-3         lit 0.11893491
-4     endroit 0.07751479
-5        deco 0.07159763
-6        cafe 0.05384615
-7 emplacement 0.05384615
+          term       prob
+1     probleme 0.14504505
+2         goût 0.13603604
+3       moment 0.11801802
+4        merci 0.10900901
+5 proprietaire 0.10900901
+6       chance 0.06396396
 
 $topic_002
-       term       prob
-1       ami 0.17214286
-2     temps 0.10071429
-3    voyage 0.09357143
-4     fille 0.07928571
-5   semaine 0.06500000
-6  dejeuner 0.05785714
-7  occasion 0.05785714
-8       lit 0.05071429
-9      mail 0.05071429
-10 pratique 0.05071429
+        term       prob
+1 experience 0.19090909
+2    semaine 0.09173554
+3     voyage 0.09173554
+4    plaisir 0.06694215
+5       Hote 0.05867769
+6   pratique 0.05867769
+7       soin 0.05867769
+8   escalier 0.05041322
 
 $topic_003
-        term       prob
-1   week-end 0.12484472
-2       fois 0.11242236
-3   probleme 0.10621118
-4     couple 0.08136646
-5     besoin 0.06894410
-6     enfant 0.06894410
-7        cas 0.06273292
-8 experience 0.06273292
-9      chose 0.05031056
+      term       prob
+1  plaisir 0.18828125
+2 week-end 0.15703125
+3  endroit 0.10234375
+4    point 0.07109375
+5 occasion 0.06328125
+6     goût 0.05546875
 
 $topic_004
-        term       prob
-1       go?t 0.12634731
-2   question 0.10239521
-3     moment 0.07844311
-4 experience 0.07245509
-5      heure 0.06047904
-6      point 0.06047904
-7      suite 0.06047904
+         term       prob
+1 emplacement 0.12242991
+2     annonce 0.07570093
+3    dejeuner 0.07570093
+4     parking 0.07570093
+5    couchage 0.05700935
+6       envie 0.05700935
+7  equipement 0.05700935
 ```
 
 
@@ -228,7 +222,7 @@ scores <- predict(m, newdata = dtm, type = "topics")
 
 ### Topic visualisation
 
-Once you have topics, visualising these can also be easily done with the igraph and ggraph packages. Below one possible plot is shown.
+Once you have topics, visualising these can also be easily done with the igraph and ggraph packages. Below one possible plot is shown. It shows for a certain topic the co-occurrence of terms
 
 
 ```r
@@ -246,7 +240,26 @@ ggraph(wordnetwork, layout = "fr") +
   labs(title = "Words in topic 1 ", subtitle = "Nouns & Adjective cooccurrence")
 ```
 
-<img src="../docs/assets/doc6_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+<img src="doc6_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+
+
+Another possibility is showing correlations among the terms driving the topic for only documents of that topic. 
+
+
+```r
+topicterminology <- predict(m, type = "terms", min_posterior = 0.05, min_terms = 10)
+termcorrs <- subset(x_topics, topic %in% 1 & lemma %in% topicterminology[[1]]$term)
+termcorrs <- document_term_frequencies(termcorrs, document = "topic_level_id", term = "lemma")
+termcorrs <- document_term_matrix(termcorrs)
+termcorrs <- dtm_cor(termcorrs)
+termcorrs[lower.tri(termcorrs)] <- NA
+diag(termcorrs) <- NA
+library(qgraph)
+qgraph(termcorrs, layout = "spring", labels = colnames(termcorrs), directed = FALSE,
+       borders = FALSE, label.scale = FALSE, label.cex = 1, node.width = 0.5)
+```
+
+<img src="doc6_files/figure-html/unnamed-chunk-9-1.png" width="672" />
 
 
 ## Include keywords in topic models
@@ -307,22 +320,22 @@ topicterminology
 
 ```
 $topic_001
-              term       prob
-1         ete tres 0.24256585
-2     centre ville 0.12786746
-3 tres confortable 0.06414613
+      term       prob
+1 ete tres 0.22057707
+2 tres bon 0.10668185
+3  il nous 0.05353075
 
 $topic_002
-           term       prob
-1 tres agreable 0.29271583
-2      tres bon 0.12634892
-3        ce qui 0.05890288
+          term       prob
+1 centre ville 0.11049927
+2      Accueil 0.07011747
+3     que nous 0.06644640
 
 $topic_003
-         term       prob
-1  tres sympa 0.12185252
-2 tres propre 0.10836331
-3     Accueil 0.06339928
+           term       prob
+1 tres agreable 0.22404153
+2    tres sympa 0.09624601
+3    bon sejour 0.06429712
 ```
 
 ### Other option to build document term matricis

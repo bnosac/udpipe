@@ -18,6 +18,7 @@ In order to get the most out of the package, let's enumerate a few things one ca
     - Due to richer features
     - Allowing to select easily words which you like to plot (e.g. nouns/adjectives or the subject of the text)
     - look for co-occurrences between words which are relevant based on the POS tag
+    - look for correlations between words which are relevant based on the POS tag
 - Easy summarisation of text
     - automatic keyword detection
     - noun phrase extraction or chunking
@@ -65,7 +66,7 @@ barchart(key ~ freq, data = stats, col = "cadetblue",
          xlab = "Freq")
 ```
 
-<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+<img src="doc5_files/figure-html/unnamed-chunk-2-1.png" width="672" />
 
 Parts of Speech tags are really interesting to extract easily the words you like to plot. You really don't need stopwords for doing this, just select nouns / verbs or adjectives and you have already the most relevant parts for basic frequency analysis.
 
@@ -79,7 +80,7 @@ barchart(key ~ freq, data = head(stats, 20), col = "cadetblue",
          main = "Most occurring nouns", xlab = "Freq")
 ```
 
-<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+<img src="doc5_files/figure-html/unnamed-chunk-3-1.png" width="672" />
 
 ```r
 ## ADJECTIVES
@@ -90,7 +91,7 @@ barchart(key ~ freq, data = head(stats, 20), col = "cadetblue",
          main = "Most occurring adjectives", xlab = "Freq")
 ```
 
-<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-3-2.png" width="672" />
+<img src="doc5_files/figure-html/unnamed-chunk-3-2.png" width="672" />
 
 ## Finding keywords
 
@@ -113,7 +114,7 @@ barchart(key ~ rake, data = head(subset(stats, freq > 3), 20), col = "cadetblue"
          xlab = "Rake")
 ```
 
-<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+<img src="doc5_files/figure-html/unnamed-chunk-4-1.png" width="672" />
 
 ```r
 ## Using Pointwise Mutual Information Collocations
@@ -125,7 +126,7 @@ barchart(key ~ pmi, data = head(subset(stats, freq > 3), 20), col = "cadetblue",
          xlab = "PMI (Pointwise Mutual Information)")
 ```
 
-<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-4-2.png" width="672" />
+<img src="doc5_files/figure-html/unnamed-chunk-4-2.png" width="672" />
 
 ```r
 ## Using a sequence of POS tags (noun phrases / verb phrases)
@@ -139,7 +140,7 @@ barchart(key ~ freq, data = head(stats, 20), col = "cadetblue",
          main = "Keywords - simple noun phrases", xlab = "Frequency")
 ```
 
-<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-4-3.png" width="672" />
+<img src="doc5_files/figure-html/unnamed-chunk-4-3.png" width="672" />
 
 ## Co-occurrences
 
@@ -184,7 +185,7 @@ ggraph(wordnetwork, layout = "fr") +
   labs(title = "Cooccurrences within sentence", subtitle = "Nouns & Adjective")
 ```
 
-<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+<img src="doc5_files/figure-html/unnamed-chunk-6-1.png" width="672" />
 
 ### Nouns / adjectives which follow one another
 
@@ -222,10 +223,39 @@ ggraph(wordnetwork, layout = "fr") +
   labs(title = "Words following one another", subtitle = "Nouns & Adjective")
 ```
 
-<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+<img src="doc5_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+
+For details on the visualisation of networks, visit the igraph and ggraph packages. The network plots shown above are just run once to show basic functionality, they are not run in the vignette in order to reduce package dependencies and to leave the freedom to people to choose their preferred visualisation toolkit.
+
+## Correlations
+
+Keyword correlations indicate how terms are just together in a same document/sentence. While co-occurrences focus on frequency, correlation measures between 2 terms can also be high even if 2 terms occur only a small number of times but always appear together. 
+
+In the below example, we show how nouns and adjectives are correlated within each sentence of a document.
 
 
-For details on the visualisation of networks, visit the igraph and ggraph packages. 
+```r
+x$id <- unique_identifier(x, fields = c("sentence_id", "doc_id"))
+dtm <- subset(x, upos %in% c("NOUN", "ADJ"))
+dtm <- document_term_frequencies(dtm, document = "id", term = "lemma")
+dtm <- document_term_matrix(dtm)
+dtm <- dtm_remove_lowfreq(dtm, minfreq = 5)
+termcorrelations <- dtm_cor(dtm)
+y <- as_cooccurrence(termcorrelations)
+y <- subset(y, term1 < term2 & abs(cooc) > 0.2)
+y <- y[order(abs(y$cooc), decreasing = TRUE), ]
+head(y)
+```
+
+```
+             term1      term2      cooc
+80301        grand      place 0.7738811
+103131     publico transporte 0.7485534
+101813      sabano     toalla 0.6281794
+94319          fin     semana 0.5535094
+91683  instrucción       ropa 0.5336684
+104322    estacion       tren 0.5318369
+```
 
 ## Support in text mining
 

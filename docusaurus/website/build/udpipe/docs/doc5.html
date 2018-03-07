@@ -12,6 +12,7 @@
 <li>Due to richer features</li>
 <li>Allowing to select easily words which you like to plot (e.g. nouns/adjectives or the subject of the text)</li>
 <li>look for co-occurrences between words which are relevant based on the POS tag</li>
+<li>look for correlations between words which are relevant based on the POS tag</li>
 </ul></li>
 <li>Easy summarisation of text
 <ul>
@@ -54,7 +55,7 @@ barchart(key ~ freq, data = stats, col = <span class="hljs-string">"cadetblue"</
          main = <span class="hljs-string">"UPOS (Universal Parts of Speech)\n frequency of occurrence"</span>, 
          xlab = <span class="hljs-string">"Freq"</span>)
 </code></pre>
-<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="doc5_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>Parts of Speech tags are really interesting to extract easily the words you like to plot. You really don't need stopwords for doing this, just select nouns / verbs or adjectives and you have already the most relevant parts for basic frequency analysis.</p>
 <pre><code class="hljs css r"><span class="hljs-comment">## NOUNS</span>
 stats &lt;- subset(x, upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>)) 
@@ -63,7 +64,7 @@ stats$key &lt;- factor(stats$key, levels = rev(stats$key))
 barchart(key ~ freq, data = head(stats, <span class="hljs-number">20</span>), col = <span class="hljs-string">"cadetblue"</span>, 
          main = <span class="hljs-string">"Most occurring nouns"</span>, xlab = <span class="hljs-string">"Freq"</span>)
 </code></pre>
-<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="doc5_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <pre><code class="hljs css r"><span class="hljs-comment">## ADJECTIVES</span>
 stats &lt;- subset(x, upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"ADJ"</span>)) 
 stats &lt;- txt_freq(stats$token)
@@ -71,7 +72,7 @@ stats$key &lt;- factor(stats$key, levels = rev(stats$key))
 barchart(key ~ freq, data = head(stats, <span class="hljs-number">20</span>), col = <span class="hljs-string">"cadetblue"</span>, 
          main = <span class="hljs-string">"Most occurring adjectives"</span>, xlab = <span class="hljs-string">"Freq"</span>)
 </code></pre>
-<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<p><img src="doc5_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
 <h2><a class="anchor" aria-hidden="true" name="finding-keywords"></a><a href="#finding-keywords" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Finding keywords</h2>
 <p>Frequency statistics of words are nice but most of the time, you are getting stuck in words which only make sense in combination with other words. Hence you want to find keywords which are a combination of words.</p>
 <p>Currently, this R package provides 3 methods to identify keywords in text</p>
@@ -88,7 +89,7 @@ barchart(key ~ rake, data = head(subset(stats, freq &gt; <span class="hljs-numbe
          main = <span class="hljs-string">"Keywords identified by RAKE"</span>, 
          xlab = <span class="hljs-string">"Rake"</span>)
 </code></pre>
-<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="doc5_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre><code class="hljs css r"><span class="hljs-comment">## Using Pointwise Mutual Information Collocations</span>
 x$word &lt;- tolower(x$token)
 stats &lt;- keywords_collocation(x = x, term = <span class="hljs-string">"word"</span>, group = <span class="hljs-string">"doc_id"</span>)
@@ -97,7 +98,7 @@ barchart(key ~ pmi, data = head(subset(stats, freq &gt; <span class="hljs-number
          main = <span class="hljs-string">"Keywords identified by PMI Collocation"</span>, 
          xlab = <span class="hljs-string">"PMI (Pointwise Mutual Information)"</span>)
 </code></pre>
-<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<p><img src="doc5_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
 <pre><code class="hljs css r"><span class="hljs-comment">## Using a sequence of POS tags (noun phrases / verb phrases)</span>
 x$phrase_tag &lt;- as_phrasemachine(x$upos, type = <span class="hljs-string">"upos"</span>)
 stats &lt;- keywords_phrases(x = x$phrase_tag, term = tolower(x$token), 
@@ -108,7 +109,7 @@ stats$key &lt;- factor(stats$keyword, levels = rev(stats$keyword))
 barchart(key ~ freq, data = head(stats, <span class="hljs-number">20</span>), col = <span class="hljs-string">"cadetblue"</span>, 
          main = <span class="hljs-string">"Keywords - simple noun phrases"</span>, xlab = <span class="hljs-string">"Frequency"</span>)
 </code></pre>
-<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-4-3.png" width="672" /></p>
+<p><img src="doc5_files/figure-html/unnamed-chunk-4-3.png" width="672" /></p>
 <h2><a class="anchor" aria-hidden="true" name="co-occurrences"></a><a href="#co-occurrences" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Co-occurrences</h2>
 <p>Co-occurrences allow to see how words are used either in the same sentence or next to each other. This R package make creating co-occurrence graphs using the relevant Parts of Speech tags as easy as possible.</p>
 <h3><a class="anchor" aria-hidden="true" name="nouns-adjectives-used-in-same-sentence"></a><a href="#nouns-adjectives-used-in-same-sentence" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Nouns / adjectives used in same sentence</h3>
@@ -139,7 +140,7 @@ ggraph(wordnetwork, layout = <span class="hljs-string">"fr"</span>) +
   theme(legend.position = <span class="hljs-string">"none"</span>) +
   labs(title = <span class="hljs-string">"Cooccurrences within sentence"</span>, subtitle = <span class="hljs-string">"Nouns &amp; Adjective"</span>)
 </code></pre>
-<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="doc5_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <h3><a class="anchor" aria-hidden="true" name="nouns-adjectives-which-follow-one-another"></a><a href="#nouns-adjectives-which-follow-one-another" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Nouns / adjectives which follow one another</h3>
 <p>If you are interested in visualising which words follow one another. This can be done by calculating word cooccurrences of a specific Parts of Speech type which follow one another where you can specify how far away you want to look regarding 'following one another' (in the example below we indicate skipgram = 1 which means look to the next word and the word after that).</p>
 <pre><code class="hljs css r">cooc &lt;- cooccurrence(x$lemma, relevant = x$upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>, <span class="hljs-string">"ADJ"</span>), skipgram = <span class="hljs-number">1</span>)
@@ -165,8 +166,30 @@ ggraph(wordnetwork, layout = <span class="hljs-string">"fr"</span>) +
   theme_graph(base_family = <span class="hljs-string">"Arial Narrow"</span>) +
   labs(title = <span class="hljs-string">"Words following one another"</span>, subtitle = <span class="hljs-string">"Nouns &amp; Adjective"</span>)
 </code></pre>
-<p><img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>For details on the visualisation of networks, visit the igraph and ggraph packages.</p>
+<p><img src="doc5_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>For details on the visualisation of networks, visit the igraph and ggraph packages. The network plots shown above are just run once to show basic functionality, they are not run in the vignette in order to reduce package dependencies and to leave the freedom to people to choose their preferred visualisation toolkit.</p>
+<h2><a class="anchor" aria-hidden="true" name="correlations"></a><a href="#correlations" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Correlations</h2>
+<p>Keyword correlations indicate how terms are just together in a same document/sentence. While co-occurrences focus on frequency, correlation measures between 2 terms can also be high even if 2 terms occur only a small number of times but always appear together.</p>
+<p>In the below example, we show how nouns and adjectives are correlated within each sentence of a document.</p>
+<pre><code class="hljs css r">x$id &lt;- unique_identifier(x, fields = c(<span class="hljs-string">"sentence_id"</span>, <span class="hljs-string">"doc_id"</span>))
+dtm &lt;- subset(x, upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>, <span class="hljs-string">"ADJ"</span>))
+dtm &lt;- document_term_frequencies(dtm, document = <span class="hljs-string">"id"</span>, term = <span class="hljs-string">"lemma"</span>)
+dtm &lt;- document_term_matrix(dtm)
+dtm &lt;- dtm_remove_lowfreq(dtm, minfreq = <span class="hljs-number">5</span>)
+termcorrelations &lt;- dtm_cor(dtm)
+y &lt;- as_cooccurrence(termcorrelations)
+y &lt;- subset(y, term1 &lt; term2 &amp; abs(cooc) &gt; <span class="hljs-number">0.2</span>)
+y &lt;- y[order(abs(y$cooc), decreasing = <span class="hljs-literal">TRUE</span>), ]
+head(y)
+</code></pre>
+<pre><code class="hljs">             term1      term2      cooc
+<span class="hljs-number">80301</span>        grand      place <span class="hljs-number">0.7738811</span>
+<span class="hljs-number">103131</span>     publico transporte <span class="hljs-number">0.7485534</span>
+<span class="hljs-number">101813</span>      sabano     toalla <span class="hljs-number">0.6281794</span>
+<span class="hljs-number">94319</span>          fin     semana <span class="hljs-number">0.5535094</span>
+<span class="hljs-number">91683</span>  instrucción       ropa <span class="hljs-number">0.5336684</span>
+<span class="hljs-number">104322</span>    estacion       tren <span class="hljs-number">0.5318369</span>
+</code></pre>
 <h2><a class="anchor" aria-hidden="true" name="support-in-text-mining"></a><a href="#support-in-text-mining" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Support in text mining</h2>
 <p>Need support in text mining.
 Contact BNOSAC: <a href="http://www.bnosac.be">http://www.bnosac.be</a></p>
