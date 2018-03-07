@@ -66,7 +66,7 @@ barchart(key ~ freq, data = stats, col = "cadetblue",
          xlab = "Freq")
 ```
 
-<img src="doc5_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-2-1.png" width="672" />
 
 Parts of Speech tags are really interesting to extract easily the words you like to plot. You really don't need stopwords for doing this, just select nouns / verbs or adjectives and you have already the most relevant parts for basic frequency analysis.
 
@@ -80,7 +80,7 @@ barchart(key ~ freq, data = head(stats, 20), col = "cadetblue",
          main = "Most occurring nouns", xlab = "Freq")
 ```
 
-<img src="doc5_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-3-1.png" width="672" />
 
 ```r
 ## ADJECTIVES
@@ -91,7 +91,7 @@ barchart(key ~ freq, data = head(stats, 20), col = "cadetblue",
          main = "Most occurring adjectives", xlab = "Freq")
 ```
 
-<img src="doc5_files/figure-html/unnamed-chunk-3-2.png" width="672" />
+<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-3-2.png" width="672" />
 
 ## Finding keywords
 
@@ -114,7 +114,7 @@ barchart(key ~ rake, data = head(subset(stats, freq > 3), 20), col = "cadetblue"
          xlab = "Rake")
 ```
 
-<img src="doc5_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-4-1.png" width="672" />
 
 ```r
 ## Using Pointwise Mutual Information Collocations
@@ -126,7 +126,7 @@ barchart(key ~ pmi, data = head(subset(stats, freq > 3), 20), col = "cadetblue",
          xlab = "PMI (Pointwise Mutual Information)")
 ```
 
-<img src="doc5_files/figure-html/unnamed-chunk-4-2.png" width="672" />
+<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-4-2.png" width="672" />
 
 ```r
 ## Using a sequence of POS tags (noun phrases / verb phrases)
@@ -140,7 +140,7 @@ barchart(key ~ freq, data = head(stats, 20), col = "cadetblue",
          main = "Keywords - simple noun phrases", xlab = "Frequency")
 ```
 
-<img src="doc5_files/figure-html/unnamed-chunk-4-3.png" width="672" />
+<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-4-3.png" width="672" />
 
 ## Co-occurrences
 
@@ -185,7 +185,7 @@ ggraph(wordnetwork, layout = "fr") +
   labs(title = "Cooccurrences within sentence", subtitle = "Nouns & Adjective")
 ```
 
-<img src="doc5_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-6-1.png" width="672" />
 
 ### Nouns / adjectives which follow one another
 
@@ -223,7 +223,7 @@ ggraph(wordnetwork, layout = "fr") +
   labs(title = "Words following one another", subtitle = "Nouns & Adjective")
 ```
 
-<img src="doc5_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+<img src="../docs/assets/doc5_files/figure-html/unnamed-chunk-8-1.png" width="672" />
 
 For details on the visualisation of networks, visit the igraph and ggraph packages. The network plots shown above are just run once to show basic functionality, they are not run in the vignette in order to reduce package dependencies and to leave the freedom to people to choose their preferred visualisation toolkit.
 

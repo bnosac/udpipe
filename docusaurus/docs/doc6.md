@@ -240,7 +240,7 @@ ggraph(wordnetwork, layout = "fr") +
   labs(title = "Words in topic 1 ", subtitle = "Nouns & Adjective cooccurrence")
 ```
 
-<img src="doc6_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+<img src="../docs/assets/doc6_files/figure-html/unnamed-chunk-8-1.png" width="672" />
 
 
 Another possibility is showing correlations among the terms driving the topic for only documents of that topic. 
@@ -259,7 +259,7 @@ qgraph(termcorrs, layout = "spring", labels = colnames(termcorrs), directed = FA
        borders = FALSE, label.scale = FALSE, label.cex = 1, node.width = 0.5)
 ```
 
-<img src="doc6_files/figure-html/unnamed-chunk-9-1.png" width="672" />
+<img src="../docs/assets/doc6_files/figure-html/unnamed-chunk-9-1.png" width="672" />
 
 
 ## Include keywords in topic models
