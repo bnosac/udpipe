@@ -74,8 +74,8 @@ dtm &lt;- document_term_matrix(x = dtf)
 dtm_clean &lt;- dtm_remove_lowfreq(dtm, minfreq = <span class="hljs-number">5</span>)
 head(dtm_colsums(dtm_clean))
 </code></pre>
-<pre><code class="hljs">   acce accueil adresse  airbnb    aise     ami 
-     <span class="hljs-number">12</span>     <span class="hljs-number">134</span>      <span class="hljs-number">40</span>       <span class="hljs-number">6</span>      <span class="hljs-number">13</span>      <span class="hljs-number">24</span> 
+<pre><code class="hljs">  <span class="hljs-number">15</span>min    acce accueil adresse  agence  airbnb 
+      <span class="hljs-number">5</span>      <span class="hljs-number">12</span>     <span class="hljs-number">134</span>      <span class="hljs-number">40</span>       <span class="hljs-number">5</span>       <span class="hljs-number">6</span> 
 </code></pre>
 <pre><code class="hljs css r"><span class="hljs-comment">## Remove nouns which you really do not like (mostly too common nouns)</span>
 dtm_clean &lt;- dtm_remove_terms(dtm_clean, terms = c(<span class="hljs-string">"appartement"</span>, <span class="hljs-string">"appart"</span>, <span class="hljs-string">"eter"</span>))
@@ -95,63 +95,57 @@ str(scores)
 </code></pre>
 <pre><code class="hljs"><span class="hljs-string">'data.frame'</span>:   <span class="hljs-number">1767</span> obs. of  <span class="hljs-number">9</span> variables:
  $ doc_id            : chr  <span class="hljs-string">"1"</span> <span class="hljs-string">"10"</span> <span class="hljs-string">"100"</span> <span class="hljs-string">"1000"</span> <span class="hljs-keyword">...</span>
- $ topic             : int  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">1</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">4</span> <span class="hljs-number">2</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
- $ topic_label       : chr  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-string">"labela"</span> <span class="hljs-keyword">...</span>
- $ topic_prob        : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.279</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
- $ topic_probdiff_2nd: num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.0385</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
- $ topic_labela      : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.279</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
- $ topic_labelb      : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.24</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
- $ topic_labelc      : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.24</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
- $ topic_xyz         : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.24</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic             : int  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">3</span> <span class="hljs-literal">NA</span> <span class="hljs-number">4</span> <span class="hljs-number">2</span> <span class="hljs-number">4</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic_label       : chr  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-string">"labelc"</span> <span class="hljs-keyword">...</span>
+ $ topic_prob        : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.265</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic_probdiff_2nd: num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.0196</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic_labela      : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.245</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic_labelb      : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.245</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic_labelc      : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.265</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
+ $ topic_xyz         : num  <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-literal">NA</span> <span class="hljs-number">0.245</span> <span class="hljs-literal">NA</span> <span class="hljs-keyword">...</span>
 </code></pre>
 <h4><a class="anchor" aria-hidden="true" name="interpret-topics"></a><a href="#interpret-topics" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Interpret topics</h4>
 <p>To interpret the topic model and to give appropriate labels, you can get the most emitted terms for each topic with a minimal term emittance probability and the minimum number of terms to show. It is also usefull to look at the textrank package (<a href="https://CRAN.R-project.org/package=textrank">https://CRAN.R-project.org/package=textrank</a>) which allows to summarise text and can be used to find the most relevant sentences within each topic.</p>
 <pre><code class="hljs css r">predict(m, type = <span class="hljs-string">"terms"</span>, min_posterior = <span class="hljs-number">0.05</span>, min_terms = <span class="hljs-number">3</span>)
 </code></pre>
 <pre><code class="hljs">$topic_001
-         term       prob
-<span class="hljs-number">1</span>        jour <span class="hljs-number">0.17218935</span>
-<span class="hljs-number">2</span>     plaisir <span class="hljs-number">0.16627219</span>
-<span class="hljs-number">3</span>         lit <span class="hljs-number">0.11893491</span>
-<span class="hljs-number">4</span>     endroit <span class="hljs-number">0.07751479</span>
-<span class="hljs-number">5</span>        deco <span class="hljs-number">0.07159763</span>
-<span class="hljs-number">6</span>        cafe <span class="hljs-number">0.05384615</span>
-<span class="hljs-number">7</span> emplacement <span class="hljs-number">0.05384615</span>
+          term       prob
+<span class="hljs-number">1</span>     probleme <span class="hljs-number">0.14504505</span>
+<span class="hljs-number">2</span>         goût <span class="hljs-number">0.13603604</span>
+<span class="hljs-number">3</span>       moment <span class="hljs-number">0.11801802</span>
+<span class="hljs-number">4</span>        merci <span class="hljs-number">0.10900901</span>
+<span class="hljs-number">5</span> proprietaire <span class="hljs-number">0.10900901</span>
+<span class="hljs-number">6</span>       chance <span class="hljs-number">0.06396396</span>
 
 $topic_002
-       term       prob
-<span class="hljs-number">1</span>       ami <span class="hljs-number">0.17214286</span>
-<span class="hljs-number">2</span>     temps <span class="hljs-number">0.10071429</span>
-<span class="hljs-number">3</span>    voyage <span class="hljs-number">0.09357143</span>
-<span class="hljs-number">4</span>     fille <span class="hljs-number">0.07928571</span>
-<span class="hljs-number">5</span>   semaine <span class="hljs-number">0.06500000</span>
-<span class="hljs-number">6</span>  dejeuner <span class="hljs-number">0.05785714</span>
-<span class="hljs-number">7</span>  occasion <span class="hljs-number">0.05785714</span>
-<span class="hljs-number">8</span>       lit <span class="hljs-number">0.05071429</span>
-<span class="hljs-number">9</span>      mail <span class="hljs-number">0.05071429</span>
-<span class="hljs-number">10</span> pratique <span class="hljs-number">0.05071429</span>
+        term       prob
+<span class="hljs-number">1</span> experience <span class="hljs-number">0.19090909</span>
+<span class="hljs-number">2</span>    semaine <span class="hljs-number">0.09173554</span>
+<span class="hljs-number">3</span>     voyage <span class="hljs-number">0.09173554</span>
+<span class="hljs-number">4</span>    plaisir <span class="hljs-number">0.06694215</span>
+<span class="hljs-number">5</span>       Hote <span class="hljs-number">0.05867769</span>
+<span class="hljs-number">6</span>   pratique <span class="hljs-number">0.05867769</span>
+<span class="hljs-number">7</span>       soin <span class="hljs-number">0.05867769</span>
+<span class="hljs-number">8</span>   escalier <span class="hljs-number">0.05041322</span>
 
 $topic_003
-        term       prob
-<span class="hljs-number">1</span>   week-end <span class="hljs-number">0.12484472</span>
-<span class="hljs-number">2</span>       fois <span class="hljs-number">0.11242236</span>
-<span class="hljs-number">3</span>   probleme <span class="hljs-number">0.10621118</span>
-<span class="hljs-number">4</span>     couple <span class="hljs-number">0.08136646</span>
-<span class="hljs-number">5</span>     besoin <span class="hljs-number">0.06894410</span>
-<span class="hljs-number">6</span>     enfant <span class="hljs-number">0.06894410</span>
-<span class="hljs-number">7</span>        cas <span class="hljs-number">0.06273292</span>
-<span class="hljs-number">8</span> experience <span class="hljs-number">0.06273292</span>
-<span class="hljs-number">9</span>      chose <span class="hljs-number">0.05031056</span>
+      term       prob
+<span class="hljs-number">1</span>  plaisir <span class="hljs-number">0.18828125</span>
+<span class="hljs-number">2</span> week-end <span class="hljs-number">0.15703125</span>
+<span class="hljs-number">3</span>  endroit <span class="hljs-number">0.10234375</span>
+<span class="hljs-number">4</span>    point <span class="hljs-number">0.07109375</span>
+<span class="hljs-number">5</span> occasion <span class="hljs-number">0.06328125</span>
+<span class="hljs-number">6</span>     goût <span class="hljs-number">0.05546875</span>
 
 $topic_004
-        term       prob
-<span class="hljs-number">1</span>       go?t <span class="hljs-number">0.12634731</span>
-<span class="hljs-number">2</span>   question <span class="hljs-number">0.10239521</span>
-<span class="hljs-number">3</span>     moment <span class="hljs-number">0.07844311</span>
-<span class="hljs-number">4</span> experience <span class="hljs-number">0.07245509</span>
-<span class="hljs-number">5</span>      heure <span class="hljs-number">0.06047904</span>
-<span class="hljs-number">6</span>      point <span class="hljs-number">0.06047904</span>
-<span class="hljs-number">7</span>      suite <span class="hljs-number">0.06047904</span>
+         term       prob
+<span class="hljs-number">1</span> emplacement <span class="hljs-number">0.12242991</span>
+<span class="hljs-number">2</span>     annonce <span class="hljs-number">0.07570093</span>
+<span class="hljs-number">3</span>    dejeuner <span class="hljs-number">0.07570093</span>
+<span class="hljs-number">4</span>     parking <span class="hljs-number">0.07570093</span>
+<span class="hljs-number">5</span>    couchage <span class="hljs-number">0.05700935</span>
+<span class="hljs-number">6</span>       envie <span class="hljs-number">0.05700935</span>
+<span class="hljs-number">7</span>  equipement <span class="hljs-number">0.05700935</span>
 </code></pre>
 <h3><a class="anchor" aria-hidden="true" name="doing-the-same-on-the-adjectives-nouns"></a><a href="#doing-the-same-on-the-adjectives-nouns" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Doing the same on the adjectives + nouns</h3>
 <p>If you want to do the same on adjectives + nouns, just change the above code where it says <code>upos %in% c(&quot;NOUN&quot;)</code> in <code>upos %in% c(&quot;NOUN&quot;, &quot;ADJ&quot;)</code> and you are ready.</p>
@@ -168,7 +162,7 @@ topicterminology &lt;- predict(m, type = <span class="hljs-string">"terms"</span
 scores &lt;- predict(m, newdata = dtm, type = <span class="hljs-string">"topics"</span>)
 </code></pre>
 <h3><a class="anchor" aria-hidden="true" name="topic-visualisation"></a><a href="#topic-visualisation" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Topic visualisation</h3>
-<p>Once you have topics, visualising these can also be easily done with the igraph and ggraph packages. Below one possible plot is shown.</p>
+<p>Once you have topics, visualising these can also be easily done with the igraph and ggraph packages. Below one possible plot is shown. It shows for a certain topic the co-occurrence of terms</p>
 <pre><code class="hljs css r"><span class="hljs-keyword">library</span>(igraph)
 <span class="hljs-keyword">library</span>(ggraph)
 <span class="hljs-keyword">library</span>(ggplot2)
@@ -182,7 +176,20 @@ ggraph(wordnetwork, layout = <span class="hljs-string">"fr"</span>) +
   theme_graph(base_family = <span class="hljs-string">"Arial Narrow"</span>) +
   labs(title = <span class="hljs-string">"Words in topic 1 "</span>, subtitle = <span class="hljs-string">"Nouns &amp; Adjective cooccurrence"</span>)
 </code></pre>
-<p><img src="../docs/assets/doc6_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="doc6_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Another possibility is showing correlations among the terms driving the topic for only documents of that topic.</p>
+<pre><code class="hljs css r">topicterminology &lt;- predict(m, type = <span class="hljs-string">"terms"</span>, min_posterior = <span class="hljs-number">0.05</span>, min_terms = <span class="hljs-number">10</span>)
+termcorrs &lt;- subset(x_topics, topic %<span class="hljs-keyword">in</span>% <span class="hljs-number">1</span> &amp; lemma %<span class="hljs-keyword">in</span>% topicterminology[[<span class="hljs-number">1</span>]]$term)
+termcorrs &lt;- document_term_frequencies(termcorrs, document = <span class="hljs-string">"topic_level_id"</span>, term = <span class="hljs-string">"lemma"</span>)
+termcorrs &lt;- document_term_matrix(termcorrs)
+termcorrs &lt;- dtm_cor(termcorrs)
+termcorrs[lower.tri(termcorrs)] &lt;- <span class="hljs-literal">NA</span>
+diag(termcorrs) &lt;- <span class="hljs-literal">NA</span>
+<span class="hljs-keyword">library</span>(qgraph)
+qgraph(termcorrs, layout = <span class="hljs-string">"spring"</span>, labels = colnames(termcorrs), directed = <span class="hljs-literal">FALSE</span>,
+       borders = <span class="hljs-literal">FALSE</span>, label.scale = <span class="hljs-literal">FALSE</span>, label.cex = <span class="hljs-number">1</span>, node.width = <span class="hljs-number">0.5</span>)
+</code></pre>
+<p><img src="doc6_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <h2><a class="anchor" aria-hidden="true" name="include-keywords-in-topic-models"></a><a href="#include-keywords-in-topic-models" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Include keywords in topic models</h2>
 <p>You mostly get better, more interpretable results in topic models if you include compound keywords in the model. Let's show the steps how you can accomplish this.</p>
 <ul>
@@ -227,22 +234,22 @@ dtm &lt;- dtm_remove_lowfreq(dtm, minfreq = <span class="hljs-number">5</span>)
 topicterminology
 </code></pre>
 <pre><code class="hljs">$topic_001
-              term       prob
-<span class="hljs-number">1</span>         ete tres <span class="hljs-number">0.24256585</span>
-<span class="hljs-number">2</span>     centre ville <span class="hljs-number">0.12786746</span>
-<span class="hljs-number">3</span> tres confortable <span class="hljs-number">0.06414613</span>
+      term       prob
+<span class="hljs-number">1</span> ete tres <span class="hljs-number">0.22057707</span>
+<span class="hljs-number">2</span> tres bon <span class="hljs-number">0.10668185</span>
+<span class="hljs-number">3</span>  il nous <span class="hljs-number">0.05353075</span>
 
 $topic_002
-           term       prob
-<span class="hljs-number">1</span> tres agreable <span class="hljs-number">0.29271583</span>
-<span class="hljs-number">2</span>      tres bon <span class="hljs-number">0.12634892</span>
-<span class="hljs-number">3</span>        ce qui <span class="hljs-number">0.05890288</span>
+          term       prob
+<span class="hljs-number">1</span> centre ville <span class="hljs-number">0.11049927</span>
+<span class="hljs-number">2</span>      Accueil <span class="hljs-number">0.07011747</span>
+<span class="hljs-number">3</span>     que nous <span class="hljs-number">0.06644640</span>
 
 $topic_003
-         term       prob
-<span class="hljs-number">1</span>  tres sympa <span class="hljs-number">0.12185252</span>
-<span class="hljs-number">2</span> tres propre <span class="hljs-number">0.10836331</span>
-<span class="hljs-number">3</span>     Accueil <span class="hljs-number">0.06339928</span>
+           term       prob
+<span class="hljs-number">1</span> tres agreable <span class="hljs-number">0.22404153</span>
+<span class="hljs-number">2</span>    tres sympa <span class="hljs-number">0.09624601</span>
+<span class="hljs-number">3</span>    bon sejour <span class="hljs-number">0.06429712</span>
 </code></pre>
 <h3><a class="anchor" aria-hidden="true" name="other-option-to-build-document-term-matricis"></a><a href="#other-option-to-build-document-term-matricis" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Other option to build document term matricis</h3>
 <p>In the above exercise, nouns which were part of a compound multi-word-expression (mwe) were replaced by the multi-word-expression. Sometimes however, you want to keep the noun as well as the multi-word expression in the topic model even if the noun is always part of a multi-word expression. You can do this as follows.</p>
