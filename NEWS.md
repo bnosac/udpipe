@@ -4,6 +4,7 @@
 - Fix to make sure as.data.frame.udpipe_connlu also works with data.table version 1.9.6. Fixes issue #16
 - Allow keywords_rake to use in group a character vector of column names
 - Added a vignette on the use of the package to do topic modelling using the POS tags and multi-word expressions
+- dtm_remove_lowfreq to uses minfreq as lower bound
 
 # CHANGES IN udpipe VERSION 0.4
 

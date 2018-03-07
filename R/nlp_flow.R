@@ -296,7 +296,7 @@ dtm_reverse <- function(x){
 #' x <- dtm_remove_lowfreq(dtm, minfreq = 10, maxterms = 25)
 #' dim(x)
 dtm_remove_lowfreq <- function(dtm, minfreq=5, maxterms){
-  dtm <- dtm[, which(Matrix::colSums(dtm) > minfreq)]
+  dtm <- dtm[, which(Matrix::colSums(dtm) >= minfreq)]
   if(!missing(maxterms)){
     terms <- head(sort(Matrix::colSums(dtm), decreasing = TRUE), n = maxterms)
     dtm <- dtm[, which(colnames(dtm) %in% names(terms)), drop = FALSE]
