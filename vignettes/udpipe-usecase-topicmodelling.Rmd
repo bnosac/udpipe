@@ -134,7 +134,7 @@ scores <- predict(m, newdata = dtm, type = "topics")
 
 ### Topic visualisation
 
-Once you have topics, visualising these can also be easily done with the igraph and ggraph packages. Below one possible plot is shown.
+Once you have topics, visualising these can also be easily done with the igraph and ggraph packages. Below one possible plot is shown. It shows for a certain topic the co-occurrence of terms
 
 ```{r eval=FALSE}
 library(igraph)
@@ -152,6 +152,24 @@ ggraph(wordnetwork, layout = "fr") +
 ```
 
 ![](coocurrence-example3.png)
+
+
+Another possibility is showing correlations among the terms driving the topic for only documents of that topic. 
+
+```{r eval=FALSE}
+topicterminology <- predict(m, type = "terms", min_posterior = 0.05, min_terms = 10)
+termcorrs <- subset(x_topics, topic %in% 1 & lemma %in% topicterminology[[1]]$term)
+termcorrs <- document_term_frequencies(termcorrs, document = "topic_level_id", term = "lemma")
+termcorrs <- document_term_matrix(termcorrs)
+termcorrs <- dtm_cor(termcorrs)
+termcorrs[lower.tri(termcorrs)] <- NA
+diag(termcorrs) <- NA
+library(qgraph)
+qgraph(termcorrs, layout = "spring", labels = colnames(termcorrs), directed = FALSE,
+       borders = FALSE, label.scale = FALSE, label.cex = 1, node.width = 0.5)
+```
+
+![](correlation-example4.png)
 
 ## Include keywords in topic models
 
