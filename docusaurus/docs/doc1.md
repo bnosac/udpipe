@@ -32,6 +32,7 @@ vignette("udpipe-tryitout", package = "udpipe")
 vignette("udpipe-annotation", package = "udpipe")
 vignette("udpipe-train", package = "udpipe")
 vignette("udpipe-usecase-postagging-lemmatisation", package = "udpipe")
+vignette("udpipe-usecase-topicmodelling", package = "udpipe")
 ```
 
 ## Example
