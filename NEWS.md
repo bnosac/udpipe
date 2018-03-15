@@ -1,3 +1,7 @@
+# CHANGES IN udpipe VERSION 0.6
+
+- Added txt_morphological
+
 # CHANGES IN udpipe VERSION 0.5
 
 - Added txt_recode_ngram for recoding tokens with compound multi-word expressions
