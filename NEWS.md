@@ -1,6 +1,7 @@
 # CHANGES IN udpipe VERSION 0.6
 
 - Added txt_morphological
+- Allow to show progress in udpipe_annotate
 
 # CHANGES IN udpipe VERSION 0.5
 

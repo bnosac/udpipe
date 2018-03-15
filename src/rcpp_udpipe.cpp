@@ -3,7 +3,6 @@
 #include <memory>
 #include "udpipe.h"
 
-
 /*
  * Functionalities to tokenise, tag and do dependency parsing based on a model
  */
@@ -21,7 +20,8 @@ SEXP udp_load_model(const char* file_model) {
 Rcpp::List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::StringVector docid, 
                             std::string annotation_tokenizer,
                             std::string annotation_tagger,
-                            std::string annotation_parser) {
+                            std::string annotation_parser,
+                            int log_every, Rcpp::Function current_time) {
   Rcpp::XPtr<ufal::udpipe::model> languagemodel(udmodel);
   
   // Handle default and none input to tokenizer, tagger, parser
@@ -51,6 +51,11 @@ Rcpp::List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::Stri
   
   int i;
   for (i = 0; i < x.size(); i++){
+    if(log_every > 0){
+      if (i % log_every == 0){
+        Rcpp::Rcout << Rcpp::as<std::string>(current_time()) << " Annotating text fragment " << i + 1 << "/" << x.size() << std::endl;  
+      }  
+    }
     iss.str (Rcpp::as<std::string>(x[i]));
     doc_id = Rcpp::as<std::string>(docid[i]);
     languagemodel_pipeline.set_document_id(doc_id);

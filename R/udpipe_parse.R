@@ -19,6 +19,9 @@
 #' 'none' (no dependency parsing needed) or a character string with more complex parsing options 
 #' as specified in \url{http://ufal.mff.cuni.cz/udpipe/users-manual} in which case \code{parser} should be a character string where the options
 #' are put after each other using the semicolon as separation.
+#' @param trace A non-negative integer indicating to show progress on the annotation. 
+#' If positive it prints out a message before each \code{trace} number of elements of \code{x} for which annotation is to be executed,
+#' allowing you to see how much of the text is already annotated. Defaults to FALSE (no progress shown).
 #' @param ... currently not used
 #' @return a list with 3 elements
 #' \itemize{
@@ -65,7 +68,7 @@
 #' 
 #' ## Provide doc_id for joining and identification purpose
 #' x <- udpipe_annotate(ud_dutch, x = txt, doc_id = c("id1", "feedbackabc"),
-#'                      tagger = "none", parser = "none")
+#'                      tagger = "none", parser = "none", trace = TRUE)
 #' as.data.frame(x)
 #' 
 #' ## Mark on encodings: if your data is not in UTF-8 encoding, make sure you convert it to UTF-8 
@@ -77,7 +80,9 @@
 udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep=""), 
                             tokenizer = "tokenizer", 
                             tagger = c("default", "none"), 
-                            parser = c("default", "none"), ...) {
+                            parser = c("default", "none"), 
+                            trace = FALSE, ...) {
+  ## Some input checking
   if(!inherits(object, "udpipe_model")){
     stop("object should be of class udpipe_model as returned by the function ?udpipe_load_model")
   }
@@ -92,8 +97,12 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
   stopifnot(is.character(parser))
   tagger <- tagger[1]
   parser <- parser[1]
-
-  x_conllu <- udp_tokenise_tag_parse(object$model, x, doc_id, tokenizer, tagger, parser)
+  log_every <- as.integer(trace)
+  log_now <- function(){
+    as.character(Sys.time())
+  }
+  ## Annotate
+  x_conllu <- udp_tokenise_tag_parse(object$model, x, doc_id, tokenizer, tagger, parser, log_every, log_now)
   Encoding(x_conllu$conllu) <- "UTF-8"
   class(x_conllu) <- "udpipe_connlu"
   x_conllu

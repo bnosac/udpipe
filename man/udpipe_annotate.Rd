@@ -6,7 +6,7 @@
 \usage{
 udpipe_annotate(object, x, doc_id = paste("doc", seq_along(x), sep = ""),
   tokenizer = "tokenizer", tagger = c("default", "none"),
-  parser = c("default", "none"), ...)
+  parser = c("default", "none"), trace = FALSE, ...)
 }
 \arguments{
 \item{object}{an object of class \code{udpipe_model} as returned by \code{\link{udpipe_load_model}}}
@@ -31,6 +31,10 @@ are put after each other using the semicolon as separation.}
 'none' (no dependency parsing needed) or a character string with more complex parsing options 
 as specified in \url{http://ufal.mff.cuni.cz/udpipe/users-manual} in which case \code{parser} should be a character string where the options
 are put after each other using the semicolon as separation.}
+
+\item{trace}{A non-negative integer indicating to show progress on the annotation. 
+If positive it prints out a message before each \code{trace} number of elements of \code{x} for which annotation is to be executed,
+allowing you to see how much of the text is already annotated. Defaults to FALSE (no progress shown).}
 
 \item{...}{currently not used}
 }
@@ -80,7 +84,7 @@ as.data.frame(x)
 
 ## Provide doc_id for joining and identification purpose
 x <- udpipe_annotate(ud_dutch, x = txt, doc_id = c("id1", "feedbackabc"),
-                     tagger = "none", parser = "none")
+                     tagger = "none", parser = "none", trace = TRUE)
 as.data.frame(x)
 
 ## Mark on encodings: if your data is not in UTF-8 encoding, make sure you convert it to UTF-8 
