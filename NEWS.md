@@ -1,6 +1,6 @@
 # CHANGES IN udpipe VERSION 0.6
 
-- Added txt_morphological
+- Added cbind_morphological and cbind_dependencies
 - Allow to show progress in udpipe_annotate
 
 # CHANGES IN udpipe VERSION 0.5
