@@ -149,7 +149,7 @@ as.data.table.udpipe_connlu <- function(x, ...){
 
 read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
   ## R CMD check happyness
-  doc_id <- paragraph_id <- token_id <- head_token_id <- lemma <- upos <- xpos <- feats <- dep_rel <- deps <- misc <- NULL
+  doc_id <- paragraph_id <- token_id <- head_token_id <- lemma <- upos <- xpos <- feats <- dep_rel <- deps <- misc <- term_id <- .N <- NULL
   
   output_fields <- c("doc_id", "paragraph_id", "sentence_id", "sentence", 
                      "token_id", "token", "lemma", "upos", "xpos", "feats", "head_token_id", "dep_rel", "deps", "misc")
