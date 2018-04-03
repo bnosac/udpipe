@@ -2,7 +2,7 @@
 % Please edit documentation in R/nlp_dependency_parsing.R
 \name{cbind_dependencies}
 \alias{cbind_dependencies}
-\title{Add the features to an annotated dataset}
+\title{Add the dependency parsing information to an annotated dataset}
 \usage{
 cbind_dependencies(x, type = c("parent"))
 }

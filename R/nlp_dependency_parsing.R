@@ -1,4 +1,4 @@
-#' @title Add the features to an annotated dataset
+#' @title Add the dependency parsing information to an annotated dataset
 #' @description Annotated results of \code{udpipe_annotate} contain dependency parsing results which indicate
 #' how each word is linked to another word and the relation between these 2 words.\cr
 #' This information is available in the fields token_id, head_token_id and dep_rel which indicates how each token
