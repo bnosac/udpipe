@@ -104,7 +104,7 @@ document_term_frequencies.character <- function(x, document=paste("doc", seq_alo
 #' @description Term frequency Inverse Document Frequency (tfidf) is calculated as the multiplication of
 #' \itemize{
 #' \item Term Frequency (tf): how many times the word occurs in the document / how many words are in the document
-#' \item Inverse Document Frequency (idf): number of documents / number of documents where the term appears
+#' \item Inverse Document Frequency (idf): log(number of documents / number of documents where the term appears)
 #' }
 #' The Okapi BM25 statistic is calculated as the multiplication of the inverse document frequency
 #' and the weighted term frequency as defined at \url{https://en.wikipedia.org/wiki/Okapi_BM25}.
