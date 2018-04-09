@@ -2,6 +2,7 @@
 
 - Added cbind_morphological and cbind_dependencies
 - Allow to show progress in udpipe_annotate
+- txt_nextgram now does not paste NA's together in case someone would use it with missing text data
 
 # CHANGES IN udpipe VERSION 0.5
 

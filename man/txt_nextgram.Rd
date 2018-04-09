@@ -34,6 +34,11 @@ data.frame(words = x,
            trigram = txt_nextgram(x, n = 3, sep = "-"),
            quatrogram = txt_nextgram(x, n = 4, sep = ""),
            stringsAsFactors = FALSE)
+
+x <- c("A1", "A2", "A3", NA, "A4", "A5")
+data.frame(x, 
+           bigram = txt_nextgram(x, n = 2, sep = "_"),
+           stringsAsFactors = FALSE)
 }
 \seealso{
 \code{\link{paste}}, \code{\link[data.table]{shift}}

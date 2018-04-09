@@ -109,6 +109,11 @@ txt_recode <- function(x, from = c(), to = c()){
 #'            trigram = txt_nextgram(x, n = 3, sep = "-"),
 #'            quatrogram = txt_nextgram(x, n = 4, sep = ""),
 #'            stringsAsFactors = FALSE)
+#' 
+#' x <- c("A1", "A2", "A3", NA, "A4", "A5")
+#' data.frame(x, 
+#'            bigram = txt_nextgram(x, n = 2, sep = "_"),
+#'            stringsAsFactors = FALSE)
 txt_nextgram <- function(x, n = 2, sep = " "){
   n <- as.integer(n)
   stopifnot(n >= 1)
@@ -118,12 +123,15 @@ txt_nextgram <- function(x, n = 2, sep = " "){
   nextel <- n - 1L
   out <- list()
   out[[1]] <- x
+  idx <- is.na(out[[1]])
   for(i in 1:nextel){
     out[[i+1]] <- txt_next(x, n = i)
+    idx <- idx | is.na(out[[i+1]])
   }
   out$sep <- sep
   out <- do.call(paste, out)
   out[max((length(out)-(nextel-1L)), 1L):length(out)] <- NA
+  out[idx] <- NA
   out
 }
 
