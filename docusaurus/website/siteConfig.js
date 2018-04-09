@@ -36,7 +36,7 @@ const siteConfig = {
   headerLinks: [
     {href: 'https://bnosac.github.io/udpipe/en/index.html', label: 'Home' },
     {doc: 'doc0', label: 'Docs'},
-    {page: 'help', label: 'Support'},
+    {href: 'https://bnosac.github.io/udpipe/en/help.html', label: 'Support'},
     {href: 'https://github.com/bnosac/udpipe', label: 'GitHub' },
     {blog: true, label: 'Blog'},
     { search: true },

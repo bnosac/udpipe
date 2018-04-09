@@ -22,7 +22,7 @@ class Help extends React.Component {
         title: 'Browse Docs',
       },
       {
-        content: 'Ask questions about the documentation and project',
+        content: 'Ask questions about the documentation and project at https://github.com/bnosac/udpipe',
         title: 'Join the community',
       },
 

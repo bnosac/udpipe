@@ -23,8 +23,8 @@ The udpipe R package was designed with the following things in mind when buildin
 
 ## Installation & License
 
-The package is availabe under the Mozilla Public License Version 2.0.
-Installation can be done as follows. Please visit the package documentation and package vignette for further details.
+The package is available under the Mozilla Public License Version 2.0.
+Installation can be done as follows. Please visit the package documentation at https://bnosac.github.io/udpipe/en and look at the R package vignettes for further details.
 
 ```
 install.packages("udpipe")

@@ -1,0 +1,154 @@
+<html lang="en"><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Basic Analytical Use Cases III · NLP with R and UDPipe</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta property="og:title" content="Basic Analytical Use Cases III · NLP with R and UDPipe"/><meta property="og:type" content="website"/><meta property="og:url" content="https://bnosac.github.io/udpipe/index.html"/><meta property="og:description" content="## An overview of keyword extraction techniques "/><link rel="shortcut icon" href="/udpipe/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://bnosac.github.io/blog/atom.xml" title="NLP with R and UDPipe Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://bnosac.github.io/blog/feed.xml" title="NLP with R and UDPipe Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><link rel="stylesheet" href="/udpipe/css/main.css"/></head><body class="sideNavVisible"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/udpipe/en"><img class="logo" src="/udpipe/img/logo-udpipe-r.png"/></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li><a href="https://bnosac.github.io/udpipe/en/index.html" target="_self">Home</a></li><li><a href="/udpipe/docs/doc0.html" target="_self">Docs</a></li><li><a href="https://bnosac.github.io/udpipe/en/help.html" target="_self">Support</a></li><li><a href="https://github.com/bnosac/udpipe" target="_self">GitHub</a></li><li><a href="/udpipe/blog" target="_self">Blog</a></li><li><a target="_self"></a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><i></i></div><h2><i>›</i><span>Analytical use cases</span></h2></div><div class="navGroups"><div class="navGroup navGroupActive"><h3>Introduction</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc0.html">Try it out</a></li><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc1.html">Introduction</a></li></ul></div><div class="navGroup navGroupActive"><h3>Annotation</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc2.html">Text Annotation</a></li><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc3.html">Model building</a></li></ul></div><div class="navGroup navGroupActive"><h3>Analytical use cases</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc5.html">Use Cases I</a></li><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc6.html">Use Cases II</a></li><li class="navListItem navListItemActive"><a class="navItem navItemActive" href="/udpipe/docs/doc7.html">Use Cases III</a></li></ul></div><div class="navGroup navGroupActive"><h3>MoreDocs</h3><ul><li class="navListItem"><a class="navItem" href="/udpipe/docs/doc4.html">More docs</a></li></ul></div></div></section></div><script>
+          var toggler = document.getElementById('navToggler');
+          var nav = document.getElementById('docsNav');
+          toggler.onclick = function() {
+            nav.classList.toggle('docsSliderActive');
+          };
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1>Basic Analytical Use Cases III</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" name="an-overview-of-keyword-extraction-techniques"></a><a href="#an-overview-of-keyword-extraction-techniques" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>An overview of keyword extraction techniques</h2>
+<p>In this post, we will show 6 keyword extraction techniques which allow to <strong>find keywords in plain text</strong>. Keywords are frequently occuring words which occur somehow together in plain text. Common examples are New York, Monte Carlo, Mixed Models, Brussels Hoofdstedelijk Gewest, Public Transport, Central Station, p-values, ...</p>
+<p>If you master these techniques, it will allow you to easily step away from doing simple word frequency statistics to more business-relevant text summarisation. For this, we will use the udpipe R package (docs at <a href="https://CRAN.R-project.org/package=udpipe">https://CRAN.R-project.org/package=udpipe</a> or <a href="https://bnosac.github.io/udpipe/en">https://bnosac.github.io/udpipe/en</a>) which is the core R package you need for doing this type of t ext processing.We'll basically show how to easily extract keywords as follows:</p>
+<ol>
+<li>Find keywords by doing <strong>Parts of Speech tagging in order to identify nouns</strong></li>
+<li>Find keywords based on <strong>Collocations and Co-occurrences</strong></li>
+<li>Find keywords based on the <strong>Textrank</strong> algorithm</li>
+<li>Find keywords based on <strong>RAKE (rapid automatic keyword extraction)</strong></li>
+<li>Find keywords by looking for <strong>Phrases</strong> (noun phrases / verb phrases)</li>
+<li>Find keywords based on <strong>results of dependency parsing</strong> (getting the subject of the text)</li>
+</ol>
+<p>These techniques will allow you to move away from showing silly word graphs to more relevant graphs containing keywords.</p>
+<p><img src="../docs/assets/doc7_files/wordclouds.png" width="672" /></p>
+<h3><a class="anchor" aria-hidden="true" name="example"></a><a href="#example" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Example</h3>
+<p>As an example we are going to use feedback in Spanish of customers going to an AirBnB appartment in Brussels. This data is part of the udpipe R package. We extract the <strong>Spanish</strong> text and annotate it using the udpipe R package. Annotation performs <strong>tokenisation, parts of speech tagging, lemmatisation and dependency parsing</strong>.</p>
+<pre><code class="hljs css r"><span class="hljs-keyword">library</span>(udpipe)
+<span class="hljs-keyword">library</span>(textrank)
+
+<span class="hljs-comment">## First step: Take the Spanish udpipe model and annotate the text. <span class="hljs-doctag">Note:</span> this takes about 3 minutes</span>
+data(brussels_reviews)
+comments &lt;- subset(brussels_reviews, language %<span class="hljs-keyword">in</span>% <span class="hljs-string">"es"</span>)
+
+ud_model &lt;- udpipe_download_model(language = <span class="hljs-string">"spanish"</span>)
+ud_model &lt;- udpipe_load_model(ud_model$file_model)
+x &lt;- udpipe_annotate(ud_model, x = comments$feedback, trace = <span class="hljs-literal">TRUE</span>)
+x &lt;- as.data.frame(x)
+</code></pre>
+<p><img src="../docs/assets/doc7_files/udpipe-output-keywords1.png"  /></p>
+<p>Once we have the annotation, finding keywords is a breeze. Let's show how this can be easily accomplished.</p>
+<h3><a class="anchor" aria-hidden="true" name="option-1-extracting-only-nouns"></a><a href="#option-1-extracting-only-nouns" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Option 1: Extracting only nouns</h3>
+<p>An easy way in order to find keywords is by looking at <strong>nouns</strong>. As each term has a Parts of Speech tag if you annotated text using the udpipe package, you can easily do this as follows.</p>
+<pre><code class="hljs css r">stats &lt;- subset(x, upos %<span class="hljs-keyword">in</span>% <span class="hljs-string">"NOUN"</span>)
+stats &lt;- txt_freq(x = stats$lemma)
+
+<span class="hljs-keyword">library</span>(lattice)
+stats$key &lt;- factor(stats$key, levels = rev(stats$key))
+barchart(key ~ freq, data = head(stats, <span class="hljs-number">30</span>), col = <span class="hljs-string">"cadetblue"</span>, main = <span class="hljs-string">"Most occurring nouns"</span>, xlab = <span class="hljs-string">"Freq"</span>)
+</code></pre>
+<p><img src="../docs/assets/doc7_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<h3><a class="anchor" aria-hidden="true" name="option-2-collocation-co-occurrences"></a><a href="#option-2-collocation-co-occurrences" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Option 2: Collocation &amp; co-occurrences</h3>
+<p>Although nouns are a great start, you are probably interested in multi-word expressions. You can get multi-word expression by looking either at <strong>collocations</strong> (words following one another), at <strong>word co-occurrences within each sentence</strong> or at word co-occurrences of <strong>words which are close in the neighbourhood of one another</strong>. These approaches can be executed as follows using the udpipe R package. If we combine this with selecting <strong>only the nouns and adjectives</strong>, this becomes already nice.</p>
+<pre><code class="hljs css r"><span class="hljs-comment">## Collocation (words following one another)</span>
+stats &lt;- keywords_collocation(x = x, 
+                             term = <span class="hljs-string">"token"</span>, group = c(<span class="hljs-string">"doc_id"</span>, <span class="hljs-string">"paragraph_id"</span>, <span class="hljs-string">"sentence_id"</span>),
+                             ngram_max = <span class="hljs-number">4</span>)
+<span class="hljs-comment">## Co-occurrences: How frequent do words occur in the same sentence, in this case only nouns or adjectives</span>
+stats &lt;- cooccurrence(x = subset(x, upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>, <span class="hljs-string">"ADJ"</span>)), 
+                     term = <span class="hljs-string">"lemma"</span>, group = c(<span class="hljs-string">"doc_id"</span>, <span class="hljs-string">"paragraph_id"</span>, <span class="hljs-string">"sentence_id"</span>))
+<span class="hljs-comment">## Co-occurrences: How frequent do words follow one another</span>
+stats &lt;- cooccurrence(x = x$lemma, 
+                     relevant = x$upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>, <span class="hljs-string">"ADJ"</span>))
+<span class="hljs-comment">## Co-occurrences: How frequent do words follow one another even if we would skip 2 words in between</span>
+stats &lt;- cooccurrence(x = x$lemma, 
+                     relevant = x$upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>, <span class="hljs-string">"ADJ"</span>), skipgram = <span class="hljs-number">2</span>)
+head(stats)
+</code></pre>
+<pre><code class="hljs"><span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#        term1     term2 cooc</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 1     barrio tranquilo   36</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 2   estacion      tren   30</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 3 transporte   publico   23</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 4     centro    ciudad   23</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 5      pleno    centro   20</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 6   estacion   central   19</span></span>
+</code></pre>
+<p>Visualisation of these co-occurrences can be done using a network plot as follows for the top 30 most frequent co-occurring nouns and adjectives.</p>
+<pre><code class="hljs css r"><span class="hljs-keyword">library</span>(igraph)
+<span class="hljs-keyword">library</span>(ggraph)
+<span class="hljs-keyword">library</span>(ggplot2)
+wordnetwork &lt;- head(stats, <span class="hljs-number">30</span>)
+wordnetwork &lt;- graph_from_data_frame(wordnetwork)
+ggraph(wordnetwork, layout = <span class="hljs-string">"fr"</span>) +
+  geom_edge_link(aes(width = cooc, edge_alpha = cooc), edge_colour = <span class="hljs-string">"pink"</span>) +
+  geom_node_text(aes(label = name), col = <span class="hljs-string">"darkgreen"</span>, size = <span class="hljs-number">4</span>) +
+  theme_graph(base_family = <span class="hljs-string">"Arial Narrow"</span>) +
+  theme(legend.position = <span class="hljs-string">"none"</span>) +
+  labs(title = <span class="hljs-string">"Cooccurrences within 3 words distance"</span>, subtitle = <span class="hljs-string">"Nouns &amp; Adjective"</span>)
+</code></pre>
+<p><img src="../docs/assets/doc7_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<h3><a class="anchor" aria-hidden="true" name="option-3-textrank-word-network-ordered-by-google-pagerank"></a><a href="#option-3-textrank-word-network-ordered-by-google-pagerank" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Option 3: Textrank (word network ordered by Google Pagerank)</h3>
+<p>Another approach for keyword detection is <strong>Textrank</strong>. Textrank is an algorithm implemented in the textrank R package. The algorithm allows to summarise text and as well allows to extract keywords. This is done by constructing a <strong>word network</strong> by looking if words are following one another. On top of that network the 'Google Pagerank' algorithm is applied to extract relevant words after which relevant words which are following one another are combined to get keywords. In the below example, we are interested in finding keywords using that algorithm of either nouns or adjectives following one another. You can see from the plot below that the keywords combines words together into multi-word expressions.</p>
+<pre><code class="hljs css r">stats &lt;- textrank_keywords(x$lemma, 
+                          relevant = x$upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>, <span class="hljs-string">"ADJ"</span>), 
+                          ngram_max = <span class="hljs-number">8</span>, sep = <span class="hljs-string">" "</span>)
+stats &lt;- subset(stats$keywords, ngram &gt; <span class="hljs-number">1</span> &amp; freq &gt;= <span class="hljs-number">5</span>)
+<span class="hljs-keyword">library</span>(wordcloud)
+wordcloud(words = stats$keyword, freq = stats$freq)
+</code></pre>
+<p><img src="../docs/assets/doc7_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<h3><a class="anchor" aria-hidden="true" name="option-4-rapid-automatic-keyword-extraction-rake"></a><a href="#option-4-rapid-automatic-keyword-extraction-rake" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Option 4: Rapid Automatic Keyword Extraction: RAKE</h3>
+<p>Next basic algorithm is called RAKE which is an acronym for <strong>Rapid Automatic Keyword Extraction</strong>. It looks for keywords by looking to a contiguous sequence of words which do not contain irrelevant words. Namely by</p>
+<ul>
+<li>calculating a score for each word which is part of any candidate keyword, this is done by
+<ul>
+<li>among the words of the candidate keywords, the algorithm looks how many times each word is occurring and how many times it co-occurs with other words</li>
+<li><strong>each word gets a score which is the ratio of the word degree (how many times it co-occurs with other words) to the word frequency</strong></li>
+</ul></li>
+<li>a RAKE score for the full candidate keyword is calculated by summing up the scores of each of the words which define the candidate keyword</li>
+</ul>
+<pre><code class="hljs css r">stats &lt;- keywords_rake(x = x, 
+                      term = <span class="hljs-string">"token"</span>, group = c(<span class="hljs-string">"doc_id"</span>, <span class="hljs-string">"paragraph_id"</span>, <span class="hljs-string">"sentence_id"</span>),
+                      relevant = x$upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>, <span class="hljs-string">"ADJ"</span>),
+                      ngram_max = <span class="hljs-number">4</span>)
+head(subset(stats, freq &gt; <span class="hljs-number">3</span>))
+</code></pre>
+<pre><code class="hljs">##                  keyword ngram freq     rake
+## <span class="hljs-number">6</span>  perfectas condiciones     <span class="hljs-number">2</span>    <span class="hljs-number">4</span> <span class="hljs-number">2.000000</span>
+## <span class="hljs-number">8</span>             unica pega     <span class="hljs-number">2</span>    <span class="hljs-number">7</span> <span class="hljs-number">2.000000</span>
+## <span class="hljs-number">12</span>           grand place     <span class="hljs-number">2</span>    <span class="hljs-number">6</span> <span class="hljs-number">1.900000</span>
+## <span class="hljs-number">13</span>   grandes anfitriones     <span class="hljs-number">2</span>    <span class="hljs-number">4</span> <span class="hljs-number">1.809717</span>
+## <span class="hljs-number">18</span>    transporte publico     <span class="hljs-number">2</span>   <span class="hljs-number">21</span> <span class="hljs-number">1.685714</span>
+## <span class="hljs-number">21</span>    buenos anfitriones     <span class="hljs-number">2</span>    <span class="hljs-number">9</span> <span class="hljs-number">1.662281</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" name="option-5-phrases"></a><a href="#option-5-phrases" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Option 5: Phrases</h3>
+<p>Next option is to extract phrases. These are defined as a <strong>sequence of Parts of Speech Tags</strong>. Common type of phrases are noun phrases or verb phrases. How does this work? Parts of Speech tags are recoded to one of the following one-letters: (A: adjective, C: coordinating conjuction, D: determiner, M: modifier of verb, N: noun or proper noun, P: preposition). Next you can define a regular expression to indicate a sequence of parts of speech tags which you want to extract from the text.</p>
+<pre><code class="hljs css r"><span class="hljs-comment">## Simple noun phrases (a adjective+noun, pre/postposition, optional determiner and another adjective+noun)</span>
+x$phrase_tag &lt;- as_phrasemachine(x$upos, type = <span class="hljs-string">"upos"</span>)
+stats &lt;- keywords_phrases(x = x$phrase_tag, term = x$token, 
+                         pattern = <span class="hljs-string">"(A|N)+N(P+D*(A|N)*N)*"</span>, 
+                         is_regex = <span class="hljs-literal">TRUE</span>, ngram_max = <span class="hljs-number">4</span>, detailed = <span class="hljs-literal">FALSE</span>)
+head(subset(stats, ngram &gt; <span class="hljs-number">2</span>))
+</code></pre>
+<pre><code class="hljs"><span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#                           keyword ngram freq</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 10                   Gare du Midi     3   12</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 34       pleno centro de Bruselas     4    6</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 68               15 minutos a pie     4    4</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 70               nos explico todo     3    4</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 75 primera experiencia con Airbnb     4    3</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 78                   Gare du Nord     3    3</span></span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" name="option-6-use-dependency-parsing-output-to-get-the-nominal-subject-and-the-adjective-of-it"></a><a href="#option-6-use-dependency-parsing-output-to-get-the-nominal-subject-and-the-adjective-of-it" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Option 6: Use dependency parsing output to get the nominal subject and the adjective of it</h3>
+<p>In the last option, we will show how to use the results of the <strong>dependency parsing</strong>. When you executed the annotation using udpipe, the dep_rel field indicates how words are related to one another. A token is related to the parent using token_id and head_token_id. The dep_rel field indicates how words are linked to one another. The type of relations are defined at <a href="http://universaldependencies.org/u/dep/index.html">http://universaldependencies.org/u/dep/index.html</a>. For this exercise we are going to take the words which have as dependency relation nsubj indicating the <strong>nominal subject</strong> and we are adding to that the adjective which is changing the nominal subject.</p>
+<p>In this way we can combine what are people talking about with the adjective they use when they talk about the subject.</p>
+<pre><code class="hljs css r">stats &lt;- merge(x, x, 
+           by.x = c(<span class="hljs-string">"doc_id"</span>, <span class="hljs-string">"paragraph_id"</span>, <span class="hljs-string">"sentence_id"</span>, <span class="hljs-string">"head_token_id"</span>),
+           by.y = c(<span class="hljs-string">"doc_id"</span>, <span class="hljs-string">"paragraph_id"</span>, <span class="hljs-string">"sentence_id"</span>, <span class="hljs-string">"token_id"</span>),
+           all.x = <span class="hljs-literal">TRUE</span>, all.y = <span class="hljs-literal">FALSE</span>, 
+           suffixes = c(<span class="hljs-string">""</span>, <span class="hljs-string">"_parent"</span>), sort = <span class="hljs-literal">FALSE</span>)
+stats &lt;- subset(stats, dep_rel %<span class="hljs-keyword">in</span>% <span class="hljs-string">"nsubj"</span> &amp; upos %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"NOUN"</span>) &amp; upos_parent %<span class="hljs-keyword">in</span>% c(<span class="hljs-string">"ADJ"</span>))
+stats$term &lt;- paste(stats$lemma_parent, stats$lemma, sep = <span class="hljs-string">" "</span>)
+stats &lt;- txt_freq(stats$term)
+<span class="hljs-keyword">library</span>(wordcloud)
+wordcloud(words = stats$key, freq = stats$freq, min.freq = <span class="hljs-number">3</span>, max.words = <span class="hljs-number">100</span>,
+          random.order = <span class="hljs-literal">FALSE</span>, colors = c(<span class="hljs-string">"#1B9E77"</span>, <span class="hljs-string">"#D95F02"</span>, <span class="hljs-string">"#7570B3"</span>, <span class="hljs-string">"#E7298A"</span>, <span class="hljs-string">"#66A61E"</span>, <span class="hljs-string">"#E6AB02"</span>))
+</code></pre>
+<p><img src="../docs/assets/doc7_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Now up to you. Can you do the same on your own text?</p>
+<p><strong>Credits</strong>: This analysis would not have been possible without the Spanish annotated treebanks (<a href="https://github.com/UniversalDependencies/UD_Spanish-GSD">https://github.com/UniversalDependencies/UD_Spanish-GSD</a> in particular as made available through <a href="http://universaldependencies.org">http://universaldependencies.org</a>) and the UDPipe C++ library and models provided by Milan Straka (<a href="https://github.com/ufal/udpipe">https://github.com/ufal/udpipe</a>). All credits have to go there.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="doc6.html">← Basic Analytical Use Cases II</a><a class="docs-next button" href="doc4.html">Further documentation →</a></div></div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/udpipe/" class="nav-home"><img src="/udpipe/img/logo-udpipe-r.png" alt="NLP with R and UDPipe" width="66" height="58"/></a><div><h5>Docs</h5><a href="/udpipe/docs/doc0.html">Getting Started</a><a href="/udpipe/docs/doc1.html">Introduction</a><a href="/udpipe/docs/doc2.html">Natural Language Processing</a></div><div><h5>Community</h5><a href="/udpipe/en/users.html">User Showcase</a><a href="https://github.com/bnosac/udpipe/issues">Report issue</a></div><div><h5>More</h5><a href="/udpipe/blog">Blog</a><a href="https://github.com/bnosac/udpipe">GitHub</a><a class="github-button" href="https://github.com/bnosac/udpipe" data-icon="octicon-star" data-count-href="/bnosac/udpipe/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><a href="http://www.bnosac.be" target="_blank" class="fbOpenSource"><img src="/udpipe/img/logo-bnosac.png" alt="BNOSAC Open Source" width="170" height="45"/></a><section class="copyright">Copyright © 2018 BNOSAC</section></footer></div></body></html>
