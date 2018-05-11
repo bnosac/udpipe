@@ -3,6 +3,8 @@
 - Added cbind_morphological and cbind_dependencies
 - Allow to show progress in udpipe_annotate
 - txt_nextgram now does not paste NA's together in case someone would use it with missing text data
+- Add example on only doing pos tagging and dependency parsing and excluding tokenisation
+- Fix gcc8 message: warning: 'char* strncpy(char*, const char*, size_t)' specified bound 15 equals destination size [-Wstringop-truncation]
 
 # CHANGES IN udpipe VERSION 0.5
 
