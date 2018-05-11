@@ -82,6 +82,30 @@ table(x$upos)
 table(x$dep_rel)
 ```
 
+#### My text data is already tokenised
+
+If your data is already tokenised according to your needs using other tools like the tidytext / tokenizers / text2vec R packages or any other external software or just by manual work. You can still use udpipe to do parts of speech annotation and dependency parsing and skip the tokenisation. This is done as follows. 
+
+```{r, results='hide'}
+## Either put every token on a new line and use tokenizer: vertical
+input <- list(doc1 = c("Ik", "ben", "de", "weg", "kwijt", ",", "kunt", "u", "me", "zeggen", 
+                       "waar", "de", "Lange Wapper", "ligt", "?", "Jazeker", "meneer"),
+              doc2 = c("Het", "gaat", "vooruit", ",", "het", "gaat", "verbazend", "goed", "vooruit"))
+txt <- sapply(input, FUN=function(x) paste(x, collapse = "\n"))
+x <- udpipe_annotate(udmodel_dutch, x = txt, tokenizer = "vertical")
+x <- as.data.frame(x)
+
+## Or put every token of each document in 1 string separated by a space and use tokenizer: horizontal
+##   Mark that if a token contains a space, you need to replace the space 
+##   with the 'NO-BREAK SPACE' (U+00A0) character to make sure it is still considered as one token
+txt <- sapply(input, FUN=function(x){
+  x <- gsub(" ", intToUtf8(160), x) ## replace space with no-break-space
+  paste(x, collapse = " ")
+})
+x <- udpipe_annotate(udmodel_dutch, x = as.character(txt), tokenizer = "horizontal")
+x <- as.data.frame(x)
+```
+
 ### Remarks
 
 Some remarks:
