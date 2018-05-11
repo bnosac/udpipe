@@ -55,6 +55,26 @@ x &lt;- as<span class="hljs-selector-class">.data</span><span class="hljs-select
 <span class="hljs-title">table</span>(x$upos)
 <span class="hljs-title">table</span>(x$dep_rel)
 </code></pre>
+<h4><a class="anchor" aria-hidden="true" name="my-text-data-is-already-tokenised"></a><a href="#my-text-data-is-already-tokenised" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>My text data is already tokenised</h4>
+<p>If your data is already tokenised according to your needs using other tools like the tidytext / tokenizers / text2vec R packages or any other external software or just by manual work. You can still use udpipe to do parts of speech annotation and dependency parsing and skip the tokenisation. This is done as follows.</p>
+<pre><code class="hljs css {r, results='hide'}">## Either put every <span class="hljs-keyword">token</span> <span class="hljs-keyword">on</span> a new <span class="hljs-keyword">line</span> and <span class="hljs-keyword">use</span> tokenizer: vertical
+<span class="hljs-keyword">input</span> &lt;- <span class="hljs-keyword">list</span>(doc1 = c(<span class="hljs-string">"Ik"</span>, <span class="hljs-string">"ben"</span>, <span class="hljs-string">"de"</span>, <span class="hljs-string">"weg"</span>, <span class="hljs-string">"kwijt"</span>, <span class="hljs-string">","</span>, <span class="hljs-string">"kunt"</span>, <span class="hljs-string">"u"</span>, <span class="hljs-string">"me"</span>, <span class="hljs-string">"zeggen"</span>, 
+                       <span class="hljs-string">"waar"</span>, <span class="hljs-string">"de"</span>, <span class="hljs-string">"Lange Wapper"</span>, <span class="hljs-string">"ligt"</span>, <span class="hljs-string">"?"</span>, <span class="hljs-string">"Jazeker"</span>, <span class="hljs-string">"meneer"</span>),
+              doc2 = c(<span class="hljs-string">"Het"</span>, <span class="hljs-string">"gaat"</span>, <span class="hljs-string">"vooruit"</span>, <span class="hljs-string">","</span>, <span class="hljs-string">"het"</span>, <span class="hljs-string">"gaat"</span>, <span class="hljs-string">"verbazend"</span>, <span class="hljs-string">"goed"</span>, <span class="hljs-string">"vooruit"</span>))
+txt &lt;- sapply(<span class="hljs-keyword">input</span>, FUN=function(x) paste(x, <span class="hljs-keyword">collapse</span> = <span class="hljs-string">"\n"</span>))
+x &lt;- udpipe_annotate(udmodel_dutch, x = txt, tokenizer = <span class="hljs-string">"vertical"</span>)
+x &lt;- <span class="hljs-keyword">as</span>.data.frame(x)
+
+## Or put every <span class="hljs-keyword">token</span> of each document <span class="hljs-keyword">in</span> 1 string separated <span class="hljs-keyword">by</span> a space and <span class="hljs-keyword">use</span> tokenizer: horizontal
+##   <span class="hljs-keyword">Mark</span> that <span class="hljs-keyword">if</span> a <span class="hljs-keyword">token</span> contains a space, you need to <span class="hljs-keyword">replace</span> the space 
+##   with the '<span class="hljs-keyword">NO</span>-<span class="hljs-keyword">BREAK</span> SPACE' (<span class="hljs-keyword">U</span>+00A0) character to make sure it is still considered <span class="hljs-keyword">as</span> <span class="hljs-keyword">one</span> <span class="hljs-keyword">token</span>
+txt &lt;- sapply(<span class="hljs-keyword">input</span>, FUN=function(x){
+  x &lt;- gsub(<span class="hljs-string">" "</span>, intToUtf8(160), x) ## <span class="hljs-keyword">replace</span> space with <span class="hljs-keyword">no</span>-<span class="hljs-keyword">break</span>-space
+  paste(x, <span class="hljs-keyword">collapse</span> = <span class="hljs-string">" "</span>)
+})
+x &lt;- udpipe_annotate(udmodel_dutch, x = <span class="hljs-keyword">as</span>.character(txt), tokenizer = <span class="hljs-string">"horizontal"</span>)
+x &lt;- <span class="hljs-keyword">as</span>.data.frame(x)
+</code></pre>
 <h3><a class="anchor" aria-hidden="true" name="remarks"></a><a href="#remarks" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Remarks</h3>
 <p>Some remarks:</p>
 <ul>
