@@ -4,7 +4,7 @@
 \alias{cbind_dependencies}
 \title{Add the dependency parsing information to an annotated dataset}
 \usage{
-cbind_dependencies(x, type = c("parent"))
+cbind_dependencies(x, type = c("parent", "child"))
 }
 \arguments{
 \item{x}{a data.frame or data.table as returned by \code{as.data.frame(udpipe_annotate(...))}}
@@ -26,7 +26,7 @@ as the term economy is the nominal subject of weak. \cr
 This function adds the parent information to the annotated data.frame.
 }
 \details{
-Mark that the output which this function provides might possibly change in subsequent releases.
+Mark that the output which this function provides might possibly change in subsequent releases and is experimental.
 }
 \examples{
 \dontrun{

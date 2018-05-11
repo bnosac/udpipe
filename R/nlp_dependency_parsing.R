@@ -11,7 +11,7 @@
 #' @param type currently only possible value is 'parent', indicating to add the information of the head_token_id to the dataset
 #' @return a data.frame/data.table in the same order of \code{x}
 #' where the token/lemma/upos/xpos information of the parent (head dependency) is added to the data.frame. See the examples.
-#' @details Mark that the output which this function provides might possibly change in subsequent releases.
+#' @details Mark that the output which this function provides might possibly change in subsequent releases and is experimental.
 #' @export
 #' @examples 
 #' \dontrun{
@@ -26,7 +26,7 @@
 #' nominalsubject <- nominalsubject[, c("dep_rel", "token", "token_parent")]
 #' nominalsubject
 #' }
-cbind_dependencies <- function(x, type = c("parent")){
+cbind_dependencies <- function(x, type = c("parent", "child")){
   type <- match.arg(type)
   stopifnot(inherits(x, "data.frame"))
   fields <- colnames(x)
@@ -43,7 +43,7 @@ cbind_dependencies <- function(x, type = c("parent")){
                  suffixes = c("", "_parent"),
                  sort = FALSE)  
   }else if(type == "child"){
-    stop("not implemented yet")
+    .NotYetImplemented()
   }
   out <- data.table::setcolorder(out, neworder = c(fields, setdiff(colnames(out), fields)))
   if(!was_data_table){
