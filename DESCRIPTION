@@ -6,8 +6,8 @@ Maintainer: Jan Wijffels <jwijffels@bnosac.be>
 Authors@R: c(person('Jan', 'Wijffels', role = c('aut', 'cre', 'cph'), email = 'jwijffels@bnosac.be'), 
     person('BNOSAC', role = 'cph'), 
     person("Institute of Formal and Applied Linguistics, Faculty of Mathematics and Physics, Charles University in Prague, Czech Republic", role = 'cph'),
-    person('Milan Straka', role = 'cph', email = 'straka@ufal.mff.cuni.cz'), 
-    person('Jana Straková', role = 'cph', email = 'strakova@ufal.mff.cuni.cz'))
+    person('Milan Straka', role = c('ctb', 'cph'), email = 'straka@ufal.mff.cuni.cz'), 
+    person('Jana Straková', role = c('ctb', 'cph'), email = 'strakova@ufal.mff.cuni.cz'))
 Description: This natural language processing toolkit provides language-agnostic
     'tokenization', 'parts of speech tagging', 'lemmatization' and 'dependency
     parsing' of raw text. Next to text parsing, the package also allows you to train
