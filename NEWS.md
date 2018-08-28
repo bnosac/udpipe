@@ -1,3 +1,7 @@
+# CHANGES IN udpipe VERSION 0.6.2
+
+- Allow to reconstruct the original text + allow to add a from/to field in as.data.frame (useful but undocumented feature)
+
 # CHANGES IN udpipe VERSION 0.6.1
 
 - src/udpipe.cpp: at the request of CRAN: remove dynamic execution specification which g++-7 and later complain about by removing the throw statements

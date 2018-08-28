@@ -160,13 +160,20 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
       output_fields <- append(output_fields, values = "term_id", after = 4)
     }
   }
+  if("from_to" %in% names(ldots)){
+    if(isTRUE(ldots$from_to)){
+      output_fields <- append(output_fields, values = c("from", "to"), after = 4)
+    }
+  }
   ## Default output 
   default <- data.frame(doc_id = character(), 
                         paragraph_id = integer(), 
                         sentence_id = character(), 
-                        sentence = character(), 
+                        sentence = character(),
+                        from = integer(),
+                        to = integer(),
                         term_id = integer(),
-                        token_id = character(), 
+                        token_id = character(),
                         token = character(), 
                         lemma = character(), 
                         upos = character(), 
@@ -240,6 +247,10 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
   out[, dep_rel := underscore_as_na(dep_rel)]
   out[, deps := underscore_as_na(deps)]
   out[, misc := underscore_as_na(misc)]
+  if(all(c("from", "to") %in% output_fields)){
+    out[, c("from", "to") := udpipe_reconstruct(sentence_id = sentence_id, token = token, token_id = token_id, misc = misc, only_from_to = TRUE), 
+        by = list(doc_id)]
+  }
   out <- out[, output_fields, with = FALSE]
   out <- data.table::setDF(out)
   out
