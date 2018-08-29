@@ -155,14 +155,18 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
                      "token_id", "token", "lemma", "upos", "xpos", "feats", "head_token_id", "dep_rel", "deps", "misc")
   ## Undocumented feature
   ldots <- list(...)
+  if(any(c("rich", "full", "enhanced", "detailed") %in% names(ldots))){
+    ldots$term_id <- TRUE
+    ldots$start_end <- TRUE
+  }
   if("term_id" %in% names(ldots)){
     if(isTRUE(ldots$term_id)){
       output_fields <- append(output_fields, values = "term_id", after = 4)
     }
   }
-  if("from_to" %in% names(ldots)){
-    if(isTRUE(ldots$from_to)){
-      output_fields <- append(output_fields, values = c("from", "to"), after = 4)
+  if("start_end" %in% names(ldots)){
+    if(isTRUE(ldots$start_end)){
+      output_fields <- append(output_fields, values = c("start", "end"), after = 4)
     }
   }
   ## Default output 
@@ -170,8 +174,8 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
                         paragraph_id = integer(), 
                         sentence_id = character(), 
                         sentence = character(),
-                        from = integer(),
-                        to = integer(),
+                        start = integer(),
+                        end = integer(),
                         term_id = integer(),
                         token_id = character(),
                         token = character(), 
@@ -247,8 +251,8 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
   out[, dep_rel := underscore_as_na(dep_rel)]
   out[, deps := underscore_as_na(deps)]
   out[, misc := underscore_as_na(misc)]
-  if(all(c("from", "to") %in% output_fields)){
-    out[, c("from", "to") := udpipe_reconstruct(sentence_id = sentence_id, token = token, token_id = token_id, misc = misc, only_from_to = TRUE), 
+  if(all(c("start", "end") %in% output_fields)){
+    out[, c("start", "end") := udpipe_reconstruct(sentence_id = sentence_id, token = token, token_id = token_id, misc = misc, only_from_to = TRUE), 
         by = list(doc_id)]
   }
   out <- out[, output_fields, with = FALSE]
