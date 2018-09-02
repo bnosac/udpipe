@@ -1,6 +1,7 @@
-# CHANGES IN udpipe VERSION 0.6.2
+# CHANGES IN udpipe VERSION 0.7
 
-- Allow to reconstruct the original text + allow to add a start/end field in as.data.frame (useful but undocumented feature)
+- Allow to reconstruct the original text + allow to add a start/end field in as.data.frame (useful but undocumented feature). Set up mainly to be used with the crfsuite R package
+- Added txt_tagsequence
 
 # CHANGES IN udpipe VERSION 0.6.1
 

@@ -318,6 +318,108 @@ txt_recode_ngram <- function(x, compound, ngram, sep = " "){
   x
 }
 
+
+#' @title Identify a contiguous sequence of tags as 1 being entity 
+#' @description 
+#' This function allows to identify contiguous sequences of text which have the same label or 
+#' which follow the IOB scheme.\cr 
+#' Named Entity Recognition or Chunking frequently follows the IOB tagging scheme 
+#' where "B" means the token begins an entity, "I" means it is inside an entity,
+#' "E" means it is the end of an entity and "O" means it is not part of an entity. 
+#' An example of such an annotation would be 'New', 'York', 'City', 'District' which can be tagged as 
+#' 'B-LOC', 'I-LOC', 'I-LOC', 'E-LOC'.\cr
+#' The function looks for such sequences which start with 'B-LOC' and combines all subsequent 
+#' labels of the same tagging group into 1 category. This sequence of words also gets a unique identifier such 
+#' that the terms 'New', 'York', 'City', 'District' would get the same sequence identifier.
+#' @param x a character vector of categories in the sequence of occurring (e.g. B-LOC, I-LOC, I-PER, B-PER, O, O, B-PER)
+#' @param entities a list of groups, where each list element contains
+#' \itemize{
+#'  \item{start: }{A length 1 character string with the start element identifying a sequence start. E.g. 'B-LOC'}
+#'  \item{labels: }{A character vector containing all the elements which are considered being part of a same labelling sequence, including the starting element. 
+#'  E.g. \code{c('B-LOC', 'I-LOC', 'E-LOC')}}
+#' }
+#' The list name of the group defines the label that will be assigned to the entity. If \code{entities} is not provided each possible value of \code{x}
+#' is considered an entity. See the examples.
+#' @return a list with elements \code{entity_id} and \code{entity} where 
+#' \itemize{
+#'  \item{entity is a character vector of the same length as \code{x} containing entities , 
+#'        constructed by recoding \code{x} to the names of \code{names(entities})}
+#'  \item{entity_id is an integer vector of the same length as \code{x} containing unique identifiers identfying the compound label sequence such that 
+#'        e.g. the sequence 'B-LOC', 'I-LOC', 'I-LOC', 'E-LOC' (New York City District) would get the same \code{entity_id} identifier.}
+#' }
+#' See the examples.
+#' @export
+#' @examples 
+#' x <- data.frame(
+#'   token = c("The", "chairman", "of", "the", "Nakitoma", "Corporation", 
+#'            "Donald", "Duck", "went", "skiing", 
+#'             "in", "the", "Niagara", "Falls"),
+#'   upos = c("DET", "NOUN", "ADP", "DET", "PROPN", "PROPN", 
+#'            "PROPN", "PROPN", "VERB", "VERB", 
+#'            "ADP", "DET", "PROPN", "PROPN"),
+#'   label = c("O", "O", "O", "O", "B-ORG", "I-ORG", 
+#'             "B-PERSON", "I-PERSON", "O", "O", 
+#'             "O", "O", "B-LOCATION", "I-LOCATION"), stringsAsFactors = FALSE)
+#' x[, c("sequence_id", "group")] <- txt_tagsequence(x$upos)
+#' x
+#' 
+#' ##
+#' ## Define entity groups following the IOB scheme
+#' ## and combine B-LOC I-LOC I-LOC sequences as 1 group (e.g. New York City) 
+#' groups <- list(
+#'  Location = list(start = "B-LOC", labels = c("B-LOC", "I-LOC", "E-LOC")),
+#'  Organisation =  list(start = "B-ORG", labels = c("B-ORG", "I-ORG", "E-ORG")),
+#'  Person = list(start = "B-PER", labels = c("B-PER", "I-PER", "E-PER")), 
+#'  Misc = list(start = "B-MISC", labels = c("B-MISC", "I-MISC", "E-MISC")))
+#' x[, c("entity_id", "entity")] <- txt_tagsequence(x$label, groups)
+#' x
+txt_tagsequence <- function(x, entities){
+  stopifnot(is.character(x))
+  if(missing(entities)){
+    entities <- unique(x)
+    names(entities) <- entities
+    entities <- lapply(entities, FUN=function(x) list(start = x, labels = x))
+    iob <- FALSE
+  }else{
+    iob <- TRUE
+  }
+  ## Data checks
+  if(!all(sapply(entities, FUN=function(x) "start" %in% names(x) & "labels" %in% names(x)))){
+    stop("entities should be list with elements start and labels")
+  }
+  
+  ## Some data preparation on the entity groups
+  starts_with <- sapply(entities, FUN=function(x) x$start)
+  restentities <- lapply(entities, FUN=function(x) setdiff(x$labels, x$start))
+  names(restentities) <- starts_with
+  
+  ## START
+  newgroup <- rep(TRUE, length(x))
+  x_prev <- txt_previous(x, n = 1)
+  ## current group is same as previous group then we need to consider this together as 1 unless the previous one is part of the starting category
+  if(iob){
+    newgroup[which(x == x_prev & !x %in% starts_with)] <- FALSE  
+  }else{
+    newgroup[which(x == x_prev)] <- FALSE
+  }
+  ## current group is not part of start category but previous group is, look if current category part of the categories of the start
+  idx <- x %in% unlist(restentities)
+  if(sum(idx) > 0){
+    is_same_grp <- mapply(x[idx], x_prev[idx], FUN=function(current, previous){
+      current %in% restentities[[previous]]
+    })
+    newgroup[idx][is_same_grp] <- FALSE  
+  }
+  
+  ## Create a new ID and a label
+  out <- list()
+  out$entity_id <- cumsum(newgroup)
+  out$entity <- txt_recode(x = x, 
+                           from = unlist(lapply(entities, FUN=function(x) x$labels)), 
+                           to = rep(names(entities), sapply(entities, FUN=function(x) length(x$labels))))
+  out
+}
+
 #' @title Create a unique identifier for each combination of fields in a data frame
 #' @description Create a unique identifier for each combination of fields in a data frame. 
 #' This unique identifier is unique for each combination of the elements of the fields. 
