@@ -280,7 +280,7 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
 #' @param object either an object of class \code{udpipe_model} as returned by \code{\link{udpipe_load_model}},
 #' the path to the file on disk containing the udpipe model or the language as defined by \code{\link{udpipe_download_model}}. 
 #' If the language is provided, it will download the model using \code{\link{udpipe_download_model}}.
-#' @param ... other elements to pass on to \code{\link{udpipe_download_model}}, \code{\link{udpipe_annotate}}
+#' @param ... other elements to pass on to \code{\link{udpipe_annotate}} and \code{\link{udpipe_download_model}}
 #' @return a data.frame with one row per doc_id and term_id containing all the tokens in the data, the lemma, the part of speech tags,
 #' the morphological features and the dependency relationship along the tokens. The data.frame has the following fields:
 #' \itemize{
@@ -335,6 +335,13 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
 #'             object = ud_dutch)
 #' x <- udpipe(strsplit(txt, "[[:space:][:punct:][:digit:]]+"), 
 #'             object = ud_dutch)
+#'        
+#' ## You can also directly pass on the language in the call to udpipe
+#' x <- udpipe(txt, object = "dutch-lassysmall")
+#' x <- udpipe(data.frame(doc_id = names(txt), text = txt, stringsAsFactors = FALSE), 
+#'             object = "dutch-lassysmall")
+#' x <- udpipe(strsplit(txt, "[[:space:][:punct:][:digit:]]+"), 
+#'             object = "dutch-lassysmall")
 udpipe <- function(x, object, ...) {
   UseMethod("udpipe")
 }
@@ -343,14 +350,24 @@ getmodel <- function(object, ...){
   if(inherits(object, "udpipe_model")){
     return(object)
   }
+  ## Load the model if it is a file and if it was not the last model which was loaded
+  already_loaded_model <- .current_model$udpipe_model
   if(is.data.frame(object) && nrow(object) == 1 && "file_model" %in% colnames(object)){
-    return(udpipe_load_model(object))
+    if(identical(already_loaded_model$file, object$file_model)){
+      return(already_loaded_model)
+    }else{
+      return(udpipe_load_model(object))  
+    }
   }
   if(file.exists(object)){
-    return(udpipe_load_model(object))
+    if(identical(already_loaded_model$file, object)){
+      return(already_loaded_model)
+    }else{
+      return(udpipe_load_model(object))
+    }
   }
-  dl <- udpipe_download_model(object, ...)
-  udpipe_load_model(dl$file_model)
+  ## Download if needed, and check again if it is the same model which was already loaded
+  getmodel(udpipe_download_model(object, overwrite = FALSE, ...))
 }
 
 #' @export

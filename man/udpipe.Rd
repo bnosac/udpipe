@@ -19,7 +19,7 @@ All text data should be in UTF-8 encoding}
 the path to the file on disk containing the udpipe model or the language as defined by \code{\link{udpipe_download_model}}. 
 If the language is provided, it will download the model using \code{\link{udpipe_download_model}}.}
 
-\item{...}{other elements to pass on to \code{\link{udpipe_download_model}}, \code{\link{udpipe_annotate}}}
+\item{...}{other elements to pass on to \code{\link{udpipe_annotate}} and \code{\link{udpipe_download_model}}}
 }
 \value{
 a data.frame with one row per doc_id and term_id containing all the tokens in the data, the lemma, the part of speech tags,
@@ -75,6 +75,13 @@ x <- udpipe(data.frame(doc_id = names(txt), text = txt, stringsAsFactors = FALSE
             object = ud_dutch)
 x <- udpipe(strsplit(txt, "[[:space:][:punct:][:digit:]]+"), 
             object = ud_dutch)
+       
+## You can also directly pass on the language in the call to udpipe
+x <- udpipe(txt, object = "dutch-lassysmall")
+x <- udpipe(data.frame(doc_id = names(txt), text = txt, stringsAsFactors = FALSE), 
+            object = "dutch-lassysmall")
+x <- udpipe(strsplit(txt, "[[:space:][:punct:][:digit:]]+"), 
+            object = "dutch-lassysmall")
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}, 

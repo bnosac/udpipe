@@ -41,6 +41,9 @@
 #'   \item 'bnosac/udpipe.models.ud' contains models mainly released under the CC-BY-SA license
 #' }
 #' Visit \url{https://github.com/jwijffels/udpipe.models.ud.2.0} and \url{https://github.com/bnosac/udpipe.models.ud} for further details.
+#' @param overwrite logical indicating to overwrite the file if the file was already downloaded. Defaults to \code{TRUE} indicating 
+#' it will download the model and overwrite the file if the file already existed. If set to \code{FALSE},
+#' the model will only be downloaded if it does not exist on disk yet in the \code{model_dir} folder.
 #' @param ... currently not used
 #' @return A data.frame with 1 row and 3 columns: 
 #' \itemize{
@@ -83,6 +86,7 @@
 #' x <- udpipe_download_model(language = "english")
 #' x <- udpipe_download_model(language = "german")
 #' x <- udpipe_download_model(language = "spanish")
+#' x <- udpipe_download_model(language = "spanish", overwrite = FALSE)
 #' 
 #' x <- udpipe_download_model(language = "english", udpipe_model_repo = "bnosac/udpipe.models.ud")
 #' x <- udpipe_download_model(language = "dutch", udpipe_model_repo = "bnosac/udpipe.models.ud")
@@ -106,6 +110,7 @@ udpipe_download_model <- function(language = c("afrikaans", "ancient_greek-proie
                                                "urdu", "uyghur", "vietnamese"),
                                   model_dir = getwd(),
                                   udpipe_model_repo = c("jwijffels/udpipe.models.ud.2.0", "bnosac/udpipe.models.ud"), 
+                                  overwrite = TRUE,
                                   ...) {
   language <- match.arg(language)
   udpipe_model_repo <- match.arg(udpipe_model_repo)
@@ -128,8 +133,10 @@ udpipe_download_model <- function(language = c("afrikaans", "ancient_greek-proie
                      filename)
     to <- file.path(model_dir, filename)
   }
-  message(sprintf("Downloading udpipe model from %s to %s", url, to))
-  utils::download.file(url = url, destfile = to, mode = "wb")
+  if(overwrite || !file.exists(to)){
+    message(sprintf("Downloading udpipe model from %s to %s", url, to))
+    utils::download.file(url = url, destfile = to, mode = "wb")  
+  }
   data.frame(language = language,
              file_model = to,
              url = url,
@@ -171,7 +178,9 @@ udpipe_load_model <- function(file) {
     stop(sprintf("File %s containing the language model does not exist", file))
   }
   ptr <- udp_load_model(file)
-  structure(
+  out <- structure(
     list(file = file, model = ptr), 
     class = "udpipe_model")
+  .current_model$udpipe_model <- out
+  out 
 }

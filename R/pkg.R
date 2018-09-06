@@ -5,3 +5,7 @@
 #' @importFrom Matrix sparseMatrix summary crossprod tcrossprod diag 
 #' @useDynLib udpipe
 NULL
+
+
+.current_model <- new.env()
+.current_model$udpipe_model <- structure(list(file = character(0), model = NULL), class = "udpipe_model")

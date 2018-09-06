@@ -19,7 +19,7 @@ udpipe_download_model(language = c("afrikaans", "ancient_greek-proiel",
   "swedish", "tamil", "turkish", "ukrainian", "urdu", "uyghur", "vietnamese"),
   model_dir = getwd(),
   udpipe_model_repo = c("jwijffels/udpipe.models.ud.2.0",
-  "bnosac/udpipe.models.ud"), ...)
+  "bnosac/udpipe.models.ud"), overwrite = TRUE, ...)
 }
 \arguments{
 \item{language}{a character string with a language. \cr
@@ -50,6 +50,10 @@ Defaults to 'jwijffels/udpipe.models.ud.2.0'. \cr
   \item 'bnosac/udpipe.models.ud' contains models mainly released under the CC-BY-SA license
 }
 Visit \url{https://github.com/jwijffels/udpipe.models.ud.2.0} and \url{https://github.com/bnosac/udpipe.models.ud} for further details.}
+
+\item{overwrite}{logical indicating to overwrite the file if the file was already downloaded. Defaults to \code{TRUE} indicating 
+it will download the model and overwrite the file if the file already existed. If set to \code{FALSE},
+the model will only be downloaded if it does not exist on disk yet in the \code{model_dir} folder.}
 
 \item{...}{currently not used}
 }
@@ -110,6 +114,7 @@ x <- udpipe_download_model(language = "french")
 x <- udpipe_download_model(language = "english")
 x <- udpipe_download_model(language = "german")
 x <- udpipe_download_model(language = "spanish")
+x <- udpipe_download_model(language = "spanish", overwrite = FALSE)
 
 x <- udpipe_download_model(language = "english", udpipe_model_repo = "bnosac/udpipe.models.ud")
 x <- udpipe_download_model(language = "dutch", udpipe_model_repo = "bnosac/udpipe.models.ud")
