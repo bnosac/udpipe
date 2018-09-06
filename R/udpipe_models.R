@@ -41,6 +41,7 @@
 #'   \item 'bnosac/udpipe.models.ud' contains models mainly released under the CC-BY-SA license
 #' }
 #' Visit \url{https://github.com/jwijffels/udpipe.models.ud.2.0} and \url{https://github.com/bnosac/udpipe.models.ud} for further details.
+#' @param ... currently not used
 #' @return A data.frame with 1 row and 3 columns: 
 #' \itemize{
 #'  \item{language: }{The language as provided by the input parameter \code{language}}
@@ -104,7 +105,8 @@ udpipe_download_model <- function(language = c("afrikaans", "ancient_greek-proie
                                                "swedish-lines", "swedish", "tamil", "turkish", "ukrainian", 
                                                "urdu", "uyghur", "vietnamese"),
                                   model_dir = getwd(),
-                                  udpipe_model_repo = c("jwijffels/udpipe.models.ud.2.0", "bnosac/udpipe.models.ud")) {
+                                  udpipe_model_repo = c("jwijffels/udpipe.models.ud.2.0", "bnosac/udpipe.models.ud"), 
+                                  ...) {
   language <- match.arg(language)
   udpipe_model_repo <- match.arg(udpipe_model_repo)
   if(!dir.exists(model_dir)){
@@ -138,7 +140,7 @@ udpipe_download_model <- function(language = c("afrikaans", "ancient_greek-proie
 
 #' @title Load an UDPipe model
 #' @description Load an UDPipe model so that it can be use in \code{\link{udpipe_annotate}}
-#' @param file full path to the model
+#' @param file full path to the model or the value returned by a call to \code{\link{udpipe_download_model}}
 #' @return An object of class \code{udpipe_model} which is a list with 2 elements
 #' \itemize{
 #'  \item{file: }{The path to the model as provided by \code{file}}
@@ -161,6 +163,9 @@ udpipe_download_model <- function(language = c("afrikaans", "ancient_greek-proie
 #' ud_hebrew <- udpipe_load_model(x$file_model)
 #' }
 udpipe_load_model <- function(file) {
+  if(is.data.frame(file) && nrow(file) == 1 && "file_model" %in% colnames(file)){
+    file <- file$file_model
+  }
   file <- path.expand(file)
   if(!file.exists(file)){
     stop(sprintf("File %s containing the language model does not exist", file))

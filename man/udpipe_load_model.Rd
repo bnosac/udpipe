@@ -7,7 +7,7 @@
 udpipe_load_model(file)
 }
 \arguments{
-\item{file}{full path to the model}
+\item{file}{full path to the model or the value returned by a call to \code{\link{udpipe_download_model}}}
 }
 \value{
 An object of class \code{udpipe_model} which is a list with 2 elements

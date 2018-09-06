@@ -19,7 +19,7 @@ udpipe_download_model(language = c("afrikaans", "ancient_greek-proiel",
   "swedish", "tamil", "turkish", "ukrainian", "urdu", "uyghur", "vietnamese"),
   model_dir = getwd(),
   udpipe_model_repo = c("jwijffels/udpipe.models.ud.2.0",
-  "bnosac/udpipe.models.ud"))
+  "bnosac/udpipe.models.ud"), ...)
 }
 \arguments{
 \item{language}{a character string with a language. \cr
@@ -50,6 +50,8 @@ Defaults to 'jwijffels/udpipe.models.ud.2.0'. \cr
   \item 'bnosac/udpipe.models.ud' contains models mainly released under the CC-BY-SA license
 }
 Visit \url{https://github.com/jwijffels/udpipe.models.ud.2.0} and \url{https://github.com/bnosac/udpipe.models.ud} for further details.}
+
+\item{...}{currently not used}
 }
 \value{
 A data.frame with 1 row and 3 columns: 

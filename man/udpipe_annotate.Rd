@@ -2,7 +2,7 @@
 % Please edit documentation in R/udpipe_parse.R
 \name{udpipe_annotate}
 \alias{udpipe_annotate}
-\title{Tokenise, Tag and Dependency Parsing Annotation of raw text}
+\title{Tokenising, Lemmatising, Tagging and Dependency Parsing Annotation of raw text}
 \usage{
 udpipe_annotate(object, x, doc_id = paste("doc", seq_along(x), sep = ""),
   tokenizer = "tokenizer", tagger = c("default", "none"),
@@ -48,7 +48,7 @@ a list with 3 elements
 }
 }
 \description{
-Tokenise, Tag and Dependency Parsing Annotation of raw text
+Tokenising, Lemmatising, Tagging and Dependency Parsing Annotation of raw text
 }
 \examples{
 x <- udpipe_download_model(language = "dutch-lassysmall")

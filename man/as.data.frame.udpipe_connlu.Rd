@@ -13,10 +13,13 @@
 }
 \value{
 a data.frame with columns doc_id, paragraph_id, sentence_id, sentence, 
-token_id, token, lemma, upos, xpos, feats, head_token_id, deprel, dep_rel, misc \cr
+token_id, token, lemma, upos, xpos, feats, head_token_id, dep_rel, deps, misc \cr
 
 The columns paragraph_id, sentence_id are integers, the other fields
 are character data in UTF-8 encoding. \cr
+
+To get more information on these fields, visit \url{http://universaldependencies.org/format.html} 
+or look at \code{link{udpipe}}.
 }
 \description{
 Convert the result of \code{\link{udpipe_annotate}} to a tidy data frame

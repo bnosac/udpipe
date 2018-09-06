@@ -1,7 +1,7 @@
 
 
-#' @title Tokenise, Tag and Dependency Parsing Annotation of raw text
-#' @description Tokenise, Tag and Dependency Parsing Annotation of raw text
+#' @title Tokenising, Lemmatising, Tagging and Dependency Parsing Annotation of raw text
+#' @description Tokenising, Lemmatising, Tagging and Dependency Parsing Annotation of raw text
 #' @param object an object of class \code{udpipe_model} as returned by \code{\link{udpipe_load_model}}
 #' @param x a character vector in UTF-8 encoding where each element of the character vector 
 #' contains text which you like to tokenize, tag and perform dependency parsing.
@@ -86,6 +86,9 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
   if(!inherits(object, "udpipe_model")){
     stop("object should be of class udpipe_model as returned by the function ?udpipe_load_model")
   }
+  if(inherits(x, "factor")){
+    x <- as.character(x)
+  }
   stopifnot(inherits(x, "character"))
   if(!inherits(doc_id, "character")){
     doc_id <- as.character(doc_id)
@@ -115,11 +118,13 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
 #' @param x an object of class \code{udpipe_connlu} as returned by \code{\link{udpipe_annotate}}
 #' @param ... currently not used
 #' @return a data.frame with columns doc_id, paragraph_id, sentence_id, sentence, 
-#' token_id, token, lemma, upos, xpos, feats, head_token_id, deprel, dep_rel, misc \cr
+#' token_id, token, lemma, upos, xpos, feats, head_token_id, dep_rel, deps, misc \cr
 #' 
 #' The columns paragraph_id, sentence_id are integers, the other fields
 #' are character data in UTF-8 encoding. \cr
 #' 
+#' To get more information on these fields, visit \url{http://universaldependencies.org/format.html} 
+#' or look at \code{link{udpipe}}.
 #' @seealso \code{\link{udpipe_annotate}}
 #' @export
 #' @examples 
@@ -261,3 +266,116 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
 }
 
 
+
+
+#' @title Tokenising, Lemmatising, Tagging and Dependency Parsing of raw text in TIF format
+#' @description Tokenising, Lemmatising, Tagging and Dependency Parsing of raw text in TIF format
+#' @param x either
+#' \itemize{
+#'  \item{a character vector: }{The character vector contains the text you want to tokenize, lemmatise, tag and perform dependency parsing. The names of the character vector indicate the document identifier.}
+#'  \item{a data.frame with columns doc_id and text: }{The text column contains the text you want to tokenize, lemmatise, tag and perform dependency parsing. The doc_id column indicate the document identifier.}
+#'  \item{a list of tokens: }{If you have already a tokenised list of tokens and you want to enrich it by lemmatising, tagging and performing dependency parsing. The names of the list indicate the document identifier.}
+#' }
+#' All text data should be in UTF-8 encoding
+#' @param object either an object of class \code{udpipe_model} as returned by \code{\link{udpipe_load_model}},
+#' the path to the file on disk containing the udpipe model or the language as defined by \code{\link{udpipe_download_model}}. 
+#' If the language is provided, it will download the model using \code{\link{udpipe_download_model}}.
+#' @param ... other elements to pass on to \code{\link{udpipe_download_model}}, \code{\link{udpipe_annotate}}
+#' @return a data.frame with one row per doc_id and term_id containing all the tokens in the data, the lemma, the part of speech tags,
+#' the morphological features and the dependency relationship along the tokens. The data.frame has the following fields:
+#' \itemize{
+#'  \item{doc_id: }{The document identifier.}
+#'  \item{paragraph_id: }{The paragraph identifier which is unique within each document.}
+#'  \item{sentence_id: }{The sentence identifier which is unique within each document.}
+#'  \item{sentence: }{The text of the sentence of the sentence_id.}
+#'  \item{start: }{Integer index indicating in the original text where the token starts. Missing in case of tokens part of multi-word tokens which are not in the text.}
+#'  \item{end: }{Integer index indicating in the original text where the token ends. Missing in case of tokens part of multi-word tokens which are not in the text.}
+#'  \item{term_id: }{A row identifier which is unique within the doc_id identifier.}
+#'  \item{token_id: }{Token index, integer starting at 1 for each new sentence. May be a range for multiword tokens or a decimal number for empty nodes.}
+#'  \item{token: }{The token.}
+#'  \item{lemma: }{The lemma of the token.}
+#'  \item{upos: }{The universal parts of speech tag of the token. See \url{http://universaldependencies.org/format.html}}
+#'  \item{xpos: }{The treebank-specific parts of speech tag of the token. See \url{http://universaldependencies.org/format.html}}
+#'  \item{feats: }{The morphological features of the token, separated by |. See \url{http://universaldependencies.org/format.html}}
+#'  \item{head_token_id: }{Indicating what is the token_id of the head of the token, indicating to which other token in the sentence it is related. See \url{http://universaldependencies.org/format.html}}
+#'  \item{dep_rel: }{The type of relation the token has with the head_token_id. See \url{http://universaldependencies.org/format.html}}
+#'  \item{deps: }{Enhanced dependency graph in the form of a list of head-deprel pairs. See \url{http://universaldependencies.org/format.html}}
+#'  \item{misc: }{SpacesBefore/SpacesAfter/SpacesInToken spaces before/after/inside the token. Used to reconstruct the original text. See \url{http://ufal.mff.cuni.cz/udpipe/users-manual}}
+#' }
+#' The columns paragraph_id, sentence_id, term_id, start, end are integers, the other fields
+#' are character data in UTF-8 encoding. \cr
+#' 
+#' @seealso \code{\link{udpipe_load_model}}, \code{\link{as.data.frame.udpipe_connlu}}, \code{\link{udpipe_download_model}}, \code{\link{udpipe_annotate}}
+#' @references \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}, 
+#' \url{http://universaldependencies.org/format.html}
+#' @export
+#' @examples 
+#' ud_dutch <- udpipe_download_model(language = "dutch-lassysmall")
+#' ud_dutch <- udpipe_load_model(ud_dutch)
+#' 
+#' ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
+#' txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
+#'   zei die schele van Van Bukburg en hij had nog gelijk ook. 
+#'   Er was toen dat liedje van tietenkonttieten kont tieten kontkontkont, 
+#'   maar dat hoefden we geenseens niet te zingen. 
+#'   Je kunt zeggen wat je wil van al die gesluierde poezenpas maar d'r kwam wel 
+#'   een vleeswarenwinkel onder te voorschijn van heb je me daar nou.
+#'   
+#'   En zo gaat het maar door.",
+#'   "Wat die ransaap van een academici nou weer in z'n botte pan heb gehaald mag 
+#'   Joost in m'n schoen gooien, maar feit staat boven water dat het een gore 
+#'   vieze vuile ransaap is.")
+#' names(txt) <- c("document_identifier_1", "we-like-ilya-leonard-pfeiffer")
+#' 
+#' ##
+#' ## TIF tagging: tag if x is a character vector, a data frame or a token sequence
+#' ##
+#' x <- udpipe(txt, object = ud_dutch)
+#' x <- udpipe(data.frame(doc_id = names(txt), text = txt, stringsAsFactors = FALSE), 
+#'             object = ud_dutch)
+#' x <- udpipe(strsplit(txt, "[[:space:][:punct:][:digit:]]+"), 
+#'             object = ud_dutch)
+udpipe <- function(x, object, ...) {
+  UseMethod("udpipe")
+}
+
+getmodel <- function(object, ...){
+  if(inherits(object, "udpipe_model")){
+    return(object)
+  }
+  if(is.data.frame(object) && nrow(object) == 1 && "file_model" %in% colnames(object)){
+    return(udpipe_load_model(object))
+  }
+  if(file.exists(object)){
+    return(udpipe_load_model(object))
+  }
+  dl <- udpipe_download_model(object, ...)
+  udpipe_load_model(dl$file_model)
+}
+
+#' @export
+udpipe.character <- function(x, object, ...){
+  udmodel <- getmodel(object, ...)
+  x <- udpipe_annotate(udmodel, x = x, doc_id = names(x), ...)
+  x <- as.data.frame(x, detailed = TRUE)
+  x
+}
+
+#' @export
+udpipe.data.frame <- function(x, object, ...){
+  udmodel <- getmodel(object, ...)
+  stopifnot(all(c("doc_id", "text") %in% colnames(x)))
+  x <- udpipe_annotate(udmodel, x = x$text, doc_id = x$doc_id, ...)
+  x <- as.data.frame(x, detailed = TRUE)
+  x
+}
+
+#' @export
+udpipe.list <- function(x, object, ...){
+  udmodel <- getmodel(object, ...)
+  x <- x[sapply(x, FUN=function(x) length(x) > 0)]
+  x <- udpipe_annotate(udmodel, 
+                       x = sapply(x, FUN=function(x) paste(x, collapse = "\n")), 
+                       doc_id = names(x), tokenizer = "vertical", ...)
+  x <- as.data.frame(x, detailed = TRUE)
+}
