@@ -4,7 +4,7 @@
 - Added txt_tagsequence
 - Added 1 general function called udpipe which does annotation of data in TIF format.
 - Add option in udpipe_download_model to download the model only it does not exist on disk
-- Last loaded model is put into an environment
+- Loaded model are put into an environment such that users of the function udpipe do not need to care about loading
 
 # CHANGES IN udpipe VERSION 0.6.1
 

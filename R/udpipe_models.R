@@ -181,6 +181,6 @@ udpipe_load_model <- function(file) {
   out <- structure(
     list(file = file, model = ptr), 
     class = "udpipe_model")
-  .current_model$udpipe_model <- out
+  .loaded_models[[out$file]] <- out
   out 
 }

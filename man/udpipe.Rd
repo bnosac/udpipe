@@ -77,6 +77,7 @@ x <- udpipe(strsplit(txt, "[[:space:][:punct:][:digit:]]+"),
             object = ud_dutch)
        
 ## You can also directly pass on the language in the call to udpipe
+x <- udpipe("Dit werkt ook.", object = "dutch-lassysmall")
 x <- udpipe(txt, object = "dutch-lassysmall")
 x <- udpipe(data.frame(doc_id = names(txt), text = txt, stringsAsFactors = FALSE), 
             object = "dutch-lassysmall")

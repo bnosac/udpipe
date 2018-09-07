@@ -337,6 +337,7 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
 #'             object = ud_dutch)
 #'        
 #' ## You can also directly pass on the language in the call to udpipe
+#' x <- udpipe("Dit werkt ook.", object = "dutch-lassysmall")
 #' x <- udpipe(txt, object = "dutch-lassysmall")
 #' x <- udpipe(data.frame(doc_id = names(txt), text = txt, stringsAsFactors = FALSE), 
 #'             object = "dutch-lassysmall")
@@ -347,25 +348,28 @@ udpipe <- function(x, object, ...) {
 }
 
 getmodel <- function(object, ...){
+  ## It already a loaded udpipe model
   if(inherits(object, "udpipe_model")){
     return(object)
   }
-  ## Load the model if it is a file and if it was not the last model which was loaded
-  already_loaded_model <- .current_model$udpipe_model
+  ## It's a data.frame returned by udpipe_download_model
+  ## Load the model, but only if it was not the already loaded
   if(is.data.frame(object) && nrow(object) == 1 && "file_model" %in% colnames(object)){
-    if(identical(already_loaded_model$file, object$file_model)){
-      return(already_loaded_model)
+    if(object$file_model %in% names(.loaded_models)){
+      return(getmodel(.loaded_models[[object$file_model]]))
     }else{
       return(udpipe_load_model(object))  
     }
   }
+  ## It's just the path to the udpipe model
   if(file.exists(object)){
-    if(identical(already_loaded_model$file, object)){
-      return(already_loaded_model)
+    if(object %in% names(.loaded_models)){
+      return(getmodel(.loaded_models[[object]]))
     }else{
       return(udpipe_load_model(object))
     }
   }
+  ## It's the language
   ## Download if needed, and check again if it is the same model which was already loaded
   getmodel(udpipe_download_model(object, overwrite = FALSE, ...))
 }
@@ -373,7 +377,11 @@ getmodel <- function(object, ...){
 #' @export
 udpipe.character <- function(x, object, ...){
   udmodel <- getmodel(object, ...)
-  x <- udpipe_annotate(udmodel, x = x, doc_id = names(x), ...)
+  if(length(names(x)) == 0){
+    x <- udpipe_annotate(udmodel, x = x, ...)  
+  }else{
+    x <- udpipe_annotate(udmodel, x = x, doc_id = names(x), ...)
+  }
   x <- as.data.frame(x, detailed = TRUE)
   x
 }
