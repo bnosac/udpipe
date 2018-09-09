@@ -26,41 +26,42 @@ Installation can be done as follows. Please visit the package documentation at h
 install.packages("udpipe")
 vignette("udpipe-tryitout", package = "udpipe")
 vignette("udpipe-annotation", package = "udpipe")
-vignette("udpipe-train", package = "udpipe")
 vignette("udpipe-usecase-postagging-lemmatisation", package = "udpipe")
+# An overview of keyword extraction techniques: https://bnosac.github.io/udpipe/docs/doc7.html
 vignette("udpipe-usecase-topicmodelling", package = "udpipe")
+vignette("udpipe-train", package = "udpipe")
 ```
 
 For installing the development version of this package: `devtools::install_github("bnosac/udpipe", build_vignettes = TRUE)`
 
 ## Example
 
-Currently the package allows you to do tokenisation, tagging, lemmatization and dependency parsing with one convenient function called `udpipe_annotate`
+Currently the package allows you to do tokenisation, tagging, lemmatization and dependency parsing with one convenient function called `udpipe`
 
 ```
 library(udpipe)
-dl <- udpipe_download_model(language = "dutch")
-dl
+udmodel <- udpipe_download_model(language = "dutch")
+udmodel
 
 language                                                                      file_model
    dutch C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/dutch-ud-2.0-170801.udpipe
 
-udmodel_dutch <- udpipe_load_model(file = "dutch-ud-2.0-170801.udpipe")
-x <- udpipe_annotate(udmodel_dutch, 
-                     x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.")
-x <- as.data.frame(x)
+x <- udpipe(x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.",
+            object = udmodel)
 x
 ```
 
 ```
- doc_id paragraph_id sentence_id token_id token lemma  upos                     xpos                                                               feats head_token_id dep_rel deps
-   doc1            1           1        1    Ik    ik  PRON        Pron|per|1|ev|nom                          Case=Nom|Number=Sing|Person=1|PronType=Prs             2   nsubj <NA>
-   doc1            1           1        2  ging    ga  VERB V|intrans|ovt|1of2of3|ev Aspect=Imp|Mood=Ind|Number=Sing|Subcat=Intr|Tense=Past|VerbForm=Fin             0    root <NA>
-   doc1            1           1        3    op    op   ADP                Prep|voor                                                        AdpType=Prep             4    case <NA>
-   doc1            1           1        4  reis  reis  NOUN          N|soort|ev|neut                                                         Number=Sing             2     obj <NA>
-   doc1            1           1        5    en    en CCONJ               Conj|neven                                                                <NA>             7      cc <NA>
-   doc1            1           1        6    ik    ik  PRON        Pron|per|1|ev|nom                          Case=Nom|Number=Sing|Person=1|PronType=Prs             7   nsubj <NA>
-   doc1            1           1        7   nam  neem  VERB   V|trans|ovt|1of2of3|ev Aspect=Imp|Mood=Ind|Number=Sing|Subcat=Tran|Tense=Past|VerbForm=Fin             2    conj <NA>
+  doc_id paragraph_id sentence_id start end term_id token_id     token     lemma  upos                     xpos                                                               feats head_token_id      dep_rel deps
+   doc1            1           1     1   2       1        1        Ik        ik  PRON        Pron|per|1|ev|nom                          Case=Nom|Number=Sing|Person=1|PronType=Prs             2        nsubj <NA>
+   doc1            1           1     4   7       2        2      ging        ga  VERB V|intrans|ovt|1of2of3|ev Aspect=Imp|Mood=Ind|Number=Sing|Subcat=Intr|Tense=Past|VerbForm=Fin             0         root <NA>
+   doc1            1           1     9  10       3        3        op        op   ADP                Prep|voor                                                        AdpType=Prep             4         case <NA>
+   doc1            1           1    12  15       4        4      reis      reis  NOUN          N|soort|ev|neut                                                         Number=Sing             2          obj <NA>
+   doc1            1           1    17  18       5        5        en        en CCONJ               Conj|neven                                                                <NA>             7           cc <NA>
+   doc1            1           1    20  21       6        6        ik        ik  PRON        Pron|per|1|ev|nom                          Case=Nom|Number=Sing|Person=1|PronType=Prs             7        nsubj <NA>
+   doc1            1           1    23  25       7        7       nam      neem  VERB   V|trans|ovt|1of2of3|ev Aspect=Imp|Mood=Ind|Number=Sing|Subcat=Tran|Tense=Past|VerbForm=Fin             2         conj <NA>
+   doc1            1           1    27  29       8        8       mee       mee   ADV                Adv|deelv                                                        PartType=Vbp             7 compound:prt <NA>
+   doc1            1           1    30  30       9        9         :         : PUNCT            Punc|dubbpunt                                                      PunctType=Colo             2        punct <NA>
 ...
 ```
 
