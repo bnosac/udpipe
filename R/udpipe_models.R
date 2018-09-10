@@ -4,17 +4,11 @@
 #' Some or these models were provided by the UDPipe community. Other models were build using this R package.
 #' You can either download these models manually in order to use it for annotation purposes 
 #' or use \code{udpipe_download_model} to download these models for a specific language of choice. \cr
-#' 
-#' The models provided by the UDPipe community are made available for your convenience at \url{https://github.com/jwijffels/udpipe.models.ud.2.0} under the CC-BY-NC-SA
-#' licence. This function downloads the models by default from that location, so if you use this function you are complying to that license.\cr
-#' 
-#' If you are working in a commercial setting, you can also choose to download models from \url{https://github.com/bnosac/udpipe.models.ud}. That
-#' repository contains models build with this R package on open data which allows for commercial usage. 
-#' The license of these models is mostly CC-BY-SA. Visit that github repository for details on the licenses of the language of your choice. 
-#' And contact www.bnosac.be if you need support on these models or require models tuned to your needs. \cr
-#' 
-#' If you need to train models yourself for commercial purposes or if you want to improve models, 
-#' you can easily do this with \code{\link{udpipe_train}} which is explained in detail in the package vignette.
+#' \itemize{
+#'   \item{The models provided by the UDPipe community are made available for your convenience at \url{https://github.com/jwijffels/udpipe.models.ud.2.0} under the CC-BY-NC-SA licence. This function downloads the models by default from that location, so if you use this function you are complying to that license.}
+#'   \item{If you are working in a commercial setting, you can also choose to download models from \url{https://github.com/bnosac/udpipe.models.ud}. That repository contains models build with this R package on open data which allows for commercial usage. The license of these models is mostly CC-BY-SA. Visit that github repository for details on the licenses of the language of your choice. And contact www.bnosac.be if you need support on these models or require models tuned to your needs.}
+#'   \item{If you need to train models yourself for commercial purposes or if you want to improve models, you can easily do this with \code{\link{udpipe_train}} which is explained in detail in the package vignette.}
+#' }
 #' @param language a character string with a language. \cr
 #' Possible values are:
 #' afrikaans, ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, 
