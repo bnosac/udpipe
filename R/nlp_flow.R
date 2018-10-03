@@ -94,7 +94,7 @@ dtf <- function(x, document = colnames(x)[1], term = colnames(x)[2], ...){
 document_term_frequencies.character <- function(x, document=paste("doc", seq_along(x), sep=""), split = "[[:space:][:punct:][:digit:]]+", ...){
   txt <- NULL
   dt <- data.table(document = as.character(document), txt = x)
-  dt <- dt[!is.na(txt), list(term = strsplit(txt, split = split)[[1]]), by = list(document)]
+  dt <- dt[!is.na(txt), list(term = unlist(strsplit(txt, split = split))), by = list(document)]
   dt <- document_term_frequencies(dt)
   dt
 }

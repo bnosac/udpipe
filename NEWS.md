@@ -1,3 +1,7 @@
+# CHANGES IN udpipe VERSION 0.7.1
+
+- In case someone uses document_term_frequencies.character incorrectly with double document identifiers, make sure this is handled
+
 # CHANGES IN udpipe VERSION 0.7
 
 - Allow to reconstruct the original text + allow to add a start/end field in as.data.frame (useful but undocumented feature). Set up mainly to be used with the crfsuite R package
