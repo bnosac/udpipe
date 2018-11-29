@@ -27,7 +27,6 @@ x <- c("NOUN", "VERB", "NOUN", "ADV")
 txt_recode(x = x,
            from = c("VERB", "ADV"),
            to = c("conjugated verb", "adverb"))
-   
 }
 \seealso{
 \code{\link{match}}
