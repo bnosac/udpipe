@@ -62,10 +62,19 @@ you might be interested in looking at the ruimtehol R package \url{https://githu
 }
 \examples{
 x <- c("I do not like whatsoever when an R package has soo many dependencies.",
-       "Making other people install java is somewhat annoying me, 
-        as it is really painful.")
+       "Making other people install java is annoying, 
+        as it is a really painful experience in classrooms.")
 x <- udpipe(x, "english-gum")
-txt_sentiment(x = x, 
+scores <- txt_sentiment(x = x, 
+              term = "lemma",
+              polarity_terms = data.frame(term = c("annoy", "like", "painful"), 
+                                          polarity = c(-1, 1, -1)), 
+              polarity_negators = c("not", "neither"),
+              polarity_amplifiers = c("pretty", "many", "really", "whatsoever"), 
+              polarity_deamplifiers = c("slightly", "somewhat"))
+scores$overall
+scores$data
+scores <- txt_sentiment(x = x, 
               term = "lemma",
               polarity_terms = data.frame(term = c("annoy", "like", "painful"), 
                                           polarity = c(-1, 1, -1)), 
@@ -74,4 +83,6 @@ txt_sentiment(x = x,
               polarity_deamplifiers = c("slightly", "somewhat"),
               constrain = TRUE, n_before = 4,
               n_after = 2, amplifier_weight = .8)
+scores$overall
+scores$data
 }
