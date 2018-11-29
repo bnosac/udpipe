@@ -1,6 +1,7 @@
 # CHANGES IN udpipe VERSION 0.7.1
 
 - In case someone uses document_term_frequencies.character incorrectly with double document identifiers, make sure this is handled
+- txt_recode now returns x if the length of x is 0
 
 # CHANGES IN udpipe VERSION 0.7
 

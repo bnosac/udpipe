@@ -73,8 +73,10 @@ txt_show <- function(x){
 #' txt_recode(x = x,
 #'            from = c("VERB", "ADV"),
 #'            to = c("conjugated verb", "adverb"))
-#'    
 txt_recode <- function(x, from = c(), to = c()){
+  if(length(x) == 0){
+    return(x)
+  }
   stopifnot(length(from) == length(to))
   nongiven <- unique(x[!is.na(x)])
   nongiven <- setdiff(nongiven, from)
