@@ -45,8 +45,8 @@ library(udpipe)
 udmodel <- udpipe_download_model(language = "dutch")
 udmodel
 
-language                                                                      file_model
-   dutch C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/dutch-ud-2.0-170801.udpipe
+language                                                                             file_model
+   dutch C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/dutch-alpino-ud-2.3-181115.udpipe
 
 x <- udpipe(x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.",
             object = udmodel)
