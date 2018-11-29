@@ -1,4 +1,4 @@
-# CHANGES IN udpipe VERSION 0.8
+## CHANGES IN udpipe VERSION 0.8
 
 - Default of udpipe_download_model is now changed, downloads now models built on Universal Dependencies 2.3 instead of the models build on Universal Dependencies 2.0
 - Incorporate models from Universal Dependencies 2.3 released on 2018-11-15
@@ -7,7 +7,7 @@
 - txt_recode now returns x if the length of x is 0
 - added txt_sentiment
 
-# CHANGES IN udpipe VERSION 0.7
+## CHANGES IN udpipe VERSION 0.7
 
 - Allow to reconstruct the original text + allow to add a start/end field in as.data.frame (useful but undocumented feature). Set up mainly to be used with the crfsuite R package
 - Added txt_tagsequence
@@ -15,12 +15,12 @@
 - Add option in udpipe_download_model to download the model only it does not exist on disk
 - Loaded model are put into an environment such that users of the function udpipe do not need to care about loading
 
-# CHANGES IN udpipe VERSION 0.6.1
+## CHANGES IN udpipe VERSION 0.6.1
 
 - src/udpipe.cpp: at the request of CRAN: remove dynamic execution specification which g++-7 and later complain about by removing the throw statements
 - add ctb role to authors Milan and Jana in DESCRIPTION 
 
-# CHANGES IN udpipe VERSION 0.6
+## CHANGES IN udpipe VERSION 0.6
 
 - Added cbind_morphological and cbind_dependencies
 - Allow to show progress in udpipe_annotate
@@ -28,7 +28,7 @@
 - Add example on only doing pos tagging and dependency parsing and excluding tokenisation
 - Fix gcc8 message: warning: 'char* strncpy(char*, const char*, size_t)' specified bound 15 equals destination size [-Wstringop-truncation]
 
-# CHANGES IN udpipe VERSION 0.5
+## CHANGES IN udpipe VERSION 0.5
 
 - Added txt_recode_ngram for recoding tokens with compound multi-word expressions
 - Fix to make sure as.data.frame.udpipe_connlu also works with data.table version 1.9.6. Fixes issue #16
@@ -37,7 +37,7 @@
 - Add example of correlation analysis in vignette on 'Basic Analytical Use Cases'
 - dtm_remove_lowfreq to uses minfreq as lower bound
 
-# CHANGES IN udpipe VERSION 0.4
+## CHANGES IN udpipe VERSION 0.4
 
 - Fix R CMD check on clang-UBSAN: UndefinedBehaviorSanitizer (runtime error: reference binding to misaligned address)
 - Add more documentation on required UTF-8 encoding
@@ -52,7 +52,7 @@
 - Allow cooccurrence.data.frame to provide a vector of groups
 - Added another vignette
 
-# CHANGES IN udpipe VERSION 0.3
+## CHANGES IN udpipe VERSION 0.3
 
 - Add docusaurus site
 - udpipe_download_model gains and extra argument called udpipe_model_repo to allow to download models mainly released under CC-BY-SA from https://github.com/bnosac/udpipe.models.ud
@@ -64,11 +64,11 @@
 - Fixing UBSAN messages (misaligned addresses)
 - If user has R version < 3.3.0, use own startsWith function instead of base::startsWith
  
-# CHANGES IN udpipe VERSION 0.2.2
+## CHANGES IN udpipe VERSION 0.2.2
 
 - Another stab at fixing the Solaris compilation issue in  ufal::udpipe::multiword_splitter::append_token
 
-# CHANGES IN udpipe VERSION 0.2.1
+## CHANGES IN udpipe VERSION 0.2.1
 
 - Added phrases to extract POS sequences more easily like noun phrases, verb phrases or any sequence of parts of speech tags and their corresponding words
 - Fix issue in txt_nextgram if n was larger than the number of elements in x
@@ -77,7 +77,7 @@
 - Another stab at the Solaris compilation issue
 
 
-# CHANGES IN udpipe VERSION 0.2
+## CHANGES IN udpipe VERSION 0.2
 
 - Added data preparation elements for standard text mining flows namely: 
     cooccurrence
@@ -105,17 +105,17 @@
 - Use path.expand on conll-u files which are used for training
 - udpipe_download_model now downloads from https://raw.githubusercontent.com/jwijffels/udpipe.models.ud.2.0/master instead of https://github.com/jwijffels/udpipe.models.ud.2.0/raw/master
 
-# CHANGES IN udpipe VERSION 0.1.2
+## CHANGES IN udpipe VERSION 0.1.2
 
 - Remove logic of UDPIPE_PROCESS_LOG (using Rcpp::Rout instead). This fixes issue detected with valgrind about ofstream
 
-# CHANGES IN udpipe VERSION 0.1.1
+## CHANGES IN udpipe VERSION 0.1.1
 
 - Fix issue on Solaris builds at CRAN, namely: error: expected primary-expression before ‘enum’
 - Use ufal::udpipe namespace directly
 - Documentation fixes
 
-# CHANGES IN udpipe VERSION 0.1
+## CHANGES IN udpipe VERSION 0.1
 
 - Initial release based on UDPipe commit a2ebb99d243546f64c95d0faf36882bb1d67a670
 - Allow to do annotation (tokenisation, POS tagging, Lemmatisation, Dependency parsing)
