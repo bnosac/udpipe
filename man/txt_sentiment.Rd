@@ -51,7 +51,7 @@ This function identifies words which have a positive/negative meaning, with the 
 in the neighbourhood of the word which has a positive/negative meaning.
 \itemize{
  \item{If a negator is occurring in the neigbourhood, positive becomes negative or vice versa.}
- \item{If amplifiers/deamplifiers occur in the neigbourhood, these amplifier weight is added to the score.}
+ \item{If amplifiers/deamplifiers occur in the neigbourhood, these amplifier weight is added to the sentiment polarity score.}
 }
 This function took inspiration from qdap::polarity but was completely re-engineered to allow to calculate similar things on 
 a udpipe-tokenised dataset. It works on a sentence level and the negator/amplification logic can not surpass a boundary defined
