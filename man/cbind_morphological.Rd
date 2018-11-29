@@ -24,7 +24,7 @@ features separately and adds these as extra columns to the data.frame
 }
 \examples{
 \dontrun{
-udmodel <- udpipe_download_model(language = "english")
+udmodel <- udpipe_download_model(language = "english-ewt")
 udmodel <- udpipe_load_model(file = udmodel$file_model)
 x <- udpipe_annotate(udmodel, 
                      x = "The economy is weak but the outlook is bright")

@@ -1,5 +1,8 @@
-# CHANGES IN udpipe VERSION 0.7.1
+# CHANGES IN udpipe VERSION 0.8
 
+- Default of udpipe_download_model is now changed, downloads now models built on Universal Dependencies 2.3 instead of the models build on Universal Dependencies 2.0
+- Incorporate models from Universal Dependencies 2.3 released on 2018-11-15
+- Incorporate models from conll18 shared task baseline built on Universal Dependencies 2.2
 - In case someone uses document_term_frequencies.character incorrectly with double document identifiers, make sure this is handled
 - txt_recode now returns x if the length of x is 0
 

@@ -35,7 +35,7 @@ head(x)
 
 
 ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
-file.remove("dutch-lassysmall-ud-2.0-170801.udpipe")
+file.remove("dutch-lassysmall-ud-2.3-181115.udpipe")
 }
 \seealso{
 \code{\link{udpipe_annotate}}

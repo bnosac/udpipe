@@ -76,7 +76,7 @@
 #' udpipe_annotate(ud_dutch, x = iconv('Ik drink melk bij mijn koffie.', to = "UTF-8"))
 #' 
 #' ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
-#' file.remove("dutch-lassysmall-ud-2.0-170801.udpipe")
+#' file.remove("dutch-lassysmall-ud-2.3-181115.udpipe")
 udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep=""), 
                             tokenizer = "tokenizer", 
                             tagger = c("default", "none"), 
@@ -138,7 +138,7 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
 #' 
 #' 
 #' ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
-#' file.remove("dutch-lassysmall-ud-2.0-170801.udpipe")
+#' file.remove("dutch-lassysmall-ud-2.3-181115.udpipe")
 as.data.frame.udpipe_connlu <- function(x, ...){
   read_connlu(x, is_udpipe_annotation = TRUE, ...)
 }
@@ -343,6 +343,9 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
 #'             object = "dutch-lassysmall")
 #' x <- udpipe(strsplit(txt, "[[:space:][:punct:][:digit:]]+"), 
 #'             object = "dutch-lassysmall")
+#'             
+#' ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
+#' file.remove("dutch-lassysmall-ud-2.3-181115.udpipe")
 udpipe <- function(x, object, ...) {
   UseMethod("udpipe")
 }

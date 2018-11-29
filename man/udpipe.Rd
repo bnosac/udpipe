@@ -83,6 +83,9 @@ x <- udpipe(data.frame(doc_id = names(txt), text = txt, stringsAsFactors = FALSE
             object = "dutch-lassysmall")
 x <- udpipe(strsplit(txt, "[[:space:][:punct:][:digit:]]+"), 
             object = "dutch-lassysmall")
+            
+## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
+file.remove("dutch-lassysmall-ud-2.3-181115.udpipe")
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}, 

@@ -49,9 +49,9 @@ The udpipe R package was designed with the following things in mind when buildin
 
 ### Pre-trained models
 
-Before you can start on performing the annotation, you need a model. Pre-trained Universal Dependencies 2.0 models on all UD treebanks are made available for more than 50 languages trained on 69 treebanks, namely: 
+Before you can start on performing the annotation, you need a model. Pre-trained models build on Universal Dependencies treebanks are made available for more than 60 languages based on 90 treebanks, namely:
 
-**afrikaans, ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, czech-cac, czech-cltt, czech, danish, dutch-lassysmall, dutch, english-lines, english-partut, english, estonian, finnish-ftb, finnish, french-partut, french-sequoia, french, galician-treegal, galician, german, gothic, greek, hebrew, hindi, hungarian, indonesian, irish, italian, japanese, kazakh, korean, latin-ittb, latin-proiel, latin, latvian, lithuanian, norwegian-bokmaal, norwegian-nynorsk, old_church_slavonic, persian, polish, portuguese-br, portuguese, romanian, russian-syntagrus, russian, sanskrit, serbian, slovak, slovenian-sst, slovenian, spanish-ancora, spanish, swedish-lines, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese**.
+**afrikaans-afribooms, ancient_greek-perseus, ancient_greek-proiel, arabic-padt, armenian-armtdp, basque-bdt, belarusian-hse, bulgarian-btb, buryat-bdt, catalan-ancora, chinese-gsd, coptic-scriptorium, croatian-set, czech-cac, czech-cltt, czech-fictree, czech-pdt, danish-ddt, dutch-alpino, dutch-lassysmall, english-ewt, english-gum, english-lines, english-partut, estonian-edt, finnish-ftb, finnish-tdt, french-gsd, french-partut, french-sequoia, french-spoken, galician-ctg, galician-treegal, german-gsd, gothic-proiel, greek-gdt, hebrew-htb, hindi-hdtb, hungarian-szeged, indonesian-gsd, irish-idt, italian-isdt, italian-partut, italian-postwita, japanese-gsd, kazakh-ktb, korean-gsd, korean-kaist, kurmanji-mg, latin-ittb, latin-perseus, latin-proiel, latvian-lvtb, lithuanian-hse, maltese-mudt, marathi-ufal, north_sami-giella, norwegian-bokmaal, norwegian-nynorsk, norwegian-nynorsklia, old_church_slavonic-proiel, old_french-srcmf, persian-seraji, polish-lfg, polish-sz, portuguese-bosque, portuguese-br, portuguese-gsd, romanian-nonstandard, romanian-rrt, russian-gsd, russian-syntagrus, russian-taiga, sanskrit-ufal, serbian-set, slovak-snk, slovenian-ssj, slovenian-sst, spanish-ancora, spanish-gsd, swedish-lines, swedish-talbanken, tamil-ttb, telugu-mtg, turkish-imst, ukrainian-iu, upper_sorbian-ufal, urdu-udtb, uyghur-udt, vietnamese-vtb.** 
 
 For R users who want to use these open-sourced models provided by the UDPipe community and start on tagging, you can proceed as follows to download the model of the language of your choice. 
 
@@ -78,7 +78,7 @@ First load the model which you have downloaded or which you have stored somewher
 
 ```{r}
 ## Either give a file in the current working directory
-udmodel_dutch <- udpipe_load_model(file = "dutch-ud-2.0-170801.udpipe")
+udmodel_dutch <- udpipe_load_model(file = "dutch-alpino-ud-2.3-181115.udpipe")
 ## Or give the full path to the file 
 udmodel_dutch <- udpipe_load_model(file = dl$file_model)
 ```
@@ -156,7 +156,7 @@ Some remarks:
 - Your text has to be in UTF-8 Encoding when you pass it to `udpipe_annotate`, if you don't have that Encoding use standard R facilities like `iconv` to convert it to UTF-8. You get also results in UTF-8 encoding back.
 
 ```{r}
-dl <- udpipe_download_model(language = "sanskrit")
+dl <- udpipe_download_model(language = "sanskrit", udpipe_model_repo = "jwijffels/udpipe.models.ud.2.0")
 udmodel_sanskrit <- udpipe_load_model(file = dl$file_model)
 txt <- "ततः असौ प्राह क्षत्रियस्य तिस्रः भार्या धर्मम् भवन्ति तत् एषा कदाचिद् वैश्या सुता भविष्यति तत् अनुरागः ममास्याम् ततः रथकारः तस्य निश्चयम् विज्ञायावदत् वयस्य किम् अ धुना कर्तव्यम् कौलिकः आह किम् अहम् जानामि त्वयि मित्रे यत् अभिहितं मया ततः"
 x <- udpipe_annotate(udmodel_sanskrit, x = txt)
@@ -178,7 +178,7 @@ Contact BNOSAC: http://www.bnosac.be
 
 
 ```{r, results='hide', echo=FALSE}
-invisible(file.remove(c("dutch-ud-2.0-170801.udpipe", 
+invisible(file.remove(c("dutch-alpino-ud-2.3-181115.udpipe", 
                         "sanskrit-ud-2.0-170801.udpipe",
                         "myannotation.conllu")))
 ```

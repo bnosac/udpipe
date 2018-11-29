@@ -30,7 +30,7 @@ Mark that the output which this function provides might possibly change in subse
 }
 \examples{
 \dontrun{
-udmodel <- udpipe_download_model(language = "english")
+udmodel <- udpipe_download_model(language = "english-ewt")
 udmodel <- udpipe_load_model(file = udmodel$file_model)
 x <- udpipe_annotate(udmodel, 
                      x = "The economy is weak but the outlook is bright")
