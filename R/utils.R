@@ -88,7 +88,7 @@ txt_recode <- function(x, from = c(), to = c()){
 }
 
 
-#' @title Based on a vector with a word sequence, get n-grams
+#' @title Based on a vector with a word sequence, get n-grams (looking forward)
 #' @description If you have annotated your text using \code{\link{udpipe_annotate}},
 #' your text is tokenised in a sequence of words. Based on this vector of words in sequence
 #' getting n-grams comes down to looking at the next word and the subsequent word andsoforth.
@@ -133,6 +133,56 @@ txt_nextgram <- function(x, n = 2, sep = " "){
   out$sep <- sep
   out <- do.call(paste, out)
   out[max((length(out)-(nextel-1L)), 1L):length(out)] <- NA
+  out[idx] <- NA
+  out
+}
+
+
+#' @title Based on a vector with a word sequence, get n-grams (looking backward)
+#' @description If you have annotated your text using \code{\link{udpipe_annotate}},
+#' your text is tokenised in a sequence of words. Based on this vector of words in sequence
+#' getting n-grams comes down to looking at the previous word and the subsequent previous word andsoforth.
+#' These words can be \code{pasted} together to form an n-gram containing
+#' the second previous word, the previous word, the current word ...
+#' @param x a character vector where each element is just 1 term or word
+#' @param n an integer indicating the ngram. Values of 1 will keep the x, a value of 2 will
+#' append the previous term to the current term, a value of 3 will append the second previous term
+#' term and the previous term preceding the current term to the current term
+#' @param sep a character element indicating how to \code{\link{paste}} the subsequent words together
+#' @return a character vector of the same length of \code{x} with the n-grams
+#' @seealso \code{\link{paste}}, \code{\link[data.table]{shift}}
+#' @export
+#' @examples 
+#' x <- sprintf("%s%s", LETTERS, 1:26)
+#' txt_previousgram(x, n = 2)
+#' 
+#' data.frame(words = x,
+#'            bigram = txt_previousgram(x, n = 2),
+#'            trigram = txt_previousgram(x, n = 3, sep = "-"),
+#'            quatrogram = txt_previousgram(x, n = 4, sep = ""),
+#'            stringsAsFactors = FALSE)
+#' 
+#' x <- c("A1", "A2", "A3", NA, "A4", "A5")
+#' data.frame(x, 
+#'            bigram = txt_previousgram(x, n = 2, sep = "_"),
+#'            stringsAsFactors = FALSE)
+txt_previousgram <- function(x, n = 2, sep = " "){
+  n <- as.integer(n)
+  stopifnot(n >= 1)
+  if(n == 1){
+    return(x)
+  }
+  nextel <- n - 1L
+  out <- list()
+  out[[n]] <- x
+  idx <- is.na(out[[n]])
+  for(i in 1:nextel){
+    out[[n-i]] <- txt_previous(x, n = i)
+    idx <- idx | is.na(out[[n-i]])
+  }
+  out$sep <- sep
+  out <- do.call(paste, out)
+  #out[max((length(out)-(nextel-1L)), 1L):length(out)] <- NA
   out[idx] <- NA
   out
 }
