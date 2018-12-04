@@ -61,10 +61,12 @@ Note that if you prefer to build a supervised model to perform sentiment scoring
 you might be interested in looking at the ruimtehol R package \url{https://github.com/bnosac/ruimtehol} instead.
 }
 \examples{
+model <- udpipe_download_model(language = "english-gum", 
+                               model_dir = tempdir())
 x <- c("I do not like whatsoever when an R package has soo many dependencies.",
        "Making other people install java is annoying, 
         as it is a really painful experience in classrooms.")
-x <- udpipe(x, "english-gum")
+x <- udpipe(x, model)
 scores <- txt_sentiment(x = x, 
               term = "lemma",
               polarity_terms = data.frame(term = c("annoy", "like", "painful"), 
@@ -85,4 +87,7 @@ scores <- txt_sentiment(x = x,
               n_after = 2, amplifier_weight = .8)
 scores$overall
 scores$data
+
+## cleanup for CRAN
+file.remove(model$file_model)
 }

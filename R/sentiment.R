@@ -37,10 +37,12 @@
 #'  the terminology causing the sentiment, the number of sentences and the number of non punctuation terms in the document.}
 #' }
 #' @examples 
+#' model <- udpipe_download_model(language = "english-gum", 
+#'                                model_dir = tempdir())
 #' x <- c("I do not like whatsoever when an R package has soo many dependencies.",
 #'        "Making other people install java is annoying, 
 #'         as it is a really painful experience in classrooms.")
-#' x <- udpipe(x, "english-gum")
+#' x <- udpipe(x, model)
 #' scores <- txt_sentiment(x = x, 
 #'               term = "lemma",
 #'               polarity_terms = data.frame(term = c("annoy", "like", "painful"), 
@@ -61,6 +63,9 @@
 #'               n_after = 2, amplifier_weight = .8)
 #' scores$overall
 #' scores$data
+#' 
+#' ## cleanup for CRAN
+#' file.remove(model$file_model)
 txt_sentiment <- function(x,
                       term = "lemma",
                       polarity_terms, 

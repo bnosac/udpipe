@@ -255,3 +255,7 @@ The textrank R package allows you to easily summarise text, it integrates well w
 Need support in text mining. 
 Contact BNOSAC: http://www.bnosac.be
 
+
+```{r, results='hide', echo=FALSE}
+invisible(file.remove(c("french-gsd-ud-2.3-181115.udpipe")))
+```

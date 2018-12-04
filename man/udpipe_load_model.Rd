@@ -32,9 +32,12 @@ x <- udpipe_download_model(language = "hebrew")
 x$file_model
 ud_hebrew <- udpipe_load_model(x$file_model)
 }
+
+## cleanup for CRAN
+file.remove(x$file_model)
 }
 \references{
-\url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
+\url{https://ufal.mff.cuni.cz/udpipe}
 }
 \seealso{
 \code{\link{udpipe_annotate}}, \code{\link{udpipe_download_model}}, \code{\link{udpipe_train}}

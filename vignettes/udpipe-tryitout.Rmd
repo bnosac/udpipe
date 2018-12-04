@@ -59,3 +59,7 @@ You can check the encoding of your text with `Encoding('your text')`. You can co
 - `udpipe_annotate(udmodel, x = iconv('your text', from = 'latin1', to = 'UTF-8'))` if your text is in latin1 encoding. 
 - `udpipe_annotate(udmodel, x = iconv('your text', from = 'CP949', to = 'UTF-8'))` if your text is in CP949 encoding. 
 
+
+```{r, results='hide', echo=FALSE}
+invisible(file.remove(c("dutch-alpino-ud-2.3-181115.udpipe")))
+```

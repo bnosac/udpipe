@@ -310,7 +310,7 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
 #'  \item{model: }{An Rcpp-generated pointer to the loaded model which can be used in \code{\link{udpipe_annotate}}}
 #' }
 #' @seealso \code{\link{udpipe_annotate}}, \code{\link{udpipe_download_model}}, \code{\link{udpipe_train}}
-#' @references \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}
+#' @references \url{https://ufal.mff.cuni.cz/udpipe}
 #' @export
 #' @examples 
 #' x <- udpipe_download_model(language = "dutch-lassysmall", model_dir = tempdir())
@@ -325,6 +325,9 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
 #' x$file_model
 #' ud_hebrew <- udpipe_load_model(x$file_model)
 #' }
+#' 
+#' ## cleanup for CRAN
+#' file.remove(x$file_model)
 udpipe_load_model <- function(file) {
   if(is.data.frame(file) && nrow(file) == 1 && "file_model" %in% colnames(file)){
     file <- file$file_model
