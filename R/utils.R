@@ -499,3 +499,89 @@ unique_identifier <- function(x, fields, start_from = 1L){
   }
   id
 }
+
+
+#' @title Concatenate text of each group of data together in one string
+#' @description This function is similar to \code{\link{paste}}
+#' but works on a data.frame, hence paste.data.frame. 
+#' It concatenates text belonging to groups of data together in one string. 
+#' The function is the inverse of \code{\link{strsplit.data.frame}}.
+#' @param data a data.frame or data.table
+#' @param term a column name or a vector of column names from \code{data} which you want to collapse together
+#' @param group a column name or a vector of column names from \code{data} indicating identifiers of groups. 
+#' Text will be concatenated by group.
+#' @param collapse a character string that you want to use to collapse the text data together. 
+#' Defaults to a single space.
+#' @return a data.frame with the columns from \code{group} and \code{term} where all the text in \code{term}
+#' will be \code{\link{paste}-d} together for each group.
+#' @seealso \code{\link{strsplit.data.frame}}, \code{\link{paste}}
+#' @export
+#' @examples 
+#' data(brussels_reviews_anno, package = "udpipe")
+#' head(brussels_reviews_anno)
+#' x <- paste.data.frame(brussels_reviews_anno, 
+#'                       term = "lemma", 
+#'                       group = c("doc_id", "sentence_id"))
+#' str(x)
+#' x <- paste.data.frame(brussels_reviews_anno, 
+#'                       term = c("lemma", "token"), 
+#'                       group = c("doc_id", "sentence_id"), 
+#'                       collapse = "-")
+#' str(x)                       
+paste.data.frame <- function(data, term, group, collapse=" "){
+  .SDcols <- .SD <- NULL
+  stopifnot(inherits(data, "data.frame"))
+  stopifnot(inherits(term, "character"))
+  stopifnot(inherits(group, "character"))
+  stopifnot(all(c(term, group) %in% colnames(data)))
+  if(inherits(data, "data.table")){
+  }else{
+    x <- data.table::as.data.table(data[, c(term, group)])  
+  }
+  x <- x[, lapply(.SD, FUN=function(x) paste(x, collapse = collapse)), by = group, .SDcols = term]
+  x <- data.table::setDF(x)
+  x
+}
+
+#' @title Split text alongside a regular expression to obtain a tokenised data frame
+#' @description Split text alongside a regular expression to obtain a tokenised data frame. 
+#' This is the inverse of \code{\link{paste.data.frame}}.
+#' @param data a data.frame or data.table
+#' @param term a column name from \code{data} which you want to split into tokens
+#' @param group a column name or a vector of column names from \code{data} indicating identifiers of groups. 
+#' Text will be split by group.
+#' @param split a regular expression indicating how to split the \code{term} column. 
+#' Defaults to splitting by spaces, punctuation symbols or digits.
+#' @return a data.frame with the columns from \code{group} and \code{term} where the text in column \code{term}
+#' will be split by the provided regular expression into tokens. The result is a tokenised data frame
+#' containing one row per token.
+#' @seealso \code{\link{paste.data.frame}}
+#' @export
+#' @examples 
+#' data(brussels_reviews, package = "udpipe")
+#' x <- strsplit.data.frame(brussels_reviews, term = "feedback", group = "id")
+#' x <- strsplit.data.frame(brussels_reviews, 
+#'                          term = c("feedback"), 
+#'                          group = c("listing_id", "language"))
+strsplit.data.frame <- function(data, term, group, split = "[[:space:][:punct:][:digit:]]+"){
+  .SDcols <- .SD <- NULL
+  stopifnot(inherits(data, "data.frame"))
+  stopifnot(inherits(term, "character"))
+  stopifnot(inherits(group, "character"))
+  stopifnot(all(c(term, group) %in% colnames(data)))
+  if(length(term) > 1){
+    warning("strsplit.data.frame is not intended to be called with several columns in term")
+  }
+  if(inherits(data, "data.table")){
+  }else{
+    x <- data.table::as.data.table(data[, c(term, group)])  
+  }
+  x <- x[, lapply(.SD, FUN=function(txt){
+    terms <- unlist(strsplit(txt, split = split))
+    terms <- terms[!is.na(terms)]
+    terms <- terms[nchar(terms) > 0]
+    terms
+  }), by = group, .SDcols = term]
+  x <- data.table::setDF(x)
+  x
+}

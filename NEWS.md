@@ -2,6 +2,7 @@
 
 - Allow to pass on a .udpipe filename in udpipe_download_model
 - Update documentation on keywords_collocation
+- Added strsplit.data.frame and paste.data.frame
 
 ## CHANGES IN udpipe VERSION 0.8
 
