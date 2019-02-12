@@ -98,6 +98,8 @@
 #' x <- udpipe_download_model(language = "afrikaans", udpipe_model_repo = "bnosac/udpipe.models.ud")
 #' x <- udpipe_download_model(language = "spanish-ancora", 
 #'                            udpipe_model_repo = "bnosac/udpipe.models.ud")
+#' x <- udpipe_download_model(language = "dutch-ud-2.1-20180111.udpipe", 
+#'                            udpipe_model_repo = "bnosac/udpipe.models.ud")                           
 #' x <- udpipe_download_model(language = "english", 
 #'                            udpipe_model_repo = "jwijffels/udpipe.models.conll18.baseline")
 #' }
@@ -249,7 +251,10 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
                               "serbian-set", "slovak-snk", "slovenian-ssj", "spanish-gsd", "swedish-talbanken", 
                               "tamil-ttb", "turkish-imst", "ukrainian-iu", "urdu-udtb", "uyghur-udt", "vietnamese-vtb")
   if(!language %in% unlist(known_models)){
-    stop("Please provide a valid language.")
+    if(grepl(pattern = "\\.udpipe$", x = language) && udpipe_model_repo %in% "bnosac/udpipe.models.ud"){
+    }else{
+      stop("Please provide a valid language.")  
+    }
   }
   ## language is now uses always UD2.2 treebank names
   language <- txt_recode(language, from = treebank_renaming$v2_1, to = treebank_renaming$v2_2)
@@ -283,7 +288,11 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
                      filename)
     to <- file.path(model_dir, filename)
   }else if(udpipe_model_repo == "bnosac/udpipe.models.ud"){
-    filename <- sprintf("%s-ud-2.1-20180111.udpipe", language)
+    if(grepl(pattern = "\\.udpipe$", x = language)){
+      filename <- language
+    }else{
+      filename <- sprintf("%s-ud-2.1-20180111.udpipe", language)
+    }
     url <- file.path("https://raw.githubusercontent.com/bnosac/udpipe.models.ud/master", 
                      "models",
                      filename)

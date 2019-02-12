@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.1
+
+- Allow to pass on a .udpipe filename in udpipe_download_model
+
 ## CHANGES IN udpipe VERSION 0.8
 
 - Default of udpipe_download_model is now changed, downloads now models built on Universal Dependencies 2.3 instead of the models build on Universal Dependencies 2.0

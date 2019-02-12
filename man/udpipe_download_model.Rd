@@ -133,6 +133,8 @@ x <- udpipe_download_model(language = "dutch", udpipe_model_repo = "bnosac/udpip
 x <- udpipe_download_model(language = "afrikaans", udpipe_model_repo = "bnosac/udpipe.models.ud")
 x <- udpipe_download_model(language = "spanish-ancora", 
                            udpipe_model_repo = "bnosac/udpipe.models.ud")
+x <- udpipe_download_model(language = "dutch-ud-2.1-20180111.udpipe", 
+                           udpipe_model_repo = "bnosac/udpipe.models.ud")                           
 x <- udpipe_download_model(language = "english", 
                            udpipe_model_repo = "jwijffels/udpipe.models.conll18.baseline")
 }
