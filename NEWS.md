@@ -1,6 +1,7 @@
 ## CHANGES IN udpipe VERSION 0.8.1
 
 - Allow to pass on a .udpipe filename in udpipe_download_model
+- Update documentation on keywords_collocation
 
 ## CHANGES IN udpipe VERSION 0.8
 

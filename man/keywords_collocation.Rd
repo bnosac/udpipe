@@ -33,13 +33,13 @@ terms which are collocated. Defaults to a space: ' '.}
 \value{
 a data.frame with columns 
 \itemize{
+\item keyword: the terms which are combined as a collocation
 \item ngram: the number of terms which are combined
-\item collocation: the terms which are combined
 \item left: the left term of the collocation
 \item right: the right term of the collocation
-\item n: the number of times the collocation occurred in the data
-\item n_left: the number of times the left element of the collocation occurred in the data
-\item n_right: the number of times the right element of the collocation occurrend in the data
+\item freq: the number of times the collocation occurred in the data
+\item freq_left: the number of times the left element of the collocation occurred in the data
+\item freq_right: the number of times the right element of the collocation occurred in the data
 \item pmi: the pointwise mutual information
 \item md: mutual dependency
 \item lfmd: log-frequency biased mutual dependency
