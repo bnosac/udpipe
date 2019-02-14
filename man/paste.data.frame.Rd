@@ -2,30 +2,30 @@
 % Please edit documentation in R/utils.R
 \name{paste.data.frame}
 \alias{paste.data.frame}
-\title{Concatenate text of each group of data together in one string}
+\title{Concatenate text of each group of data together}
 \usage{
 paste.data.frame(data, term, group, collapse = " ")
 }
 \arguments{
 \item{data}{a data.frame or data.table}
 
-\item{term}{a column name or a vector of column names from \code{data} which you want to collapse together}
+\item{term}{a string with a column name or a character vector of column names from \code{data} which you want to concatenate together using \code{\link{paste}}}
 
-\item{group}{a column name or a vector of column names from \code{data} indicating identifiers of groups. 
-Text will be concatenated by group.}
+\item{group}{a string with a column name or a character vector of column names from \code{data} indicating identifiers of groups. 
+The text in \code{term} will be concatenated by group.}
 
 \item{collapse}{a character string that you want to use to collapse the text data together. 
 Defaults to a single space.}
 }
 \value{
-a data.frame with the columns from \code{group} and \code{term} where all the text in \code{term}
-will be \code{\link{paste}-d} together for each group.
+A data.frame with 1 row per group containing the columns from \code{group} and \code{term} 
+where all the text in \code{term} for each group will be \code{\link{paste}-d} together, separated by the \code{collapse} argument.
 }
 \description{
 This function is similar to \code{\link{paste}}
 but works on a data.frame, hence paste.data.frame. 
 It concatenates text belonging to groups of data together in one string. 
-The function is the inverse of \code{\link{strsplit.data.frame}}.
+The function is the inverse operation of \code{\link{strsplit.data.frame}}.
 }
 \examples{
 data(brussels_reviews_anno, package = "udpipe")

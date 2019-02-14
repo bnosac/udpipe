@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{strsplit.data.frame}
 \alias{strsplit.data.frame}
-\title{Split text alongside a regular expression to obtain a tokenised data frame}
+\title{Obtain a tokenised data frame by splitting text alongside a regular expression}
 \usage{
 strsplit.data.frame(data, term, group,
   split = "[[:space:][:punct:][:digit:]]+")
@@ -10,22 +10,22 @@ strsplit.data.frame(data, term, group,
 \arguments{
 \item{data}{a data.frame or data.table}
 
-\item{term}{a column name from \code{data} which you want to split into tokens}
+\item{term}{a character with a column name from \code{data} which you want to split into tokens}
 
-\item{group}{a column name or a vector of column names from \code{data} indicating identifiers of groups. 
-Text will be split by group.}
+\item{group}{a string with a column name or a character vector of column names from \code{data} indicating identifiers of groups. 
+The text in \code{term} will be split into tokens by group.}
 
 \item{split}{a regular expression indicating how to split the \code{term} column. 
-Defaults to splitting by spaces, punctuation symbols or digits.}
+Defaults to splitting by spaces, punctuation symbols or digits. This will be passed on to \code{\link{strsplit}}.}
 }
 \value{
-a data.frame with the columns from \code{group} and \code{term} where the text in column \code{term}
-will be split by the provided regular expression into tokens. The result is a tokenised data frame
-containing one row per token.
+A tokenised data frame containing one row per token.\cr
+This data.frame has the columns from \code{group} and \code{term} where the text in column \code{term}
+will be split by the provided regular expression into tokens.
 }
 \description{
-Split text alongside a regular expression to obtain a tokenised data frame. 
-This is the inverse of \code{\link{paste.data.frame}}.
+Obtain a tokenised data frame by splitting text alongside a regular expression. 
+This is the inverse operation of \code{\link{paste.data.frame}}.
 }
 \examples{
 data(brussels_reviews, package = "udpipe")
@@ -35,5 +35,5 @@ x <- strsplit.data.frame(brussels_reviews,
                          group = c("listing_id", "language"))
 }
 \seealso{
-\code{\link{paste.data.frame}}
+\code{\link{paste.data.frame}}, \code{\link{strsplit}}
 }
