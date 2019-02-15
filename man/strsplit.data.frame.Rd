@@ -30,9 +30,11 @@ This is the inverse operation of \code{\link{paste.data.frame}}.
 \examples{
 data(brussels_reviews, package = "udpipe")
 x <- strsplit.data.frame(brussels_reviews, term = "feedback", group = "id")
+head(x)
 x <- strsplit.data.frame(brussels_reviews, 
                          term = c("feedback"), 
                          group = c("listing_id", "language"))
+head(x)                          
 }
 \seealso{
 \code{\link{paste.data.frame}}, \code{\link{strsplit}}

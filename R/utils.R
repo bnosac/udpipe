@@ -560,9 +560,11 @@ paste.data.frame <- function(data, term, group, collapse=" "){
 #' @examples 
 #' data(brussels_reviews, package = "udpipe")
 #' x <- strsplit.data.frame(brussels_reviews, term = "feedback", group = "id")
+#' head(x)
 #' x <- strsplit.data.frame(brussels_reviews, 
 #'                          term = c("feedback"), 
 #'                          group = c("listing_id", "language"))
+#' head(x)                          
 strsplit.data.frame <- function(data, term, group, split = "[[:space:][:punct:][:digit:]]+"){
   .SDcols <- .SD <- NULL
   stopifnot(inherits(data, "data.frame"))
@@ -578,6 +580,7 @@ strsplit.data.frame <- function(data, term, group, split = "[[:space:][:punct:][
   }
   x <- x[, lapply(.SD, FUN=function(txt){
     terms <- unlist(strsplit(txt, split = split))
+    terms <- as.character(terms)
     terms <- terms[!is.na(terms)]
     terms <- terms[nchar(terms) > 0]
     terms
