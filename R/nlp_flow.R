@@ -198,7 +198,8 @@ document_term_matrix.data.frame <- function(x, vocabulary, ...){
   stopifnot(all(c("doc_id", "term", "freq") %in% colnames(x)))
   stopifnot(ncol(x) == 3)
   
-  x$document <- factor(as.character(x$doc_id))
+  x$document <- as.character(x$doc_id)
+  x$document <- factor(x$document, levels = setdiff(unique(x$document), NA))
   
   term <- as.character(x$term)
   if(!missing(vocabulary)){

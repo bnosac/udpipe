@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.2
+
+- document_term_matrix.data.frame now preserves order of the documents (issue #44)
+
 ## CHANGES IN udpipe VERSION 0.8.1
 
 - Allow to pass on a .udpipe filename in udpipe_download_model
