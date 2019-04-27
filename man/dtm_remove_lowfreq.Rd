@@ -7,14 +7,14 @@
 dtm_remove_lowfreq(dtm, minfreq = 5, maxterms)
 }
 \arguments{
-\item{dtm}{an object returned by \code{\link{document_term_matrix}} or an object of class DocumentTermMatrix}
+\item{dtm}{an object returned by \code{\link{document_term_matrix}}}
 
 \item{minfreq}{integer with the minimum number of times the term should occur in order to keep the term}
 
 \item{maxterms}{integer indicating the maximum number of terms which should be kept in the \code{dtm}. The argument is optional.}
 }
 \value{
-a sparse Matrix as returned by \code{sparseMatrix} or an object of class \code{DocumentTermMatrix} 
+a sparse Matrix as returned by \code{sparseMatrix} 
 where terms with low occurrence are removed and documents without any terms are also removed
 }
 \description{

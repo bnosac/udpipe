@@ -277,10 +277,10 @@ dtm_reverse <- function(x){
 
 #' @title Remove terms occurring with low frequency from a Document-Term-Matrix and documents with no terms
 #' @description Remove terms occurring with low frequency from a Document-Term-Matrix and documents with no terms
-#' @param dtm an object returned by \code{\link{document_term_matrix}} or an object of class DocumentTermMatrix
+#' @param dtm an object returned by \code{\link{document_term_matrix}}
 #' @param minfreq integer with the minimum number of times the term should occur in order to keep the term
 #' @param maxterms integer indicating the maximum number of terms which should be kept in the \code{dtm}. The argument is optional. 
-#' @return a sparse Matrix as returned by \code{sparseMatrix} or an object of class \code{DocumentTermMatrix} 
+#' @return a sparse Matrix as returned by \code{sparseMatrix} 
 #' where terms with low occurrence are removed and documents without any terms are also removed
 #' @export
 #' @examples 
@@ -340,12 +340,12 @@ dtm_tfidf <- function(dtm){
 #' @description Remove terms from a Document-Term-Matrix and documents with no terms based on the term frequency inverse document frequency.
 #' Either giving in the maximum number of terms (argument \code{top}), the tfidf cutoff (argument \code{cutoff})
 #' or a quantile (argument \code{prob})
-#' @param dtm an object returned by \code{\link{document_term_matrix}} or an object of class DocumentTermMatrix
+#' @param dtm an object returned by \code{\link{document_term_matrix}} 
 #' @param top integer with the number of terms which should be kept as defined by the highest mean tfidf
 #' @param cutoff numeric cutoff value to keep only terms in \code{dtm} where the tfidf obtained by \code{dtm_tfidf} is higher than this value
 #' @param prob numeric quantile indicating to keep only terms in \code{dtm} where the tfidf obtained by \code{dtm_tfidf} is higher than 
 #' the \code{prob} percent quantile
-#' @return a sparse Matrix as returned by \code{sparseMatrix} or an object of class \code{DocumentTermMatrix} 
+#' @return a sparse Matrix as returned by \code{sparseMatrix} 
 #' where terms with high tfidf are kept and documents without any remaining terms are removed
 #' @export
 #' @examples 
@@ -394,9 +394,9 @@ dtm_remove_tfidf <- function(dtm, top, cutoff, prob){
 
 #' @title Remove terms from a Document-Term-Matrix and keep only documents which have a least some terms
 #' @description Remove terms from a Document-Term-Matrix and keep only documents which have a least some terms
-#' @param dtm an object returned by \code{\link{document_term_matrix}} or an object of class DocumentTermMatrix
+#' @param dtm an object returned by \code{\link{document_term_matrix}} 
 #' @param terms a character vector of terms which are in \code{colnames(dtm)} and which should be removed
-#' @return a sparse Matrix as returned by \code{sparseMatrix} or an object of class \code{DocumentTermMatrix} 
+#' @return a sparse Matrix as returned by \code{sparseMatrix} 
 #' where the indicated terms are removed as well as documents with no terms whatsoever
 #' @export
 #' @examples 

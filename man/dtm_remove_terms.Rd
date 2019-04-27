@@ -7,12 +7,12 @@
 dtm_remove_terms(dtm, terms)
 }
 \arguments{
-\item{dtm}{an object returned by \code{\link{document_term_matrix}} or an object of class DocumentTermMatrix}
+\item{dtm}{an object returned by \code{\link{document_term_matrix}}}
 
 \item{terms}{a character vector of terms which are in \code{colnames(dtm)} and which should be removed}
 }
 \value{
-a sparse Matrix as returned by \code{sparseMatrix} or an object of class \code{DocumentTermMatrix} 
+a sparse Matrix as returned by \code{sparseMatrix} 
 where the indicated terms are removed as well as documents with no terms whatsoever
 }
 \description{

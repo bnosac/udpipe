@@ -7,7 +7,7 @@
 dtm_remove_tfidf(dtm, top, cutoff, prob)
 }
 \arguments{
-\item{dtm}{an object returned by \code{\link{document_term_matrix}} or an object of class DocumentTermMatrix}
+\item{dtm}{an object returned by \code{\link{document_term_matrix}}}
 
 \item{top}{integer with the number of terms which should be kept as defined by the highest mean tfidf}
 
@@ -17,7 +17,7 @@ dtm_remove_tfidf(dtm, top, cutoff, prob)
 the \code{prob} percent quantile}
 }
 \value{
-a sparse Matrix as returned by \code{sparseMatrix} or an object of class \code{DocumentTermMatrix} 
+a sparse Matrix as returned by \code{sparseMatrix} 
 where terms with high tfidf are kept and documents without any remaining terms are removed
 }
 \description{
