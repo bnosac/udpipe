@@ -4,7 +4,7 @@
 \alias{dtm_remove_lowfreq}
 \title{Remove terms occurring with low frequency from a Document-Term-Matrix and documents with no terms}
 \usage{
-dtm_remove_lowfreq(dtm, minfreq = 5, maxterms)
+dtm_remove_lowfreq(dtm, minfreq = 5, maxterms, remove_emptydocs = TRUE)
 }
 \arguments{
 \item{dtm}{an object returned by \code{\link{document_term_matrix}}}
@@ -12,6 +12,8 @@ dtm_remove_lowfreq(dtm, minfreq = 5, maxterms)
 \item{minfreq}{integer with the minimum number of times the term should occur in order to keep the term}
 
 \item{maxterms}{integer indicating the maximum number of terms which should be kept in the \code{dtm}. The argument is optional.}
+
+\item{remove_emptydocs}{logical indicating to remove documents containing no more terms after the term removal is executed. Defaults to \code{TRUE}.}
 }
 \value{
 a sparse Matrix as returned by \code{sparseMatrix} 
@@ -32,5 +34,7 @@ dtm <- document_term_matrix(x)
 x <- dtm_remove_lowfreq(dtm, minfreq = 10)
 dim(x)
 x <- dtm_remove_lowfreq(dtm, minfreq = 10, maxterms = 25)
+dim(x)
+x <- dtm_remove_lowfreq(dtm, minfreq = 10, maxterms = 25, remove_emptydocs = FALSE)
 dim(x)
 }

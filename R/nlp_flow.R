@@ -280,6 +280,7 @@ dtm_reverse <- function(x){
 #' @param dtm an object returned by \code{\link{document_term_matrix}}
 #' @param minfreq integer with the minimum number of times the term should occur in order to keep the term
 #' @param maxterms integer indicating the maximum number of terms which should be kept in the \code{dtm}. The argument is optional. 
+#' @param remove_emptydocs logical indicating to remove documents containing no more terms after the term removal is executed. Defaults to \code{TRUE}.
 #' @return a sparse Matrix as returned by \code{sparseMatrix} 
 #' where terms with low occurrence are removed and documents without any terms are also removed
 #' @export
@@ -296,15 +297,63 @@ dtm_reverse <- function(x){
 #' dim(x)
 #' x <- dtm_remove_lowfreq(dtm, minfreq = 10, maxterms = 25)
 #' dim(x)
-dtm_remove_lowfreq <- function(dtm, minfreq=5, maxterms){
-  dtm <- dtm[, which(Matrix::colSums(dtm) >= minfreq)]
+#' x <- dtm_remove_lowfreq(dtm, minfreq = 10, maxterms = 25, remove_emptydocs = FALSE)
+#' dim(x)
+dtm_remove_lowfreq <- function(dtm, minfreq=5, maxterms, remove_emptydocs = TRUE){
+  dtm <- dtm[, which(Matrix::colSums(dtm) >= minfreq), drop = FALSE]
   if(!missing(maxterms)){
     terms <- head(sort(Matrix::colSums(dtm), decreasing = TRUE), n = maxterms)
     dtm <- dtm[, which(colnames(dtm) %in% names(terms)), drop = FALSE]
   }
-  dtm <- dtm[Matrix::rowSums(dtm) > 0, ]
+  if(remove_emptydocs){
+    dtm <- dtm[Matrix::rowSums(dtm) > 0, , drop = FALSE]  
+  }
   dtm
 }
+
+
+#' @title Remove terms with high sparsity from a Document-Term-Matrix
+#' @description Remove terms with high sparsity from a Document-Term-Matrix and remove documents with no terms.\cr
+#' Sparsity indicates in how many documents the term is not occurring.
+#' @param dtm an object returned by \code{\link{document_term_matrix}}
+#' @param sparsity numeric in 0-1 range indicating the sparsity percent. Defaults to 0.99 meaning drop terms which occur in less than 1 percent of the documents.
+#' @param remove_emptydocs logical indicating to remove documents containing no more terms after the term removal is executed. Defaults to \code{TRUE}.
+#' @return a sparse Matrix as returned by \code{sparseMatrix} 
+#' where terms with high sparsity are removed and documents without any terms are also removed
+#' @export
+#' @examples 
+#' data(brussels_reviews_anno)
+#' x <- subset(brussels_reviews_anno, xpos == "NN")
+#' x <- x[, c("doc_id", "lemma")]
+#' x <- document_term_frequencies(x)
+#' dtm <- document_term_matrix(x)
+#' 
+#' 
+#' ## Remove terms with low frequencies and documents with no terms
+#' x <- dtm_remove_sparseterms(dtm, sparsity = 0.99)
+#' dim(x)
+#' x <- dtm_remove_sparseterms(dtm, sparsity = 0.99, remove_emptydocs = FALSE)
+#' dim(x)
+dtm_remove_sparseterms <- function(dtm, sparsity = 0.99, remove_emptydocs = TRUE){
+  colfreq <- diff(dtm@p)
+  sparseness <- 1 - (colfreq / nrow(dtm))
+  keep <- which(sparseness < sparsity)
+  if(length(keep) == 0){
+    warning(sprintf("No terms which occur more than %s percent of the documents", 100*(1-sparsity)))
+    if(remove_emptydocs){
+      dtm <- dtm[0, 0, drop = FALSE]
+    }else{
+      dtm <- dtm[, 0, drop = FALSE]
+    }
+  }else{
+    dtm <- dtm[, keep, drop = FALSE]
+    if(remove_emptydocs){
+      dtm <- dtm[Matrix::rowSums(dtm) > 0, , drop = FALSE]  
+    }  
+  }
+  dtm
+}
+
 
 
 #' @title Term Frequency - Inverse Document Frequency calculation
@@ -345,6 +394,7 @@ dtm_tfidf <- function(dtm){
 #' @param cutoff numeric cutoff value to keep only terms in \code{dtm} where the tfidf obtained by \code{dtm_tfidf} is higher than this value
 #' @param prob numeric quantile indicating to keep only terms in \code{dtm} where the tfidf obtained by \code{dtm_tfidf} is higher than 
 #' the \code{prob} percent quantile
+#' @param remove_emptydocs logical indicating to remove documents containing no more terms after the term removal is executed. Defaults to \code{TRUE}.
 #' @return a sparse Matrix as returned by \code{sparseMatrix} 
 #' where terms with high tfidf are kept and documents without any remaining terms are removed
 #' @export
@@ -360,6 +410,8 @@ dtm_tfidf <- function(dtm){
 #' ## Keep only terms with high tfidf
 #' x <- dtm_remove_tfidf(dtm, top=50)
 #' dim(x)
+#' x <- dtm_remove_tfidf(dtm, top=50, remove_emptydocs = FALSE)
+#' dim(x)
 #' 
 #' ## Keep only terms with tfidf above 1.1
 #' x <- dtm_remove_tfidf(dtm, cutoff=1.1)
@@ -368,7 +420,7 @@ dtm_tfidf <- function(dtm){
 #' ## Keep only terms with tfidf above the 60 percent quantile
 #' x <- dtm_remove_tfidf(dtm, prob=0.6)
 #' dim(x)
-dtm_remove_tfidf <- function(dtm, top, cutoff, prob){
+dtm_remove_tfidf <- function(dtm, top, cutoff, prob, remove_emptydocs = TRUE){
   tfidf <- dtm_tfidf(dtm)
   if(!missing(top)){
     terms <- head(sort(tfidf, decreasing = TRUE), n = top)
@@ -386,8 +438,10 @@ dtm_remove_tfidf <- function(dtm, top, cutoff, prob){
   if(length(terms) == 0){
     stop("no terms found in reducing based on tfidf, consider increasing top or decreasing cutoff/prob")
   }
-  dtm <- dtm[, which(colnames(dtm) %in% terms)]
-  dtm <- dtm[Matrix::rowSums(dtm) > 0, ]
+  dtm <- dtm[, which(colnames(dtm) %in% terms), drop = FALSE]
+  if(remove_emptydocs){
+    dtm <- dtm[Matrix::rowSums(dtm) > 0, , drop = FALSE]  
+  }
   dtm
 }
 
@@ -396,6 +450,7 @@ dtm_remove_tfidf <- function(dtm, top, cutoff, prob){
 #' @description Remove terms from a Document-Term-Matrix and keep only documents which have a least some terms
 #' @param dtm an object returned by \code{\link{document_term_matrix}} 
 #' @param terms a character vector of terms which are in \code{colnames(dtm)} and which should be removed
+#' @param remove_emptydocs logical indicating to remove documents containing no more terms after the term removal is executed. Defaults to \code{TRUE}.
 #' @return a sparse Matrix as returned by \code{sparseMatrix} 
 #' where the indicated terms are removed as well as documents with no terms whatsoever
 #' @export
@@ -406,11 +461,16 @@ dtm_remove_tfidf <- function(dtm, top, cutoff, prob){
 #' x <- document_term_frequencies(x)
 #' dtm <- document_term_matrix(x)
 #' dim(dtm)
-#' dtm <- dtm_remove_terms(dtm, terms = c("appartement", "casa", "centrum", "ciudad"))
-#' dim(dtm)
-dtm_remove_terms <- function(dtm, terms){
-  dtm <- dtm[, which(!colnames(dtm) %in% terms)]
-  dtm <- dtm[Matrix::rowSums(dtm) > 0, ]
+#' x <- dtm_remove_terms(dtm, terms = c("appartement", "casa", "centrum", "ciudad"))
+#' dim(x)
+#' x <- dtm_remove_terms(dtm, terms = c("appartement", "casa", "centrum", "ciudad"), 
+#'                       remove_emptydocs = FALSE)
+#' dim(x)
+dtm_remove_terms <- function(dtm, terms, remove_emptydocs = TRUE){
+  dtm <- dtm[, which(!colnames(dtm) %in% terms), drop = FALSE]
+  if(remove_emptydocs){
+    dtm <- dtm[Matrix::rowSums(dtm) > 0, , drop = FALSE]  
+  }
   dtm
 }
 
@@ -498,7 +558,7 @@ dtm_cbind <- function(x, y){
                                      dims = c(length(addright), ncol(y)), dimnames = list(addright, colnames(y)))
     y <- methods::rbind2(y, addright)
   }
-  cbind2(x[r, ], y[r, ])
+  cbind2(x[r, , drop = FALSE], y[r, , drop = FALSE])
 }
 
 #' @export
@@ -522,7 +582,7 @@ dtm_rbind <- function(x, y){
                                      dims = c(nrow(y), length(addright)), dimnames = list(rownames(y), addright))
     y <- methods::cbind2(y, addright)
   }
-  rbind2(x[, r], y[, r])
+  rbind2(x[, r, drop = FALSE], y[, r, drop = FALSE])
 }
 
 
