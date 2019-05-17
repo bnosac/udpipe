@@ -280,6 +280,12 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
 #' @param object either an object of class \code{udpipe_model} as returned by \code{\link{udpipe_load_model}},
 #' the path to the file on disk containing the udpipe model or the language as defined by \code{\link{udpipe_download_model}}. 
 #' If the language is provided, it will download the model using \code{\link{udpipe_download_model}}.
+#' @param parallel.cores integer indicating the number of parallel cores to use to speed up the annotation. Defaults to 1 (use only 1 single thread). \cr
+#' If more than 1 is specified, it uses parallel::mclapply (unix) or parallel::clusterApply (windows) to run annotation in parallel. In order to do this on Windows it runs first parallel::makeCluster to set up a local socket cluster, on unix it just uses forking to parallelise the annotation.\cr
+#' Only set this if you have more than 1 CPU at disposal and you have large amount of data to annotate as setting up a parallel backend also takes some time plus 
+#' annotations will run in chunks set by \code{parallel.chunksize} and for each parallel chunk the udpipe model will be loaded which takes also some time.\cr
+#' If \code{parallel.cores} is bigger than 1 and \code{object} is of class \code{udpipe_model}, it will load the corresponding file from the model again in each parallel chunk.
+#' @param parallel.chunksize integer with the size of the chunks of text to be annotated in parallel. If not provided, defaults to the size of \code{x} divided by \code{parallel.cores}. Only used in case \code{parallel.cores} is bigger than 1.
 #' @param ... other elements to pass on to \code{\link{udpipe_annotate}} and \code{\link{udpipe_download_model}}
 #' @return a data.frame with one row per doc_id and term_id containing all the tokens in the data, the lemma, the part of speech tags,
 #' the morphological features and the dependency relationship along the tokens. The data.frame has the following fields:
@@ -346,9 +352,69 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
 #'             
 #' ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
 #' file.remove("dutch-lassysmall-ud-2.3-181115.udpipe")
-udpipe <- function(x, object, ...) {
-  UseMethod("udpipe")
+udpipe <- function(x, object, parallel.cores = 1L, parallel.chunksize, ...) {
+  parallel.cores <- as.integer(parallel.cores)
+  if(is.data.frame(x)){
+    size <- nrow(x)
+  }else if(is.list(x) || is.character(x)){
+    size <- length(x)
+  }else{
+    stop("x should either be a data.frame, a list or a character vector")
+  }
+  if(!.Platform$OS.type %in% c("unix", "windows")){
+    parallel.cores <- 1L
+  }
+  ##
+  ## RUN IN PARALLEL if we have data and parallel.cores is bigger than 1, else just run single-threaded
+  ##
+  if(parallel.cores > 1 && size > 0){
+    if(is.list(x) || is.character(x)){
+      if(is.null(names(x))){
+        names(x) <- seq_len(size)
+      }
+    }
+    #requireNamespace(package = "parallel")
+    if(inherits(object, "udpipe_model")){
+      stopifnot(file.exists(object$file))
+      object <- object$file
+    }
+    if(missing(parallel.chunksize)){
+      parallel.chunksize <- ceiling(size / parallel.cores)
+    }
+    parallel.chunksize <- as.integer(parallel.chunksize)
+    stopifnot(parallel.chunksize >= 0)
+    
+    chunks <- rep(seq_len(ceiling(size / parallel.chunksize)), length.out = size)
+    chunks <- sort(chunks, decreasing = FALSE)
+    anno <- split(x, f = chunks)
+    if(.Platform$OS.type %in% c("unix")) {
+      anno <- parallel::mclapply(anno, 
+                                 FUN = function(x, object, parallel.chunksize, ...){
+                                   udpipe(x, object, parallel.cores = 1, parallel.chunksize = parallel.chunksize, ...) 
+                                 }, 
+                                 object = object,
+                                 parallel.chunksize = parallel.chunksize, 
+                                 mc.cores = parallel.cores, 
+                                 ...)
+    }else if(.Platform$OS.type %in% c("windows")){
+      cl   <- parallel::makeCluster(parallel.cores)
+      on.exit(parallel::stopCluster(cl))
+      anno <- parallel::parLapply(cl = cl, 
+                                  X = anno, 
+                                  fun = function(x, object, parallel.chunksize, ...){
+                                    udpipe(x, object, parallel.cores = 1, parallel.chunksize = parallel.chunksize,...) 
+                                  }, object = object, parallel.chunksize = parallel.chunksize, ...)
+      
+    }else{
+      stop(paste("unknown platform:", .Platform$OS.type))
+    }
+    anno <- data.table::rbindlist(anno)
+    anno <- data.table::setDF(anno)
+  }else{
+    UseMethod("udpipe")
+  }
 }
+
 
 getmodel <- function(object, ...){
   ## It already a loaded udpipe model

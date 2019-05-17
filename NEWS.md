@@ -1,5 +1,6 @@
 ## CHANGES IN udpipe VERSION 0.8.2
 
+- udpipe::udpipe now gains 2 arguments: parallel.cores and parallel.chunksize in order to annotate in parallel over your CPU cores.
 - document_term_matrix.data.frame now preserves order of the documents (issue #44)
 - dtm_remove_lowfreq, dtm_remove_tfidf, dtm_remove_terms gain extra argument remove_emptydocs
   explicitely add drop=FALSE to internal dtm_... calls
