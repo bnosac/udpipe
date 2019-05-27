@@ -61,13 +61,32 @@ Note that if you prefer to build a supervised model to perform sentiment scoring
 you might be interested in looking at the ruimtehol R package \url{https://github.com/bnosac/ruimtehol} instead.
 }
 \examples{
-model <- udpipe_download_model(language = "english-gum", 
-                               model_dir = tempdir())
 x <- c("I do not like whatsoever when an R package has soo many dependencies.",
        "Making other people install java is annoying, 
         as it is a really painful experience in classrooms.")
-x <- udpipe(x, model)
-scores <- txt_sentiment(x = x, 
+\dontrun{
+## Do the annotation to get the data.frame needed as input to txt_sentiment
+anno <- udpipe(x, "english-gum")
+}
+anno <- data.frame(doc_id = c(rep("doc1", 14), rep("doc2", 18)), 
+                   paragraph_id = 1,
+                   sentence_id = 1,
+                   lemma = c("I", "do", "not", "like", "whatsoever", 
+                             "when", "an", "R", "package", 
+                             "has", "soo", "many", "dependencies", ".", 
+                             "Making", "other", "people", "install", 
+                             "java", "is", "annoying", ",", "as", 
+                             "it", "is", "a", "really", "painful", 
+                             "experience", "in", "classrooms", "."),
+                   upos = c("PRON", "AUX", "PART", "VERB", "PRON", 
+                            "SCONJ", "DET", "PROPN", "NOUN", "VERB", 
+                             "ADV", "ADJ", "NOUN", "PUNCT", 
+                             "VERB", "ADJ", "NOUN", "ADJ", "NOUN", 
+                             "AUX", "VERB", "PUNCT", "SCONJ", "PRON", 
+                             "AUX", "DET", "ADV", "ADJ", "NOUN", 
+                             "ADP", "NOUN", "PUNCT"),
+                   stringsasFactors = FALSE)
+scores <- txt_sentiment(x = anno, 
               term = "lemma",
               polarity_terms = data.frame(term = c("annoy", "like", "painful"), 
                                           polarity = c(-1, 1, -1)), 
@@ -76,7 +95,7 @@ scores <- txt_sentiment(x = x,
               polarity_deamplifiers = c("slightly", "somewhat"))
 scores$overall
 scores$data
-scores <- txt_sentiment(x = x, 
+scores <- txt_sentiment(x = anno, 
               term = "lemma",
               polarity_terms = data.frame(term = c("annoy", "like", "painful"), 
                                           polarity = c(-1, 1, -1)), 
@@ -87,7 +106,4 @@ scores <- txt_sentiment(x = x,
               n_after = 2, amplifier_weight = .8)
 scores$overall
 scores$data
-
-## cleanup for CRAN
-file.remove(model$file_model)
 }
