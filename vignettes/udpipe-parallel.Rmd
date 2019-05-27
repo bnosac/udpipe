@@ -30,6 +30,7 @@ library(udpipe)
 data(brussels_reviews)
 x <- subset(brussels_reviews, language %in% "fr")
 x <- data.frame(doc_id = x$id, text = x$feedback, stringsAsFactors = FALSE)
+x <- head(x, n = 75)
 dim(x)
 ```
 
@@ -66,19 +67,19 @@ It only makes sense to run annotation in parallel if you have many CPU cores and
 
 You can gain a speedup similar as the amount of cores you have on your machine. That can be done by using the parallel.cores argument wisely alongside parallel.chunksize argument which indicates the size of the chunks that the text data will be splitted into to perform the annotation (the default of this argument is set to the size of the data / parallel.cores). 
 
-```{r}
-system.time(annotation <- udpipe(x, path, parallel.cores = 2))
-system.time(annotation <- udpipe(x, path, parallel.cores = 2, parallel.chunksize = 50))
-system.time(annotation <- udpipe(x, path, parallel.cores = 1))
+```{r, eval=FALSE}
+annotation <- udpipe(x, path, parallel.cores = 2)
+annotation <- udpipe(x, path, parallel.cores = 2, parallel.chunksize = 50)
+annotation <- udpipe(x, path, parallel.cores = 1)
 ```
 
 The following calls are also possible (pass on a character vector or a pre-tokenised list)
 
-```{r}
+```{r, eval=FALSE}
 x <- setNames(x$text, x$doc_id)
-system.time(annotation <- udpipe(x, path, parallel.cores = 2))
+annotation <- udpipe(x, path, parallel.cores = 2)
 x <- split(annotation$token, annotation$doc_id)
-system.time(annotation <- udpipe(x, path, parallel.cores = 2))
+annotation <- udpipe(x, path, parallel.cores = 2)
 ```
 
 ## Using other packages allowing parallel computation
