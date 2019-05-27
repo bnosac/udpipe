@@ -4,7 +4,7 @@
 \alias{udpipe}
 \title{Tokenising, Lemmatising, Tagging and Dependency Parsing of raw text in TIF format}
 \usage{
-udpipe(x, object, parallel.cores = 2L, parallel.chunksize, ...)
+udpipe(x, object, parallel.cores = 1L, parallel.chunksize, ...)
 }
 \arguments{
 \item{x}{either
