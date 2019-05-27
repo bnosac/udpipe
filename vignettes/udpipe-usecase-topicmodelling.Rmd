@@ -37,10 +37,17 @@ Let's start by annotating some text in French. The annotated data.frame can next
 
 ```{r}
 library(udpipe)
+ud_model <- udpipe_download_model(language = "french")
+```
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, comment = NA, eval = !ud_model$download_failed)
+```
+
+```{r}
 data(brussels_reviews)
 comments <- subset(brussels_reviews, language %in% "fr")
 
-ud_model <- udpipe_download_model(language = "french")
 ud_model <- udpipe_load_model(ud_model$file_model)
 x <- udpipe_annotate(ud_model, x = comments$feedback, doc_id = comments$id)
 x <- as.data.frame(x)
@@ -257,5 +264,5 @@ Contact BNOSAC: http://www.bnosac.be
 
 
 ```{r, results='hide', echo=FALSE}
-invisible(file.remove(c("french-gsd-ud-2.3-181115.udpipe")))
+invisible(if(file.exists("french-gsd-ud-2.3-181115.udpipe")) file.remove(c("french-gsd-ud-2.3-181115.udpipe")))
 ```

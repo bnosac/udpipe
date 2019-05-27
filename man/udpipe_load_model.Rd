@@ -20,10 +20,11 @@ An object of class \code{udpipe_model} which is a list with 2 elements
 Load an UDPipe model so that it can be use in \code{\link{udpipe_annotate}}
 }
 \examples{
-x <- udpipe_download_model(language = "dutch-lassysmall", model_dir = tempdir())
-x$file_model
-ud_dutch <- udpipe_load_model(x$file_model)
 \dontrun{
+x <- udpipe_download_model(language = "dutch-lassysmall")
+x$file_model
+ud_english <- udpipe_load_model(x$file_model)
+
 x <- udpipe_download_model(language = "english")
 x$file_model
 ud_english <- udpipe_load_model(x$file_model)
@@ -33,8 +34,15 @@ x$file_model
 ud_hebrew <- udpipe_load_model(x$file_model)
 }
 
+
+x <- udpipe_download_model(language = "dutch-lassysmall", model_dir = tempdir())
+x$file_model
+if(!x$download_failed){
+  ud_dutch <- udpipe_load_model(x$file_model)
+}
+
 ## cleanup for CRAN
-file.remove(x$file_model)
+if(file.exists(x$file_model)) file.remove(x$file_model)
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}

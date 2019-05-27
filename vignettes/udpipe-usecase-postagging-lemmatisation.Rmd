@@ -51,10 +51,17 @@ Let's start by annotating some text in Spanish. The annotated data.frame can nex
 
 ```{r}
 library(udpipe)
+ud_model <- udpipe_download_model(language = "spanish")
+```
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, comment = NA, eval = !ud_model$download_failed)
+```
+
+```{r}
 data(brussels_reviews)
 comments <- subset(brussels_reviews, language %in% "es")
 
-ud_model <- udpipe_download_model(language = "spanish")
 ud_model <- udpipe_load_model(ud_model$file_model)
 x <- udpipe_annotate(ud_model, x = comments$feedback, doc_id = comments$id)
 x <- as.data.frame(x)
@@ -216,5 +223,5 @@ Need support in text mining.
 Contact BNOSAC: http://www.bnosac.be
 
 ```{r, results='hide', echo=FALSE}
-invisible(file.remove(c("spanish-gsd-ud-2.3-181115.udpipe")))
+invisible(if(file.exists("spanish-gsd-ud-2.3-181115.udpipe")) file.remove(c("spanish-gsd-ud-2.3-181115.udpipe")))
 ```

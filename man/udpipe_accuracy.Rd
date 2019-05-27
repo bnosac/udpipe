@@ -30,8 +30,9 @@ Get precision, recall and F1 measures on finding words / sentences / upos / xpos
 annotation as well as UAS and LAS dependency scores on holdout data in conllu format.
 }
 \examples{
-x <- udpipe_download_model(language = "dutch-lassysmall")
-ud_dutch <- udpipe_load_model(x$file_model)
+model <- udpipe_download_model(language = "dutch-lassysmall")
+if(!model$download_failed){
+ud_dutch <- udpipe_load_model(model$file_model)
 
 file_conllu <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
 metrics <- udpipe_accuracy(ud_dutch, file_conllu)
@@ -45,9 +46,11 @@ metrics$accuracy
 metrics <- udpipe_accuracy(ud_dutch, file_conllu, 
                            tokenizer = "default", tagger = "none", parser = "none")
 metrics$accuracy
+}
+
 
 ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
-file.remove("dutch-lassysmall-ud-2.0-170801.udpipe")
+if(file.exists(model$file_model)) file.remove(model$file_model)
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}, 

@@ -25,17 +25,18 @@ or look at \code{link{udpipe}}.
 Convert the result of \code{\link{udpipe_annotate}} to a tidy data frame
 }
 \examples{
-x <- udpipe_download_model(language = "dutch-lassysmall")
-ud_dutch <- udpipe_load_model(x$file_model)
+model    <- udpipe_download_model(language = "dutch-lassysmall")
+if(!model$download_failed){
+ud_dutch <- udpipe_load_model(model$file_model)
 txt <- c("Ik ben de weg kwijt, kunt u me zeggen waar de Lange Wapper ligt? Jazeker meneer", 
          "Het gaat vooruit, het gaat verbazend goed vooruit")
 x <- udpipe_annotate(ud_dutch, x = txt)
 x <- as.data.frame(x)
 head(x)
-
+}
 
 ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
-file.remove("dutch-lassysmall-ud-2.3-181115.udpipe")
+if(file.exists(model$file_model)) file.remove(model$file_model)
 }
 \seealso{
 \code{\link{udpipe_annotate}}

@@ -41,6 +41,8 @@
 #'  \item{language: }{The language as provided by the input parameter \code{language}}
 #'  \item{file_model: }{The path to the file on disk where the model was downloaded to}
 #'  \item{url: }{The URL where the model was downloaded from}
+#'  \item{download_failed: }{A logical indicating if the download has failed or not due to internet connectivity issues}
+#'  \item{download_message: }{A character string with the error message in case the downloading of the model failed}
 #' }
 #' @seealso \code{\link{udpipe_load_model}}
 #' @details 
@@ -103,14 +105,13 @@
 #' x <- udpipe_download_model(language = "english", 
 #'                            udpipe_model_repo = "jwijffels/udpipe.models.conll18.baseline")
 #' }
+#' 
 #' x <- udpipe_download_model(language = "sanskrit", 
 #'                            udpipe_model_repo = "jwijffels/udpipe.models.ud.2.0", 
 #'                            model_dir = tempdir())
 #' x
-#' x$file_model
-#' 
 #' ## cleanup for CRAN
-#' file.remove(x$file_model)
+#' if(file.exists(x$file_model)) file.remove(x$file_model)
 udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_greek-perseus", "ancient_greek-proiel", 
                                                "arabic-padt", "armenian-armtdp", "basque-bdt", "belarusian-hse", 
                                                "bulgarian-btb", "buryat-bdt", "catalan-ancora", "chinese-gsd", 
@@ -298,13 +299,26 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
                      filename)
     to <- file.path(model_dir, filename)
   }
+  download_failed <- FALSE
+  download_message <- "OK"
   if(overwrite || !file.exists(to)){
     message(sprintf("Downloading udpipe model from %s to %s", url, to))
-    utils::download.file(url = url, destfile = to, mode = "wb")  
+    dl <- suppressWarnings(try(
+      utils::download.file(url = url, destfile = to, mode = "wb"),  
+      silent = TRUE))
+    if(inherits(dl, "try-error")){
+      download_failed  <- TRUE
+      download_message <- as.character(dl)
+    }else if(inherits(dl, "integer") && dl != 0){
+      download_failed  <- TRUE
+      download_message <- "Download failed. Please check internet connectivity"
+    }
   }
   data.frame(language = language,
              file_model = to,
              url = url,
+             download_failed = download_failed,
+             download_message = download_message,
              stringsAsFactors = FALSE)
 }
 
@@ -322,10 +336,11 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
 #' @references \url{https://ufal.mff.cuni.cz/udpipe}
 #' @export
 #' @examples 
-#' x <- udpipe_download_model(language = "dutch-lassysmall", model_dir = tempdir())
-#' x$file_model
-#' ud_dutch <- udpipe_load_model(x$file_model)
 #' \dontrun{
+#' x <- udpipe_download_model(language = "dutch-lassysmall")
+#' x$file_model
+#' ud_english <- udpipe_load_model(x$file_model)
+#' 
 #' x <- udpipe_download_model(language = "english")
 #' x$file_model
 #' ud_english <- udpipe_load_model(x$file_model)
@@ -335,8 +350,15 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
 #' ud_hebrew <- udpipe_load_model(x$file_model)
 #' }
 #' 
+#' 
+#' x <- udpipe_download_model(language = "dutch-lassysmall", model_dir = tempdir())
+#' x$file_model
+#' if(!x$download_failed){
+#'   ud_dutch <- udpipe_load_model(x$file_model)
+#' }
+#' 
 #' ## cleanup for CRAN
-#' file.remove(x$file_model)
+#' if(file.exists(x$file_model)) file.remove(x$file_model)
 udpipe_load_model <- function(file) {
   if(is.data.frame(file) && nrow(file) == 1 && "file_model" %in% colnames(file)){
     file <- file$file_model

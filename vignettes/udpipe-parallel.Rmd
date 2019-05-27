@@ -23,6 +23,8 @@ I know your time is precious.
 
 Annotations can take a while if you have quite some text to annotate. Luckily performing text annotation is trivially paralleliseable. In order to gain some of your precious time, the udpipe package integrates with the parallel package which is shipped by R-core. To run annotations in parallel, you can do as follows:
 
+- Get your data as a data.frame with columns doc_id and text
+
 ```{r}
 library(udpipe)
 data(brussels_reviews)
@@ -31,13 +33,17 @@ x <- data.frame(doc_id = x$id, text = x$feedback, stringsAsFactors = FALSE)
 dim(x)
 ```
 
-Download the model if you don't have the model already
+- Download the model if you don't have the model already
 
 ```{r, results='hide'}
 model <- udpipe_download_model(language = "french")
 ```
 
-Provide the path to the model and give to udpipe the data.frame with columns *doc_id* and *text* and **on how many cores** you would like to execute the annotation.
+```{r, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, comment = NA, eval = !model$download_failed)
+```
+
+- Provide the path to the model and give to udpipe the data.frame with columns *doc_id* and *text* and **on how many cores** you would like to execute the annotation.
 
 ```{r}
 path <- model$file_model
@@ -101,5 +107,5 @@ anno <- rbindlist(anno)
 
 
 ```{r, results='hide', echo=FALSE}
-invisible(file.remove(path))
+invisible(if(file.exists(path)) file.remove(path))
 ```

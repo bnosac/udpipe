@@ -51,8 +51,9 @@ a list with 3 elements
 Tokenising, Lemmatising, Tagging and Dependency Parsing Annotation of raw text
 }
 \examples{
-x <- udpipe_download_model(language = "dutch-lassysmall")
-ud_dutch <- udpipe_load_model(x$file_model)
+model    <- udpipe_download_model(language = "dutch-lassysmall")
+if(!model$download_failed){
+ud_dutch <- udpipe_load_model(model$file_model)
 
 ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
 txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
@@ -90,9 +91,12 @@ as.data.frame(x)
 ## Mark on encodings: if your data is not in UTF-8 encoding, make sure you convert it to UTF-8 
 ## This can be done using iconv as follows for example
 udpipe_annotate(ud_dutch, x = iconv('Ik drink melk bij mijn koffie.', to = "UTF-8"))
+}
+
+
 
 ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
-file.remove("dutch-lassysmall-ud-2.3-181115.udpipe")
+if(file.exists(model$file_model)) file.remove(model$file_model)
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}, 

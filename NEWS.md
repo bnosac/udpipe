@@ -5,6 +5,8 @@
 - dtm_remove_lowfreq, dtm_remove_tfidf, dtm_remove_terms gain extra argument remove_emptydocs
   explicitely add drop=FALSE to internal dtm_... calls
 - add dtm_remove_sparseterms (issue #44)
+- make sure downloading model fails gracefully if github internet resource is not available on CRAN machines
+- udpipe_download_model now also returns download_failed/download_message indicating if the download failed due to internet connectivity issues
 
 ## CHANGES IN udpipe VERSION 0.8.1
 

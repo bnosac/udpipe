@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, comment = NA, eval = TRUE)
 
 Install the R package. 
 
-```{eval=FALSE}
+```{r, eval=FALSE}
 install.packages("udpipe")
 ```
 
@@ -30,6 +30,13 @@ Get your language model and start annotating.
 ```{r, results='hide'}
 library(udpipe)
 udmodel <- udpipe_download_model(language = "dutch")
+```
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, comment = NA, eval = !udmodel$download_failed)
+```
+
+```{r, results='hide'}
 udmodel <- udpipe_load_model(file = udmodel$file_model)
 x <- udpipe_annotate(udmodel, 
                      x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.")
@@ -38,7 +45,7 @@ x <- as.data.frame(x, detailed = TRUE)
 
 Or just do as follows.
 
-```{r, results='hide'}
+```{r, results='hide', eval=FALSE}
 library(udpipe)
 x <- udpipe(x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.",
             object = "dutch")

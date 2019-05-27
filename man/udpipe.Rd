@@ -58,8 +58,9 @@ are character data in UTF-8 encoding. \cr
 Tokenising, Lemmatising, Tagging and Dependency Parsing of raw text in TIF format
 }
 \examples{
-ud_dutch <- udpipe_download_model(language = "dutch-lassysmall")
-ud_dutch <- udpipe_load_model(ud_dutch)
+model    <- udpipe_download_model(language = "dutch-lassysmall")
+if(!model$download_failed){
+ud_dutch <- udpipe_load_model(model)
 
 ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
 txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
@@ -91,9 +92,10 @@ x <- udpipe(data.frame(doc_id = names(txt), text = txt, stringsAsFactors = FALSE
             object = "dutch-lassysmall")
 x <- udpipe(strsplit(txt, "[[:space:][:punct:][:digit:]]+"), 
             object = "dutch-lassysmall")
+}
             
 ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
-file.remove("dutch-lassysmall-ud-2.3-181115.udpipe")
+if(file.exists(model$file_model)) file.remove(model$file_model)
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}, 

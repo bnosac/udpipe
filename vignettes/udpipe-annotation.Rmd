@@ -61,6 +61,10 @@ dl <- udpipe_download_model(language = "dutch")
 str(dl)
 ```
 
+```{r, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, comment = NA, eval = !dl$download_failed)
+```
+
 
 ### Build your own annotator models
 
@@ -155,7 +159,7 @@ Some remarks:
 - Use argument `doc_id` to  `udpipe_annotate` so that you can link your document to the tagged terms later on
 - Your text has to be in UTF-8 Encoding when you pass it to `udpipe_annotate`, if you don't have that Encoding use standard R facilities like `iconv` to convert it to UTF-8. You get also results in UTF-8 encoding back.
 
-```{r}
+```{r, eval=FALSE}
 dl <- udpipe_download_model(language = "sanskrit", udpipe_model_repo = "jwijffels/udpipe.models.ud.2.0")
 udmodel_sanskrit <- udpipe_load_model(file = dl$file_model)
 txt <- "ततः असौ प्राह क्षत्रियस्य तिस्रः भार्या धर्मम् भवन्ति तत् एषा कदाचिद् वैश्या सुता भविष्यति तत् अनुरागः ममास्याम् ततः रथकारः तस्य निश्चयम् विज्ञायावदत् वयस्य किम् अ धुना कर्तव्यम् कौलिकः आह किम् अहम् जानामि त्वयि मित्रे यत् अभिहितं मया ततः"
@@ -166,7 +170,7 @@ x <- as.data.frame(x)
 
 - If you want to work with other tools which are capable of handling CONLL-U format, just export your annotation to a file as shown below
 
-```{r}
+```{r, eval=FALSE}
 x <- udpipe_annotate(udmodel_sanskrit, x = txt)
 cat(x$conllu, file = "myannotation.conllu")
 ```
@@ -179,6 +183,5 @@ Contact BNOSAC: http://www.bnosac.be
 
 ```{r, results='hide', echo=FALSE}
 invisible(file.remove(c("dutch-alpino-ud-2.3-181115.udpipe", 
-                        "sanskrit-ud-2.0-170801.udpipe",
                         "myannotation.conllu")))
 ```

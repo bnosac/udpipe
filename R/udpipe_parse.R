@@ -35,8 +35,9 @@
 #' \url{http://universaldependencies.org/format.html}
 #' @export
 #' @examples 
-#' x <- udpipe_download_model(language = "dutch-lassysmall")
-#' ud_dutch <- udpipe_load_model(x$file_model)
+#' model    <- udpipe_download_model(language = "dutch-lassysmall")
+#' if(!model$download_failed){
+#' ud_dutch <- udpipe_load_model(model$file_model)
 #' 
 #' ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
 #' txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
@@ -74,9 +75,12 @@
 #' ## Mark on encodings: if your data is not in UTF-8 encoding, make sure you convert it to UTF-8 
 #' ## This can be done using iconv as follows for example
 #' udpipe_annotate(ud_dutch, x = iconv('Ik drink melk bij mijn koffie.', to = "UTF-8"))
+#' }
+#' 
+#' 
 #' 
 #' ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
-#' file.remove("dutch-lassysmall-ud-2.3-181115.udpipe")
+#' if(file.exists(model$file_model)) file.remove(model$file_model)
 udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep=""), 
                             tokenizer = "tokenizer", 
                             tagger = c("default", "none"), 
@@ -128,17 +132,18 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
 #' @seealso \code{\link{udpipe_annotate}}
 #' @export
 #' @examples 
-#' x <- udpipe_download_model(language = "dutch-lassysmall")
-#' ud_dutch <- udpipe_load_model(x$file_model)
+#' model    <- udpipe_download_model(language = "dutch-lassysmall")
+#' if(!model$download_failed){
+#' ud_dutch <- udpipe_load_model(model$file_model)
 #' txt <- c("Ik ben de weg kwijt, kunt u me zeggen waar de Lange Wapper ligt? Jazeker meneer", 
 #'          "Het gaat vooruit, het gaat verbazend goed vooruit")
 #' x <- udpipe_annotate(ud_dutch, x = txt)
 #' x <- as.data.frame(x)
 #' head(x)
-#' 
+#' }
 #' 
 #' ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
-#' file.remove("dutch-lassysmall-ud-2.3-181115.udpipe")
+#' if(file.exists(model$file_model)) file.remove(model$file_model)
 as.data.frame.udpipe_connlu <- function(x, ...){
   read_connlu(x, is_udpipe_annotation = TRUE, ...)
 }
@@ -316,8 +321,9 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
 #' \url{http://universaldependencies.org/format.html}
 #' @export
 #' @examples 
-#' ud_dutch <- udpipe_download_model(language = "dutch-lassysmall")
-#' ud_dutch <- udpipe_load_model(ud_dutch)
+#' model    <- udpipe_download_model(language = "dutch-lassysmall")
+#' if(!model$download_failed){
+#' ud_dutch <- udpipe_load_model(model)
 #' 
 #' ## Tokenise, Tag and Dependency Parsing Annotation. Output is in CONLL-U format.
 #' txt <- c("Dus. Godvermehoeren met pus in alle puisten, 
@@ -349,9 +355,10 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
 #'             object = "dutch-lassysmall")
 #' x <- udpipe(strsplit(txt, "[[:space:][:punct:][:digit:]]+"), 
 #'             object = "dutch-lassysmall")
+#' }
 #'             
 #' ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
-#' file.remove("dutch-lassysmall-ud-2.3-181115.udpipe")
+#' if(file.exists(model$file_model)) file.remove(model$file_model)
 udpipe <- function(x, object, parallel.cores = 1L, parallel.chunksize, ...) {
   parallel.cores <- as.integer(parallel.cores)
   if(is.data.frame(x)){
