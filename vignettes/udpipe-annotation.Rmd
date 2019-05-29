@@ -182,6 +182,5 @@ Contact BNOSAC: http://www.bnosac.be
 
 
 ```{r, results='hide', echo=FALSE}
-invisible(file.remove(c("dutch-alpino-ud-2.3-181115.udpipe", 
-                        "myannotation.conllu")))
+invisible(if(file.exists(dl$file_model)) file.remove(dl$file_model))
 ```
