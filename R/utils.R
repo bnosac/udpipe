@@ -576,9 +576,9 @@ strsplit.data.frame <- function(data, term, group, split = "[[:space:][:punct:][
   }
   if(inherits(data, "data.table")){
   }else{
-    x <- data.table::as.data.table(data[, c(term, group)])  
+    data <- data.table::as.data.table(data[, c(term, group)])  
   }
-  x <- x[, lapply(.SD, FUN=function(txt){
+  x <- data[, lapply(.SD, FUN=function(txt){
     terms <- unlist(strsplit(txt, split = split))
     terms <- as.character(terms)
     terms <- terms[!is.na(terms)]

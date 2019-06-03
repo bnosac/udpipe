@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.3
+
+- also allow strsplit.data.frame to work if the data argument is a data.table
+
 ## CHANGES IN udpipe VERSION 0.8.2
 
 - udpipe::udpipe now gains 2 arguments: parallel.cores and parallel.chunksize in order to annotate in parallel over your CPU cores.
