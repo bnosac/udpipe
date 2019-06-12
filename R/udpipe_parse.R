@@ -90,6 +90,11 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
   if(!inherits(object, "udpipe_model")){
     stop("object should be of class udpipe_model as returned by the function ?udpipe_load_model")
   }
+  check <- capture.output(object$model)
+  if(check %in% "<pointer: (nil)>"){
+    message(paste("This looks like you restarted your R session which has invalidated the model object, trying now to reload the model again from the file at", object$file, "in order to do the annotation."))
+    object <- udpipe_load_model(object$file)
+  }
   if(inherits(x, "factor")){
     x <- as.character(x)
   }

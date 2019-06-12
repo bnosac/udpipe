@@ -1,6 +1,7 @@
 ## CHANGES IN udpipe VERSION 0.8.3
 
 - also allow strsplit.data.frame to work if the data argument is a data.table
+- in case the model loaded with udpipe_load_model is a nil pointer (most likely due to users which restarted their R sessions without knowing), try reloading the model file in udpipe_annotate
 
 ## CHANGES IN udpipe VERSION 0.8.2
 
