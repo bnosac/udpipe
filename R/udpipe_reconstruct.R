@@ -1,6 +1,6 @@
 if(FALSE){
   library(udpipe)
-  txt <- "  Maxime y su mujer\\ hicieron que nuestra estancia 
+  txt <- "  Maxime  y su mujer\\ hicieron que nuestra estancia 
     fuera lo mas comoda posible. \n  
     El primer dia Maxime nos espero hasta tarde para recibirnos y 
     darnos todas las indicaciones posibles del apartamento y 
@@ -18,7 +18,7 @@ if(FALSE){
   ud_model <- udpipe_download_model(language = "spanish")
   ud_model <- udpipe_load_model(ud_model$file_model)
   x <- udpipe_annotate(ud_model, x = txt)
-  x <- as.data.frame(x, from_to = TRUE)
+  x <- as.data.frame(x, detailed = TRUE)
   original <- udpipe_reconstruct(sentence_id = x$sentence_id, token = x$token, token_id = x$token_id, misc = x$misc)
 }
 
@@ -45,9 +45,9 @@ udpipe_reconstruct <- function(sentence_id, token, token_id, misc, only_from_to 
   rawtxt <- token
   
   has_spacesafter_no <- grepl(pattern = "SpaceAfter=No", misc)
-  has_spacesafter <- grepl(pattern = "SpacesAfter=", misc)
-  has_spacesbefore <- grepl(pattern = "SpacesBefore=", misc)
-  has_spacesintoken <- grepl(pattern = "SpacesInToken=", misc)
+  has_spacesafter    <- grepl(pattern = "SpacesAfter=", misc)
+  has_spacesbefore   <- grepl(pattern = "SpacesBefore=", misc)
+  has_spacesintoken  <- grepl(pattern = "SpacesInToken=", misc)
   
   ##
   ## Spaces after
@@ -61,7 +61,9 @@ udpipe_reconstruct <- function(sentence_id, token, token_id, misc, only_from_to 
   after[has_spacesafter_no] <- ""
   ## if contains SpacesAfter=, add the spaces to the after part
   idx <- which(has_spacesafter)
-  addme <- gsub(pattern = "(SpacesAfter=)(.+)($|Spaces)", "\\2", misc[idx])
+  #addme <- gsub(pattern = "(SpacesAfter=)(.+)($|Spaces)", "\\2", misc[idx])
+  addme <- sapply(strsplit(misc[idx], split = "\\|"), FUN=function(x) grep(pattern = "SpacesAfter", x = x, value = TRUE))
+  addme <- gsub(pattern = "SpacesAfter=", replacement = "", addme)
   addme <- gsub("\\\\s", " ", addme)
   addme <- gsub("\\\\n", "\n", addme)
   addme <- gsub("\\\\t", "\t", addme)
@@ -78,7 +80,9 @@ udpipe_reconstruct <- function(sentence_id, token, token_id, misc, only_from_to 
   before <- rep("", length(token))
   ## if contains SpacesBefore=, add the spaces to the after part
   idx <- which(has_spacesbefore)
-  addme <- gsub(pattern = "(SpacesBefore=)(.+)($|Spaces)", "\\2", misc[idx])
+  #addme <- gsub(pattern = "(SpacesBefore=)(.+)($|Spaces)", "\\2", misc[idx])
+  addme <- sapply(strsplit(misc[idx], split = "\\|"), FUN=function(x) grep(pattern = "SpacesBefore", x = x, value = TRUE))
+  addme <- gsub(pattern = "SpacesBefore=", replacement = "", addme)
   addme <- gsub("\\\\s", " ", addme)
   addme <- gsub("\\\\n", "\n", addme)
   addme <- gsub("\\\\t", "\t", addme)
@@ -91,7 +95,10 @@ udpipe_reconstruct <- function(sentence_id, token, token_id, misc, only_from_to 
   ## SpacesInToken - MISC field stores form of the token including original spaces if there is a space in the token which can not be handled by FORM
   ##
   idx <- which(has_spacesintoken)
-  token[idx] <- gsub(pattern = "(SpacesInToken=)(.+)($|Spaces)", "\\2", misc[idx])
+  #token[idx] <- gsub(pattern = "(SpacesInToken=)(.+)($|Spaces)", "\\2", misc[idx])
+  addme <- sapply(strsplit(misc[idx], split = "\\|"), FUN=function(x) grep(pattern = "SpacesInToken", x = x, value = TRUE))
+  addme <- gsub(pattern = "SpacesInToken=", replacement = "", addme)
+  token[idx] <- addme
   
   ##
   ## Construct original text
