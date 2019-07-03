@@ -19,20 +19,23 @@ The columns paragraph_id, sentence_id are integers, the other fields
 are character data in UTF-8 encoding. \cr
 
 To get more information on these fields, visit \url{http://universaldependencies.org/format.html} 
-or look at \code{link{udpipe}}.
+or look at \code{\link{udpipe}}.
 }
 \description{
 Convert the result of \code{\link{udpipe_annotate}} to a tidy data frame
 }
 \examples{
 model    <- udpipe_download_model(language = "dutch-lassysmall")
+
 if(!model$download_failed){
+
 ud_dutch <- udpipe_load_model(model$file_model)
 txt <- c("Ik ben de weg kwijt, kunt u me zeggen waar de Lange Wapper ligt? Jazeker meneer", 
          "Het gaat vooruit, het gaat verbazend goed vooruit")
 x <- udpipe_annotate(ud_dutch, x = txt)
 x <- as.data.frame(x)
 head(x)
+
 }
 
 ## cleanup for CRAN only - you probably want to keep your model if you have downloaded it
