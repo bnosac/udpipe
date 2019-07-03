@@ -29,7 +29,7 @@ dim(x)
 <pre><code class="hljs css r">path &lt;- model$file_model
 path
 </code></pre>
-<pre><code class="hljs">[<span class="hljs-number">1</span>] <span class="hljs-string">"C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/vignettes/french-gsd-ud-2.3-181115.udpipe"</span>
+<pre><code class="hljs">[<span class="hljs-number">1</span>] <span class="hljs-string">"C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/vignettes/french-gsd-ud-2.4-190531.udpipe"</span>
 </code></pre>
 <pre><code class="hljs css r">annotation &lt;- udpipe(x, path, parallel.cores = <span class="hljs-number">2</span>)
 </code></pre>
@@ -40,15 +40,15 @@ annotation &lt;- readRDS(file = <span class="hljs-string">"anno.rds"</span>)
 <h2><a class="anchor" aria-hidden="true" name="when-to-run-in-parallel"></a><a href="#when-to-run-in-parallel" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>When to run in parallel?</h2>
 <p>It only makes sense to run annotation in parallel if you have many CPU cores and have enough data to annotate. As udpipe models are Rcpp pointers to the loaded models on disk which can not be passed on to the parallel threads, each thread will load the model again which takes some time next to the internal setup of the parallel backend.</p>
 <p>You can gain a speedup similar as the amount of cores you have on your machine. That can be done by using the parallel.cores argument wisely alongside parallel.chunksize argument which indicates the size of the chunks that the text data will be splitted into to perform the annotation (the default of this argument is set to the size of the data / parallel.cores).</p>
-<pre><code class="hljs css r">system.time(annotation &lt;- udpipe(x, path, parallel.cores = <span class="hljs-number">2</span>))
-system.time(annotation &lt;- udpipe(x, path, parallel.cores = <span class="hljs-number">2</span>, parallel.chunksize = <span class="hljs-number">50</span>))
-system.time(annotation &lt;- udpipe(x, path, parallel.cores = <span class="hljs-number">1</span>))
+<pre><code class="hljs css r">annotation &lt;- udpipe(x, path, parallel.cores = <span class="hljs-number">2</span>)
+annotation &lt;- udpipe(x, path, parallel.cores = <span class="hljs-number">2</span>, parallel.chunksize = <span class="hljs-number">50</span>)
+annotation &lt;- udpipe(x, path, parallel.cores = <span class="hljs-number">1</span>)
 </code></pre>
 <p>The following calls are also possible (pass on a character vector or a pre-tokenised list)</p>
 <pre><code class="hljs css r">x &lt;- setNames(x$text, x$doc_id)
-system.time(annotation &lt;- udpipe(x, path, parallel.cores = <span class="hljs-number">2</span>))
+annotation &lt;- udpipe(x, path, parallel.cores = <span class="hljs-number">2</span>)
 x &lt;- split(annotation$token, annotation$doc_id)
-system.time(annotation &lt;- udpipe(x, path, parallel.cores = <span class="hljs-number">2</span>))
+annotation &lt;- udpipe(x, path, parallel.cores = <span class="hljs-number">2</span>)
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" name="using-other-packages-allowing-parallel-computation"></a><a href="#using-other-packages-allowing-parallel-computation" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Using other packages allowing parallel computation</h2>
 <p>Another possibility is to use the future.apply R package. Below is a snippet how such a parallel annotation looks like with that package</p>

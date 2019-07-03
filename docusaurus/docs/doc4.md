@@ -15,6 +15,7 @@ More documentation can be found at
   * https://cran.r-project.org/web/packages/udpipe/vignettes/udpipe-train.html
   * https://cran.r-project.org/web/packages/udpipe/vignettes/udpipe-usecase-postagging-lemmatisation.html
   * https://cran.r-project.org/web/packages/udpipe/vignettes/udpipe-usecase-topicmodelling.html
+  * https://cran.r-project.org/web/packages/udpipe/vignettes/udpipe-parallel.html
 - The R package webstie: https://cran.r-project.org/web/packages/udpipe
 
 ## Model background
