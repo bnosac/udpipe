@@ -45,7 +45,7 @@ path
 ```
 
 ```
-[1] "C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/vignettes/french-gsd-ud-2.3-181115.udpipe"
+[1] "C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/vignettes/french-gsd-ud-2.4-190531.udpipe"
 ```
 
 ```r
@@ -69,9 +69,9 @@ You can gain a speedup similar as the amount of cores you have on your machine. 
 
 
 ```r
-system.time(annotation <- udpipe(x, path, parallel.cores = 2))
-system.time(annotation <- udpipe(x, path, parallel.cores = 2, parallel.chunksize = 50))
-system.time(annotation <- udpipe(x, path, parallel.cores = 1))
+annotation <- udpipe(x, path, parallel.cores = 2)
+annotation <- udpipe(x, path, parallel.cores = 2, parallel.chunksize = 50)
+annotation <- udpipe(x, path, parallel.cores = 1)
 ```
 
 The following calls are also possible (pass on a character vector or a pre-tokenised list)
@@ -79,9 +79,9 @@ The following calls are also possible (pass on a character vector or a pre-token
 
 ```r
 x <- setNames(x$text, x$doc_id)
-system.time(annotation <- udpipe(x, path, parallel.cores = 2))
+annotation <- udpipe(x, path, parallel.cores = 2)
 x <- split(annotation$token, annotation$doc_id)
-system.time(annotation <- udpipe(x, path, parallel.cores = 2))
+annotation <- udpipe(x, path, parallel.cores = 2)
 ```
 
 ## Using other packages allowing parallel computation

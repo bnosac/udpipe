@@ -35,16 +35,16 @@ x <- udpipe(x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en g
 The annotation returns paragraphs, sentences, tokens, the location of the token in the original text, morphology elements like the lemma, the universal part of speech tag and the treebank-specific parts of speech tag, morphosyntactic features and returns as well the dependency relationship. More information at http://universaldependencies.org/guidelines.html
 
 ```
- doc_id paragraph_id sentence_id start end term_id token_id     token     lemma  upos                     xpos                                                               feats head_token_id      dep_rel deps
-   doc1            1           1     1   2       1        1        Ik        ik  PRON        Pron|per|1|ev|nom                          Case=Nom|Number=Sing|Person=1|PronType=Prs             2        nsubj <NA>
-   doc1            1           1     4   7       2        2      ging        ga  VERB V|intrans|ovt|1of2of3|ev Aspect=Imp|Mood=Ind|Number=Sing|Subcat=Intr|Tense=Past|VerbForm=Fin             0         root <NA>
-   doc1            1           1     9  10       3        3        op        op   ADP                Prep|voor                                                        AdpType=Prep             4         case <NA>
-   doc1            1           1    12  15       4        4      reis      reis  NOUN          N|soort|ev|neut                                                         Number=Sing             2          obj <NA>
-   doc1            1           1    17  18       5        5        en        en CCONJ               Conj|neven                                                                <NA>             7           cc <NA>
-   doc1            1           1    20  21       6        6        ik        ik  PRON        Pron|per|1|ev|nom                          Case=Nom|Number=Sing|Person=1|PronType=Prs             7        nsubj <NA>
-   doc1            1           1    23  25       7        7       nam      neem  VERB   V|trans|ovt|1of2of3|ev Aspect=Imp|Mood=Ind|Number=Sing|Subcat=Tran|Tense=Past|VerbForm=Fin             2         conj <NA>
-   doc1            1           1    27  29       8        8       mee       mee   ADV                Adv|deelv                                                        PartType=Vbp             7 compound:prt <NA>
-   doc1            1           1    30  30       9        9         :         : PUNCT            Punc|dubbpunt                                                      PunctType=Colo             2        punct <NA>
+ doc_id paragraph_id sentence_id start end term_id token_id     token     lemma  upos                                        xpos                               feats head_token_id      dep_rel            misc
+   doc1            1           1     1   2       1        1        Ik        ik  PRON                VNW|pers|pron|nomin|vol|1|ev      Case=Nom|Person=1|PronType=Prs             2        nsubj            <NA>
+   doc1            1           1     4   7       2        2      ging      gaan  VERB                               WW|pv|verl|ev Number=Sing|Tense=Past|VerbForm=Fin             0         root            <NA>
+   doc1            1           1     9  10       3        3        op        op   ADP                                     VZ|init                                <NA>             4         case            <NA>
+   doc1            1           1    12  15       4        4      reis      reis  NOUN                  N|soort|ev|basis|zijd|stan              Gender=Com|Number=Sing             2          obl            <NA>
+   doc1            1           1    17  18       5        5        en        en CCONJ                                    VG|neven                                <NA>             7           cc            <NA>
+   doc1            1           1    20  21       6        6        ik        ik  PRON                VNW|pers|pron|nomin|vol|1|ev      Case=Nom|Person=1|PronType=Prs             7        nsubj            <NA>
+   doc1            1           1    23  25       7        7       nam     nemen  VERB                               WW|pv|verl|ev Number=Sing|Tense=Past|VerbForm=Fin             2         conj            <NA>
+   doc1            1           1    27  29       8        8       mee       mee   ADP                                      VZ|fin                                <NA>             7 compound:prt   SpaceAfter=No
+   doc1            1           1    30  30       9        9         :         : PUNCT                                         LET                                <NA>             7        punct            <NA>
 ...
 ```
 

@@ -1,5 +1,6 @@
 ## CHANGES IN udpipe VERSION 0.8.3
 
+- Default of udpipe_download_model is now changed, downloads now models built on Universal Dependencies 2.4 instead of the models build on Universal Dependencies 2.3
 - also allow strsplit.data.frame to work if the data argument is a data.table
 - in case the model loaded with udpipe_load_model is a nil pointer (most likely due to users which restarted their R sessions without knowing), try reloading the model file in udpipe_annotate
 - fix issue in udpipe_reconstruct giving wrong values in start/end positions of the token in case someone had as well SpacesBefore as SpacesAfter for a token. For users prior to version 0.8.3 you can easily circumvent this issue by removing leading/trailing white space in your text by using trimws on your text before using udpipe::udpipe.

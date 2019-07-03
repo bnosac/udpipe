@@ -264,5 +264,5 @@ Contact BNOSAC: http://www.bnosac.be
 
 
 ```{r, results='hide', echo=FALSE}
-invisible(if(file.exists("french-gsd-ud-2.3-181115.udpipe")) file.remove(c("french-gsd-ud-2.3-181115.udpipe")))
+invisible(if(file.exists("french-gsd-ud-2.4-190531.udpipe")) file.remove(c("french-gsd-ud-2.4-190531.udpipe")))
 ```

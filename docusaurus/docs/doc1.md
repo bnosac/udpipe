@@ -33,6 +33,7 @@ vignette("udpipe-annotation", package = "udpipe")
 vignette("udpipe-usecase-postagging-lemmatisation", package = "udpipe")
 # An overview of keyword extraction techniques: https://bnosac.github.io/udpipe/docs/doc7.html
 vignette("udpipe-usecase-topicmodelling", package = "udpipe")
+vignette("udpipe-parallel", package = "udpipe")
 vignette("udpipe-train", package = "udpipe")
 ```
 
@@ -45,8 +46,8 @@ library(udpipe)
 udmodel <- udpipe_download_model(language = "dutch")
 udmodel
 
-language                                                                             file_model
-   dutch C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/dutch-alpino-ud-2.3-181115.udpipe
+    language                                                                             file_model
+dutch-alpino C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/dutch-alpino-ud-2.4-190531.udpipe
 
 x <- udpipe(x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.",
             object = udmodel)
@@ -54,31 +55,31 @@ x
 ```
 
 ```
-  doc_id paragraph_id sentence_id start end term_id token_id     token     lemma  upos                     xpos                                                               feats head_token_id      dep_rel deps
-   doc1            1           1     1   2       1        1        Ik        ik  PRON        Pron|per|1|ev|nom                          Case=Nom|Number=Sing|Person=1|PronType=Prs             2        nsubj <NA>
-   doc1            1           1     4   7       2        2      ging        ga  VERB V|intrans|ovt|1of2of3|ev Aspect=Imp|Mood=Ind|Number=Sing|Subcat=Intr|Tense=Past|VerbForm=Fin             0         root <NA>
-   doc1            1           1     9  10       3        3        op        op   ADP                Prep|voor                                                        AdpType=Prep             4         case <NA>
-   doc1            1           1    12  15       4        4      reis      reis  NOUN          N|soort|ev|neut                                                         Number=Sing             2          obj <NA>
-   doc1            1           1    17  18       5        5        en        en CCONJ               Conj|neven                                                                <NA>             7           cc <NA>
-   doc1            1           1    20  21       6        6        ik        ik  PRON        Pron|per|1|ev|nom                          Case=Nom|Number=Sing|Person=1|PronType=Prs             7        nsubj <NA>
-   doc1            1           1    23  25       7        7       nam      neem  VERB   V|trans|ovt|1of2of3|ev Aspect=Imp|Mood=Ind|Number=Sing|Subcat=Tran|Tense=Past|VerbForm=Fin             2         conj <NA>
-   doc1            1           1    27  29       8        8       mee       mee   ADV                Adv|deelv                                                        PartType=Vbp             7 compound:prt <NA>
-   doc1            1           1    30  30       9        9         :         : PUNCT            Punc|dubbpunt                                                      PunctType=Colo             2        punct <NA>
+ doc_id paragraph_id sentence_id start end term_id token_id     token     lemma  upos                                        xpos                               feats head_token_id      dep_rel            misc
+   doc1            1           1     1   2       1        1        Ik        ik  PRON                VNW|pers|pron|nomin|vol|1|ev      Case=Nom|Person=1|PronType=Prs             2        nsubj            <NA>
+   doc1            1           1     4   7       2        2      ging      gaan  VERB                               WW|pv|verl|ev Number=Sing|Tense=Past|VerbForm=Fin             0         root            <NA>
+   doc1            1           1     9  10       3        3        op        op   ADP                                     VZ|init                                <NA>             4         case            <NA>
+   doc1            1           1    12  15       4        4      reis      reis  NOUN                  N|soort|ev|basis|zijd|stan              Gender=Com|Number=Sing             2          obl            <NA>
+   doc1            1           1    17  18       5        5        en        en CCONJ                                    VG|neven                                <NA>             7           cc            <NA>
+   doc1            1           1    20  21       6        6        ik        ik  PRON                VNW|pers|pron|nomin|vol|1|ev      Case=Nom|Person=1|PronType=Prs             7        nsubj            <NA>
+   doc1            1           1    23  25       7        7       nam     nemen  VERB                               WW|pv|verl|ev Number=Sing|Tense=Past|VerbForm=Fin             2         conj            <NA>
+   doc1            1           1    27  29       8        8       mee       mee   ADP                                      VZ|fin                                <NA>             7 compound:prt   SpaceAfter=No
+   doc1            1           1    30  30       9        9         :         : PUNCT                                         LET                                <NA>             7        punct            <NA>
 ...
 ```
 
 
 ## Pre-trained models
 
-Pre-trained Universal Dependencies 2.0 models on all UD treebanks are made available for more than 50 languages, namely:
+Pre-trained models build on Universal Dependencies treebanks are made available for more than 64 languages based on 97 treebanks, namely:
 
-afrikaans, ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, czech-cac, czech-cltt, czech, danish, dutch-lassysmall, dutch, english-lines, english-partut, english, estonian, finnish-ftb, finnish, french-partut, french-sequoia, french, galician-treegal, galician, german, gothic, greek, hebrew, hindi, hungarian, indonesian, irish, italian, japanese, kazakh, korean, latin-ittb, latin-proiel, latin, latvian, lithuanian, norwegian-bokmaal, norwegian-nynorsk, old_church_slavonic, persian, polish, portuguese-br, portuguese, romanian, russian-syntagrus, russian, sanskrit, serbian, slovak, slovenian-sst, slovenian, spanish-ancora, spanish, swedish-lines, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese. 
+afrikaans-afribooms, ancient_greek-perseus, ancient_greek-proiel, arabic-padt, armenian-armtdp, basque-bdt, belarusian-hse, bulgarian-btb, buryat-bdt, catalan-ancora, chinese-gsd, classical_chinese-kyoto, coptic-scriptorium, croatian-set, czech-cac, czech-cltt, czech-fictree, czech-pdt, danish-ddt, dutch-alpino, dutch-lassysmall, english-ewt, english-gum, english-lines, english-partut, estonian-edt, estonian-ewt, finnish-ftb, finnish-tdt, french-gsd, french-partut, french-sequoia, french-spoken, galician-ctg, galician-treegal, german-gsd, gothic-proiel, greek-gdt, hebrew-htb, hindi-hdtb, hungarian-szeged, indonesian-gsd, irish-idt, italian-isdt, italian-partut, italian-postwita, italian-vit, japanese-gsd, kazakh-ktb, korean-gsd, korean-kaist, kurmanji-mg, latin-ittb, latin-perseus, latin-proiel, latvian-lvtb, lithuanian-alksnis, lithuanian-hse, maltese-mudt, marathi-ufal, north_sami-giella, norwegian-bokmaal, norwegian-nynorsk, norwegian-nynorsklia, old_church_slavonic-proiel, old_french-srcmf, old_russian-torot, persian-seraji, polish-lfg, polish-pdb, polish-sz, portuguese-bosque, portuguese-br, portuguese-gsd, romanian-nonstandard, romanian-rrt, russian-gsd, russian-syntagrus, russian-taiga, sanskrit-ufal, serbian-set, slovak-snk, slovenian-ssj, slovenian-sst, spanish-ancora, spanish-gsd, swedish-lines, swedish-talbanken, tamil-ttb, telugu-mtg, turkish-imst, ukrainian-iu, upper_sorbian-ufal, urdu-udtb, uyghur-udt, vietnamese-vtb, wolof-wtb.
 
 These have been made available easily to users of the package by using `udpipe_download_model`
 
 ### How good are these models? 
 
-- Accuracy statistics of models provided by the UDPipe authors which you download with udpipe_download_model from the default repository are available at [this link](https://github.com/jwijffels/udpipe.models.ud.2.0/blob/master/inst/udpipe-ud-2.0-170801/README).
+- Accuracy statistics of models provided by the UDPipe authors which you download with udpipe_download_model from the default repository are available at [this link](https://github.com/jwijffels/udpipe.models.ud.2.4/blob/master/inst/udpipe-ud-2.4-190531/README).
 - Accuracy statistics of models trained using this R package which you download with udpipe_download_model from the bnosac/udpipe.models.ud repository are available at https://github.com/bnosac/udpipe.models.ud.
 - For a comparison between UDPipe and spaCy visit https://github.com/jwijffels/udpipe-spacy-comparison
 

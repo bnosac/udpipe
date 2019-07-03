@@ -68,5 +68,5 @@ You can check the encoding of your text with `Encoding('your text')`. You can co
 
 
 ```{r, results='hide', echo=FALSE}
-invisible(file.remove(c("dutch-alpino-ud-2.3-181115.udpipe")))
+invisible(if(file.exists("dutch-alpino-ud-2.4-190531.udpipe")) file.remove("dutch-alpino-ud-2.4-190531.udpipe"))
 ```
