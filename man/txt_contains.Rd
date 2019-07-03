@@ -4,7 +4,7 @@
 \alias{txt_contains}
 \title{Check if text contains a certain pattern}
 \usage{
-txt_contains(x, patterns, value = FALSE, ignore.case = TRUE)
+txt_contains(x, patterns, value = FALSE, ignore.case = TRUE, ...)
 }
 \arguments{
 \item{x}{a character vector with text}
@@ -16,6 +16,8 @@ while excluding elements which have another pattern}
 \item{value}{logical, indicating to return the elements of \code{x} where the pattern was found or just a logical vector. Defaults to FALSE indicating to return a logical.}
 
 \item{ignore.case}{logical, if set to \code{FALSE}, the pattern matching is case sensitive and if TRUE, case is ignored during matching. Passed on to \code{\link{grepl}}}
+
+\item{...}{other parameters which can be passed on to \code{\link{grepl}} e.g. fixed/perl/useBytes}
 }
 \value{
 a logical vector of the same length as \code{x} indicating if one of the patterns was found in \code{x}.\cr 

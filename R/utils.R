@@ -481,6 +481,7 @@ txt_tagsequence <- function(x, entities){
 #' while excluding elements which have another pattern
 #' @param value logical, indicating to return the elements of \code{x} where the pattern was found or just a logical vector. Defaults to FALSE indicating to return a logical.
 #' @param ignore.case logical, if set to \code{FALSE}, the pattern matching is case sensitive and if TRUE, case is ignored during matching. Passed on to \code{\link{grepl}}
+#' @param ... other parameters which can be passed on to \code{\link{grepl}} e.g. fixed/perl/useBytes
 #' @export
 #' @seealso \code{\link{grepl}}
 #' @return  
@@ -497,21 +498,21 @@ txt_tagsequence <- function(x, entities){
 #' txt_contains(x, patterns = list(include = c("cat"), exclude = c("dog")), 
 #'              value = TRUE) 
 #' txt_contains(x, "cat") & txt_contains(x, "dog")
-txt_contains <- function(x, patterns, value = FALSE, ignore.case = TRUE){
+txt_contains <- function(x, patterns, value = FALSE, ignore.case = TRUE, ...){
   if(is.list(patterns)){
     include <- rep_len(FALSE, length(x))
     exclude <- rep_len(FALSE, length(x))
     for(pattern in patterns$include){
-      include <- include | grepl(pattern = pattern, x = x, ignore.case = ignore.case)
+      include <- include | grepl(pattern = pattern, x = x, ignore.case = ignore.case, ...)
     }
     for(pattern in patterns$exclude){
-      exclude <- exclude | grepl(pattern = pattern, x = x, ignore.case = ignore.case)
+      exclude <- exclude | grepl(pattern = pattern, x = x, ignore.case = ignore.case, ...)
     }
     result <- include & !exclude
   }else{
     result <- rep_len(FALSE, length(x))
     for(pattern in patterns){
-      result <- result | grepl(pattern = pattern, x = x, ignore.case = ignore.case)
+      result <- result | grepl(pattern = pattern, x = x, ignore.case = ignore.case, ...)
     }
   }
   if(value == TRUE){
