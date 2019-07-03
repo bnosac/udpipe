@@ -8,9 +8,9 @@
 \alias{document_term_matrix.simple_triplet_matrix}
 \title{Create a document/term matrix from a data.frame with 1 row per document/term}
 \usage{
-document_term_matrix(x, vocabulary, ...)
+document_term_matrix(x, vocabulary, weight = "freq", ...)
 
-\method{document_term_matrix}{data.frame}(x, vocabulary, ...)
+\method{document_term_matrix}{data.frame}(x, vocabulary, weight = "freq", ...)
 
 \method{document_term_matrix}{DocumentTermMatrix}(x, ...)
 
@@ -19,10 +19,13 @@ document_term_matrix(x, vocabulary, ...)
 \method{document_term_matrix}{simple_triplet_matrix}(x, ...)
 }
 \arguments{
-\item{x}{a data.frame with columns doc_id, term and freq indicating how many times a term occurred in that specific document.
-This is what \code{\link{document_term_frequencies}} returns.}
+\item{x}{a data.frame with columns doc_id, term and freq indicating how many times a term occurred in that specific document. This is what \code{\link{document_term_frequencies}} returns.\cr
+This data.frame will be reshaped to a matrix with 1 row per doc_id, the terms will be put 
+in the columns and the freq in the matrix cells. Note that the column name to use for freq can be set in the \code{weight} argument.}
 
-\item{vocabulary}{a character vector of terms which should be present in the document term matrix even if they did not occur in the \code{x}}
+\item{vocabulary}{a character vector of terms which should be present in the document term matrix even if they did not occur in \code{x}}
+
+\item{weight}{a column of \code{x} indicating what to put in the matrix cells. Defaults to 'freq' indicating to use column \code{freq} from \code{x} to put into the matrix cells}
 
 \item{...}{further arguments currently not used}
 }
@@ -59,6 +62,12 @@ data(brussels_reviews_anno)
 x <- document_term_frequencies(brussels_reviews_anno[, c("doc_id", "lemma")])
 dtm <- document_term_matrix(x)
 dim(dtm)
+x <- document_term_frequencies(brussels_reviews_anno[, c("doc_id", "lemma")])
+x <- document_term_frequencies_statistics(x)
+dtm <- document_term_matrix(x)
+dtm <- document_term_matrix(x, weight = "freq")
+dtm <- document_term_matrix(x, weight = "tf_idf")
+dtm <- document_term_matrix(x, weight = "bm25")
 
 ## example showing the vocubulary argument
 ## allowing you to making sure terms which are not in the data are provided in the resulting dtm

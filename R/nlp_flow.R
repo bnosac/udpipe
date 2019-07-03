@@ -149,9 +149,11 @@ document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
 #' @title Create a document/term matrix from a data.frame with 1 row per document/term
 #' @description Create a document/term matrix from a data.frame with 1 row per document/term as returned
 #' by \code{\link{document_term_frequencies}}
-#' @param x a data.frame with columns doc_id, term and freq indicating how many times a term occurred in that specific document.
-#' This is what \code{\link{document_term_frequencies}} returns.
-#' @param vocabulary a character vector of terms which should be present in the document term matrix even if they did not occur in the \code{x}
+#' @param x a data.frame with columns doc_id, term and freq indicating how many times a term occurred in that specific document. This is what \code{\link{document_term_frequencies}} returns.\cr
+#' This data.frame will be reshaped to a matrix with 1 row per doc_id, the terms will be put 
+#' in the columns and the freq in the matrix cells. Note that the column name to use for freq can be set in the \code{weight} argument.
+#' @param vocabulary a character vector of terms which should be present in the document term matrix even if they did not occur in \code{x}
+#' @param weight a column of \code{x} indicating what to put in the matrix cells. Defaults to 'freq' indicating to use column \code{freq} from \code{x} to put into the matrix cells
 #' @param ... further arguments currently not used
 #' @return an sparse object of class dgCMatrix with in the rows the documents and in the columns the terms containing the frequencies
 #' provided in \code{x} extended with terms which were not in \code{x} but were provided in \code{vocabulary}.
@@ -170,6 +172,12 @@ document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
 #' x <- document_term_frequencies(brussels_reviews_anno[, c("doc_id", "lemma")])
 #' dtm <- document_term_matrix(x)
 #' dim(dtm)
+#' x <- document_term_frequencies(brussels_reviews_anno[, c("doc_id", "lemma")])
+#' x <- document_term_frequencies_statistics(x)
+#' dtm <- document_term_matrix(x)
+#' dtm <- document_term_matrix(x, weight = "freq")
+#' dtm <- document_term_matrix(x, weight = "tf_idf")
+#' dtm <- document_term_matrix(x, weight = "bm25")
 #' 
 #' ## example showing the vocubulary argument
 #' ## allowing you to making sure terms which are not in the data are provided in the resulting dtm
@@ -188,15 +196,15 @@ document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
 #'                                document = "doc_id", 
 #'                                term = c("token", "token_bigram", "token_trigram"))
 #' dtm <- document_term_matrix(x)
-document_term_matrix <- function(x, vocabulary, ...){
+document_term_matrix <- function(x, vocabulary, weight = "freq", ...){
   UseMethod("document_term_matrix")
 }
 
 #' @describeIn document_term_matrix Construct a document term matrix from a data.frame with columns doc_id, term, freq
 #' @export
-document_term_matrix.data.frame <- function(x, vocabulary, ...){
-  stopifnot(all(c("doc_id", "term", "freq") %in% colnames(x)))
-  stopifnot(ncol(x) == 3)
+document_term_matrix.data.frame <- function(x, vocabulary, weight = "freq", ...){
+  stopifnot(all(c("doc_id", "term", weight) %in% colnames(x)))
+  #stopifnot(ncol(x) == 3)
   
   x$document <- as.character(x$doc_id)
   x$document <- factor(x$document, levels = setdiff(unique(x$document), NA))
@@ -214,7 +222,7 @@ document_term_matrix.data.frame <- function(x, vocabulary, ...){
   x$document <- as.integer(x$document)
   x$term <- as.integer(x$term)
   
-  dtm <- sparseMatrix(i=x$document, j = x$term, x = x$freq, dims = c(length(doclabels), length(termlabels)),
+  dtm <- sparseMatrix(i=x$document, j = x$term, x = x[[weight]], dims = c(length(doclabels), length(termlabels)),
                       dimnames = list(doclabels, termlabels))
   dtm
 }

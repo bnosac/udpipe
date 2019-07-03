@@ -4,6 +4,7 @@
 - also allow strsplit.data.frame to work if the data argument is a data.table
 - in case the model loaded with udpipe_load_model is a nil pointer (most likely due to users which restarted their R sessions without knowing), try reloading the model file in udpipe_annotate
 - fix issue in udpipe_reconstruct giving wrong values in start/end positions of the token in case someone had as well SpacesBefore as SpacesAfter for a token. For users prior to version 0.8.3 you can easily circumvent this issue by removing leading/trailing white space in your text by using trimws on your text before using udpipe::udpipe.
+- document_term_matrix now gains argument weight allowing to select another column to put into the matrix cells
 - add txt_contains
 
 ## CHANGES IN udpipe VERSION 0.8.2
