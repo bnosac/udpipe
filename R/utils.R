@@ -472,6 +472,54 @@ txt_tagsequence <- function(x, entities){
   out
 }
 
+
+#' @title Check if text contains a certain pattern
+#' @description Look up text which has a certain pattern. This pattern lookup is performed by executing a regular expression using \code{\link{grepl}}.
+#' @param x a character vector with text
+#' @param patterns a regular expression which might be contained in \code{x}, a vector of these
+#' or a list of pattern elements where the list elements \code{include} and \code{exclude} indicate to find a pattern in \code{x}
+#' while excluding elements which have another pattern
+#' @param value logical, indicating to return the elements of \code{x} where the pattern was found or just a logical vector. Defaults to FALSE indicating to return a logical.
+#' @param ignore.case logical, if set to \code{FALSE}, the pattern matching is case sensitive and if TRUE, case is ignored during matching. Passed on to \code{\link{grepl}}
+#' @export
+#' @seealso \code{\link{grepl}}
+#' @return  
+#' a logical vector of the same length as \code{x} indicating if one of the patterns was found in \code{x}.\cr 
+#' Or the vector of elements of \code{x} where the pattern was found in case argument \code{value} is set to \code{TRUE}
+#' @examples
+#' x <- c("The cats are eating catfood", 
+#'        "Our cat is eating the catfood", 
+#'        "the dog eats catfood, he likes it")
+#' txt_contains(x, patterns = c("cat", "dog")) 
+#' txt_contains(x, patterns = c("cat", "dog"), value = TRUE) 
+#' txt_contains(x, patterns = c("eats"), value = TRUE) 
+#' txt_contains(x, patterns = c("^The"), ignore.case = FALSE, value = TRUE) 
+#' txt_contains(x, patterns = list(include = c("cat"), exclude = c("dog")), 
+#'              value = TRUE) 
+#' txt_contains(x, "cat") & txt_contains(x, "dog")
+txt_contains <- function(x, patterns, value = FALSE, ignore.case = TRUE){
+  if(is.list(patterns)){
+    include <- rep_len(FALSE, length(x))
+    exclude <- rep_len(FALSE, length(x))
+    for(pattern in patterns$include){
+      include <- include | grepl(pattern = pattern, x = x, ignore.case = ignore.case)
+    }
+    for(pattern in patterns$exclude){
+      exclude <- exclude | grepl(pattern = pattern, x = x, ignore.case = ignore.case)
+    }
+    result <- include & !exclude
+  }else{
+    result <- rep_len(FALSE, length(x))
+    for(pattern in patterns){
+      result <- result | grepl(pattern = pattern, x = x, ignore.case = ignore.case)
+    }
+  }
+  if(value == TRUE){
+    result <- x[result]
+  }
+  result
+}
+
 #' @title Create a unique identifier for each combination of fields in a data frame
 #' @description Create a unique identifier for each combination of fields in a data frame. 
 #' This unique identifier is unique for each combination of the elements of the fields. 
