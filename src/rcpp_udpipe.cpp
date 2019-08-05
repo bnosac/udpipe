@@ -21,7 +21,8 @@ Rcpp::List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::Stri
                             std::string annotation_tokenizer,
                             std::string annotation_tagger,
                             std::string annotation_parser,
-                            int log_every, Rcpp::Function current_time) {
+                            int log_every, Rcpp::Function current_time,
+                            std::string output_format = "conllu") {
   Rcpp::XPtr<ufal::udpipe::model> languagemodel(udmodel);
   
   // Handle default and none input to tokenizer, tagger, parser
@@ -40,7 +41,7 @@ Rcpp::List udp_tokenise_tag_parse(SEXP udmodel, Rcpp::StringVector x, Rcpp::Stri
   }
   
   // Set up pipeline: tokenizer, tagger and dependency parser, output format conllu
-  ufal::udpipe::pipeline languagemodel_pipeline = ufal::udpipe::pipeline(languagemodel, pipeline_tokenizer, pipeline_tagger, pipeline_parser, "conllu");
+  ufal::udpipe::pipeline languagemodel_pipeline = ufal::udpipe::pipeline(languagemodel, pipeline_tokenizer, pipeline_tagger, pipeline_parser, output_format);
   
   // Put character data in a stream
   std::string error;
