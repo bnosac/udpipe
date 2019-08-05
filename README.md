@@ -33,7 +33,7 @@ vignette("udpipe-parallel", package = "udpipe")
 vignette("udpipe-train", package = "udpipe")
 ```
 
-For installing the development version of this package: `devtools::install_github("bnosac/udpipe", build_vignettes = TRUE)`
+For installing the development version of this package: `remotes::install_github("bnosac/udpipe", build_vignettes = TRUE)`
 
 ## Example
 
