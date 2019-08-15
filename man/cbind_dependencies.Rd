@@ -4,16 +4,26 @@
 \alias{cbind_dependencies}
 \title{Add the dependency parsing information to an annotated dataset}
 \usage{
-cbind_dependencies(x, type = c("parent", "child"))
+cbind_dependencies(x, type = c("parent", "child", "parent_rowid",
+  "child_rowid"), recursive = FALSE)
 }
 \arguments{
 \item{x}{a data.frame or data.table as returned by \code{as.data.frame(udpipe_annotate(...))}}
 
-\item{type}{currently only possible value is 'parent', indicating to add the information of the head_token_id to the dataset}
+\item{type}{either one of 'parent', 'child', 'parent_rowid', 'child_rowid'. Look to the return value section for more information on the difference in logic. 
+Defaults to  'parent', indicating to add the information of the head_token_id to the dataset}
+
+\item{recursive}{in case when \code{type} is set to 'parent_rowid' or 'child_rowid', do you want the parent of the parent of the parent, ... or the child of the child of the child ... included. Defaults to FALSE indicating to only have the direct parent or children.}
 }
 \value{
-a data.frame/data.table in the same order of \code{x}
-where the token/lemma/upos/xpos information of the parent (head dependency) is added to the data.frame. See the examples.
+a data.frame/data.table in the same order of \code{x} where extra information is added on top namely:
+\itemize{
+  \item In case \code{type} is set to \code{'parent'}: the token/lemma/upos/xpos information of the parent (head dependency) is added to the data.frame. See the examples.
+  \item In case \code{type} is set to \code{'parent_rowid'}: a new list column is added to \code{x} containing the row numbers within each combination of \code{doc_id, paragraph_id, sentence_id} which are parents of the token. \cr
+  In case recursive is set to \code{TRUE} the new column which is added to the data.frame is called \code{parent_rowids}, otherwise it is called \code{parent_rowid}. See the examples.
+  \item In case \code{type} is set to \code{'child_rowid'}: a new list column is added to \code{x} containing the row numbers  within each combination of \code{doc_id, paragraph_id, sentence_id} which are children of the token. \cr
+  In case recursive is set to \code{TRUE} the new column which is added to the data.frame is called \code{child_rowids}, otherwise it is called \code{child_rowid}. See the examples.
+}
 }
 \description{
 Annotated results of \code{udpipe_annotate} contain dependency parsing results which indicate
@@ -23,7 +33,7 @@ is linked to the parent. The type of relation (dep_rel) is defined at
 \url{http://universaldependencies.org/u/dep/index.html}. 
 For example in the text 'The economy is weak but the outlook is bright', the term economy is linked to weak
 as the term economy is the nominal subject of weak. \cr
-This function adds the parent information to the annotated data.frame.
+This function adds the parent or child information to the annotated data.frame.
 }
 \details{
 Mark that the output which this function provides might possibly change in subsequent releases and is experimental.
@@ -40,5 +50,12 @@ x <- cbind_dependencies(x, type = "parent")
 nominalsubject <- subset(x, dep_rel \%in\% c("nsubj"))
 nominalsubject <- nominalsubject[, c("dep_rel", "token", "token_parent")]
 nominalsubject
+
+x <- cbind_dependencies(x, type = "parent_rowid")
+x <- cbind_dependencies(x, type = "parent_rowid", recursive = TRUE)
+x <- cbind_dependencies(x, type = "child_rowid")
+x <- cbind_dependencies(x, type = "child_rowid", recursive = TRUE)
+x
+lapply(x$child_rowid, FUN=function(i) x[sort(i), ])
 }
 }

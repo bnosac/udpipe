@@ -6,11 +6,19 @@
 #' \url{http://universaldependencies.org/u/dep/index.html}. 
 #' For example in the text 'The economy is weak but the outlook is bright', the term economy is linked to weak
 #' as the term economy is the nominal subject of weak. \cr
-#' This function adds the parent information to the annotated data.frame.
+#' This function adds the parent or child information to the annotated data.frame.
 #' @param x a data.frame or data.table as returned by \code{as.data.frame(udpipe_annotate(...))}
-#' @param type currently only possible value is 'parent', indicating to add the information of the head_token_id to the dataset
-#' @return a data.frame/data.table in the same order of \code{x}
-#' where the token/lemma/upos/xpos information of the parent (head dependency) is added to the data.frame. See the examples.
+#' @param type either one of 'parent', 'child', 'parent_rowid', 'child_rowid'. Look to the return value section for more information on the difference in logic. 
+#' Defaults to  'parent', indicating to add the information of the head_token_id to the dataset
+#' @param recursive in case when \code{type} is set to 'parent_rowid' or 'child_rowid', do you want the parent of the parent of the parent, ... or the child of the child of the child ... included. Defaults to FALSE indicating to only have the direct parent or children.
+#' @return a data.frame/data.table in the same order of \code{x} where extra information is added on top namely:
+#' \itemize{
+#'   \item In case \code{type} is set to \code{'parent'}: the token/lemma/upos/xpos information of the parent (head dependency) is added to the data.frame. See the examples.
+#'   \item In case \code{type} is set to \code{'parent_rowid'}: a new list column is added to \code{x} containing the row numbers within each combination of \code{doc_id, paragraph_id, sentence_id} which are parents of the token. \cr
+#'   In case recursive is set to \code{TRUE} the new column which is added to the data.frame is called \code{parent_rowids}, otherwise it is called \code{parent_rowid}. See the examples.
+#'   \item In case \code{type} is set to \code{'child_rowid'}: a new list column is added to \code{x} containing the row numbers  within each combination of \code{doc_id, paragraph_id, sentence_id} which are children of the token. \cr
+#'   In case recursive is set to \code{TRUE} the new column which is added to the data.frame is called \code{child_rowids}, otherwise it is called \code{child_rowid}. See the examples.
+#' }
 #' @details Mark that the output which this function provides might possibly change in subsequent releases and is experimental.
 #' @export
 #' @examples 
@@ -25,8 +33,15 @@
 #' nominalsubject <- subset(x, dep_rel %in% c("nsubj"))
 #' nominalsubject <- nominalsubject[, c("dep_rel", "token", "token_parent")]
 #' nominalsubject
+#' 
+#' x <- cbind_dependencies(x, type = "parent_rowid")
+#' x <- cbind_dependencies(x, type = "parent_rowid", recursive = TRUE)
+#' x <- cbind_dependencies(x, type = "child_rowid")
+#' x <- cbind_dependencies(x, type = "child_rowid", recursive = TRUE)
+#' x
+#' lapply(x$child_rowid, FUN=function(i) x[sort(i), ])
 #' }
-cbind_dependencies <- function(x, type = c("parent", "child")){
+cbind_dependencies <- function(x, type = c("parent", "child", "parent_rowid", "child_rowid"), recursive = FALSE){
   type <- match.arg(type)
   stopifnot(inherits(x, "data.frame"))
   fields <- colnames(x)
@@ -44,6 +59,20 @@ cbind_dependencies <- function(x, type = c("parent", "child")){
                  sort = FALSE)  
   }else if(type == "child"){
     .NotYetImplemented()
+  }else if(type == "parent_rowid"){
+    if(recursive){
+      out <- x[, parent_rowids := list(dependency_locations(data = .SD, type = "parent", recursive = recursive)), by = list(doc_id, paragraph_id, sentence_id)]
+    }else{
+      out <- x[, parent_rowid := list(dependency_locations(data = .SD, type = "parent", recursive = recursive)), by = list(doc_id, paragraph_id, sentence_id)]  
+    }
+    
+  }else if(type == "child_rowid"){
+    if(recursive){
+      out <- x[, child_rowids := list(dependency_locations(data = .SD, type = "children", recursive = recursive)), by = list(doc_id, paragraph_id, sentence_id)]
+    }else{
+      out <- x[, child_rowid := list(dependency_locations(data = .SD, type = "children", recursive = recursive)), by = list(doc_id, paragraph_id, sentence_id)]
+    }
+    
   }
   out <- data.table::setcolorder(out, neworder = c(fields, setdiff(colnames(out), fields)))
   if(!was_data_table){
@@ -81,7 +110,7 @@ dependency_locations <- function(data, type = c("parent", "children"), recursive
       class(result) <- c("rows_child")
     }  
     return(result)
-  }else if(recursive && inherits(data, c("rows_parent", "rows_child"))){
+  }else if(recursive){
     recursive_locations <- function(i, linksto){
       if(length(i)){
         new <- unlist(linksto[i])
@@ -91,6 +120,9 @@ dependency_locations <- function(data, type = c("parent", "children"), recursive
         i <- c(i, new)
       }
       i
+    }
+    if(!inherits(data, c("rows_parent", "rows_child"))){
+      data <- dependency_locations(data = data, type = type, recursive = FALSE)
     }
     lapply(data, FUN=function(i) recursive_locations(i, data))
   }else{
