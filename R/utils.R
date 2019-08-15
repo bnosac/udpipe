@@ -82,8 +82,12 @@ txt_recode <- function(x, from = c(), to = c()){
   nongiven <- setdiff(nongiven, from)
   if(length(nongiven) > 0) {
     from <- append(x = from, values = nongiven)
-    to <- append(x = to, values = nongiven)
+    to   <- append(x = to, values = nongiven)
   }
+  to[match(x, from)]
+}
+
+recode <- function(x, from, to){
   to[match(x, from)]
 }
 
@@ -519,6 +523,32 @@ txt_contains <- function(x, patterns, value = FALSE, ignore.case = TRUE, ...){
     result <- x[result]
   }
   result
+}
+
+
+#' @title Count the number of times a pattern is occurring in text
+#' @description Count the number of times a pattern is occurring in text. 
+#' Pattern counting is performed by executing a regular expression using \code{\link{gregexpr}} and 
+#' checking how many times the regular expression occurs.
+#' @param x a character vector with text
+#' @param pattern a text pattern which might be contained in \code{x}
+#' @param ... other arguments, passed on to \code{\link{gregexpr}}
+#' @return an integer vector of the same length as \code{x} indicating how many times the pattern is occurring in \code{x}
+#' @export
+#' @examples 
+#' x <- c("abracadabra", "ababcdab")
+#' txt_count(x, pattern = "ab")
+#' txt_count(x, pattern = "AB", ignore.case = TRUE)
+#' txt_count(x, pattern = "AB", ignore.case = FALSE)
+txt_count <- function(x, pattern, ...){
+  result <- gregexpr(pattern = pattern, text = x, ...)
+  sapply(result, FUN = function(x){
+    if(length(x) == 1 && x < 0){
+      0L
+    }else{
+      length(x)
+    }
+  }, USE.NAMES = FALSE)
 }
 
 #' @title Create a unique identifier for each combination of fields in a data frame

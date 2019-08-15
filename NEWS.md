@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.4
+
+- Added txt_count
+
 ## CHANGES IN udpipe VERSION 0.8.3
 
 - Default of udpipe_download_model is now changed, downloads now models built on Universal Dependencies 2.4 instead of the models build on Universal Dependencies 2.3
