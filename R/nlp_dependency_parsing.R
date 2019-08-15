@@ -51,3 +51,49 @@ cbind_dependencies <- function(x, type = c("parent", "child")){
   }
   out
 }
+
+
+
+expressionlist <- function(...){
+  #expr <- substitute(list(...))
+  #expr <- as.list(expr[-1])
+  expr <- substitute(...())  
+  expr
+}
+
+
+
+dependency_locations <- function(data, type = c("parent", "children"), recursive = FALSE){
+  type <- match.arg(type)
+  stopifnot(inherits(data, c("data.frame", "rows_parent", "rows_child")))
+  if(inherits(data, "data.frame") & !recursive){
+    if(type == "parent"){
+      # each term is linked to exactly 1 parent head, we could put it into a vector but for consistency, put it as a list
+      #as.list(match(data$term_id_parent, data$term_id))
+      #as.list(match(data$head_token_id,  data$token_id))
+      # make sure NA values are not there but are elements of length 0
+      result <- lapply(data$head_token_id, FUN = function(id) which(id ==  data$token_id)) 
+      class(result) <- c("rows_parent")
+    }else if(type == "children"){
+      # a list of row numbers where to find the children
+      #lapply(data$term_id,  FUN = function(id) which(id == data$term_id_parent))
+      result <- lapply(data$token_id, FUN = function(id) which(id == data$head_token_id))
+      class(result) <- c("rows_child")
+    }  
+    return(result)
+  }else if(recursive && inherits(data, c("rows_parent", "rows_child"))){
+    recursive_locations <- function(i, linksto){
+      if(length(i)){
+        new <- unlist(linksto[i])
+        if(length(new)){
+          new <- recursive_locations(new, linksto)
+        }
+        i <- c(i, new)
+      }
+      i
+    }
+    lapply(data, FUN=function(i) recursive_locations(i, data))
+  }else{
+    stop("data should be of type data.frame or of type rows_parent/rows_child in case recursive is set to TRUE")
+  }
+}
