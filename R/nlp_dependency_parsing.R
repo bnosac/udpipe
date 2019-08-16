@@ -42,6 +42,9 @@
 #' lapply(x$child_rowid, FUN=function(i) x[sort(i), ])
 #' }
 cbind_dependencies <- function(x, type = c("parent", "child", "parent_rowid", "child_rowid"), recursive = FALSE){
+  ## R CMD check happiness
+  .SD <- doc_id <- paragraph_id <- sentence_id <- parent_rowid <- parent_rowids <- child_rowid <- child_rowids <- NULL
+  
   type <- match.arg(type)
   stopifnot(inherits(x, "data.frame"))
   fields <- colnames(x)
