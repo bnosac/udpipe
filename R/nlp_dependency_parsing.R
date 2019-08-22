@@ -66,14 +66,14 @@ cbind_dependencies <- function(x, type = c("parent", "child", "parent_rowid", "c
     if(recursive){
       out <- x[, parent_rowids := list(dependency_locations(data = .SD, type = "parent", recursive = recursive)), by = list(doc_id, paragraph_id, sentence_id)]
     }else{
-      out <- x[, parent_rowid := list(dependency_locations(data = .SD, type = "parent", recursive = recursive)), by = list(doc_id, paragraph_id, sentence_id)]  
+      out <- x[, parent_rowid  := list(dependency_locations(data = .SD, type = "parent", recursive = recursive)), by = list(doc_id, paragraph_id, sentence_id)]  
     }
     
   }else if(type == "child_rowid"){
     if(recursive){
       out <- x[, child_rowids := list(dependency_locations(data = .SD, type = "children", recursive = recursive)), by = list(doc_id, paragraph_id, sentence_id)]
     }else{
-      out <- x[, child_rowid := list(dependency_locations(data = .SD, type = "children", recursive = recursive)), by = list(doc_id, paragraph_id, sentence_id)]
+      out <- x[, child_rowid  := list(dependency_locations(data = .SD, type = "children", recursive = recursive)), by = list(doc_id, paragraph_id, sentence_id)]
     }
     
   }
@@ -94,7 +94,16 @@ expressionlist <- function(...){
 }
 
 
-
+recursive_locations <- function(i, linksto, depth = 1L){
+  if(length(i$row) > 0){
+    new   <- unlist(linksto[i$row])
+    if(length(new)){
+      inew <- recursive_locations(list(row = new, depth = rep(depth + 1L, length(new))), linksto, depth = depth + 1L)
+      i <- list(row = c(i$row, inew$row), depth = c(i$depth, inew$depth))
+    }
+  }
+  i
+}
 dependency_locations <- function(data, type = c("parent", "children"), recursive = FALSE){
   type <- match.arg(type)
   stopifnot(inherits(data, c("data.frame", "rows_parent", "rows_child")))
@@ -114,20 +123,15 @@ dependency_locations <- function(data, type = c("parent", "children"), recursive
     }  
     return(result)
   }else if(recursive){
-    recursive_locations <- function(i, linksto){
-      if(length(i)){
-        new <- unlist(linksto[i])
-        if(length(new)){
-          new <- recursive_locations(new, linksto)
-        }
-        i <- c(i, new)
-      }
-      i
-    }
+    
     if(!inherits(data, c("rows_parent", "rows_child"))){
       data <- dependency_locations(data = data, type = type, recursive = FALSE)
     }
-    lapply(data, FUN=function(i) recursive_locations(i, data))
+    lapply(data, FUN=function(i){
+      d <- recursive_locations(list(row = i, depth = rep(1L, length(i))), data) 
+      #data.table::setDF(d)
+      d
+    })
   }else{
     stop("data should be of type data.frame or of type rows_parent/rows_child in case recursive is set to TRUE")
   }
