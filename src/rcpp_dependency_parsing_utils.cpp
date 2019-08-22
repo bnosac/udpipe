@@ -4,8 +4,8 @@
  * Functionalities to speed up working with dependency parsing results
  */
 std::vector<int> pluck_int(const Rcpp::List& x, const unsigned int& i) {
-  if(i >= x.size()){
-    Rcpp::Rcout << "Trying to extract list element " << i << "/" << x.size() << std::endl;  
+  if(i > x.size() | i < 1){
+    Rcpp::Rcout << "Trying to extract list element " << i << " out of " << x.size() << std::endl;  
     Rcpp::stop("This is not possible");
   }
   std::vector<int> rows = x[i-1];
