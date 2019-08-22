@@ -5,6 +5,19 @@
 
 using namespace Rcpp;
 
+// dependency_rowlocations
+Rcpp::List dependency_rowlocations(const unsigned int& row, const Rcpp::List& x, const int depth);
+RcppExport SEXP _udpipe_dependency_rowlocations(SEXP rowSEXP, SEXP xSEXP, SEXP depthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const unsigned int& >::type row(rowSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const int >::type depth(depthSEXP);
+    rcpp_result_gen = Rcpp::wrap(dependency_rowlocations(row, x, depth));
+    return rcpp_result_gen;
+END_RCPP
+}
 // phrases_regex_locate
 Rcpp::List phrases_regex_locate(Rcpp::StringVector x, std::string pattern, int ngram_max);
 RcppExport SEXP _udpipe_phrases_regex_locate(SEXP xSEXP, SEXP patternSEXP, SEXP ngram_maxSEXP) {
@@ -93,6 +106,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_udpipe_dependency_rowlocations", (DL_FUNC) &_udpipe_dependency_rowlocations, 3},
     {"_udpipe_phrases_regex_locate", (DL_FUNC) &_udpipe_phrases_regex_locate, 3},
     {"_udpipe_udp_load_model", (DL_FUNC) &_udpipe_udp_load_model, 1},
     {"_udpipe_udp_tokenise_tag_parse", (DL_FUNC) &_udpipe_udp_tokenise_tag_parse, 9},
