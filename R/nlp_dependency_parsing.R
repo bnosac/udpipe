@@ -107,14 +107,6 @@ cbind_dependencies <- function(x, type = c("parent", "child", "parent_rowid", "c
 
 
 
-expressionlist <- function(...){
-  #expr <- substitute(list(...))
-  #expr <- as.list(expr[-1])
-  expr <- substitute(...())  
-  expr
-}
-
-
 recursive_locations <- function(i, linksto, depth = 1L){
   if(length(i$row) > 0){
     new   <- unlist(linksto[i$row])
