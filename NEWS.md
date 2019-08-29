@@ -5,6 +5,7 @@
 - Experimental changes regarding cbind_dependencies which might change in a subsequent release.
   - cbind_dependencies now has been implementend for type 'child'. 
   - cbind_dependencies now allows to add row numbers of the parent or children where the token is linked to using the dependency parsing output. 
+- Work on allowing to easily query dependency relations
 
 ## CHANGES IN udpipe VERSION 0.8.3
 
