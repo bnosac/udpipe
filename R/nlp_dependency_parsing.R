@@ -135,12 +135,12 @@ dependency_locations <- function(data, type = c("parent", "children"), recursive
       #as.list(match(data$head_token_id,  data$token_id))
       # make sure NA values are not there but are elements of length 0
       result <- lapply(data$head_token_id, FUN = function(id) which(id ==  data$token_id)) 
-      class(result) <- c("rows_parent")
+      class(result) <- c("list", "rows_parent")
     }else if(type == "children"){
       # a list of row numbers where to find the children
       #lapply(data$term_id,  FUN = function(id) which(id == data$term_id_parent))
       result <- lapply(data$token_id, FUN = function(id) which(id == data$head_token_id))
-      class(result) <- c("rows_child")
+      class(result) <- c("list", "rows_child")
     }  
     return(result)
   }else if(recursive){
@@ -157,3 +157,4 @@ dependency_locations <- function(data, type = c("parent", "children"), recursive
     stop("data should be of type data.frame or of type rows_parent/rows_child in case recursive is set to TRUE")
   }
 }
+

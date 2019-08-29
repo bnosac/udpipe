@@ -1,7 +1,9 @@
 ## CHANGES IN udpipe VERSION 0.8.4
 
 - Added txt_count
-- cbind_dependencies now allows to add row numbers of the parent or children where the token is linked to using the dependency parsing output. Not that this behaviour is experimental and might change in a subsequent release.
+- Experimental changes regarding cbind_dependencies which might change in a subsequent release.
+  - cbind_dependencies now has been implementend for type 'child'. 
+  - cbind_dependencies now allows to add row numbers of the parent or children where the token is linked to using the dependency parsing output. 
 
 ## CHANGES IN udpipe VERSION 0.8.3
 
