@@ -551,6 +551,21 @@ txt_count <- function(x, pattern, ...){
   }, USE.NAMES = FALSE)
 }
 
+#' @title Get the overlap between 2 vectors
+#' @description Get the overlap between 2 vectors
+#' @param x a vector
+#' @param y a vector
+#' @return a vector with elements of \code{x} which are also found in \code{y}
+#' @export
+#' @examples 
+#' x <- c("a", "b", "c")
+#' y <- c("b", "c", "e", "z")
+#' txt_overlap(x, y)
+#' txt_overlap(y, x)
+txt_overlap <- function(x, y, ...){
+  y[match(x, y, nomatch = 0L)]
+}
+
 #' @title Create a unique identifier for each combination of fields in a data frame
 #' @description Create a unique identifier for each combination of fields in a data frame. 
 #' This unique identifier is unique for each combination of the elements of the fields. 

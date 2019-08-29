@@ -1,6 +1,7 @@
 ## CHANGES IN udpipe VERSION 0.8.4
 
 - Added txt_count
+- Added txt_overlap
 - Experimental changes regarding cbind_dependencies which might change in a subsequent release.
   - cbind_dependencies now has been implementend for type 'child'. 
   - cbind_dependencies now allows to add row numbers of the parent or children where the token is linked to using the dependency parsing output. 
