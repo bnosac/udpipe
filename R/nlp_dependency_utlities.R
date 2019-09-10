@@ -53,7 +53,10 @@ rowLinks$methods(list(
 ##
 ## linkChain class indicating the chain of child/parent links
 ##
-linkChain <- setRefClass("linkChain", fields = list(rowids = "rowLinks", data = "data.table", n = "integer", current_depth = "integer",
+linkChain <- setRefClass("linkChain", fields = list(rowids = "rowLinks", 
+                                                    data = "data.table", 
+                                                    n = "integer", 
+                                                    current_depth = "integer",
                                                     labels = "character",
                                                     last_matched_on = "character"))
 linkChain$methods(list(
@@ -91,43 +94,40 @@ linkChain$methods(list(
     links       <- .self$as.data.table(links)
     links       <- data.table::setnames(links,      old = "row", new = "link")
     .self$data  <- data.table::setnames(.self$data, old = "row_childparent", new = "link")
-    .self$data  <- merge(links, .self$data,
-                         by.x = "link", by.y = "link", all.x = FALSE, all.y = FALSE, allow.cartesian = TRUE,
+    .self$data  <- merge(links, .self$data, by.x = "link", by.y = "link", all.x = FALSE, all.y = FALSE, allow.cartesian = TRUE,
                          suffixes = c("newlink", paste("_depth", depth, sep = "")))
     .self$data <- data.table::setnames(.self$data, old = "link", new = label)
     ## Maintain some administration
     .self$last_matched_on <- label
     .self$labels <- c(.self$labels, label)
     .self$current_depth <- as.integer(depth)
+    .self$data <- data.table::setcolorder(.self$data, neworder = c("row", .self$labels, "row_childparent"))
     invisible(.self)
   },
-  merge = function(chain){
+  join = function(chain){
     stopifnot(inherits(chain, "linkChain"))
     .self$current_depth <- .self$current_depth + chain$current_depth + 1L
     depth <- .self$current_depth
+    newname <- paste("row_link_", depth, sep = "")
     
-    if(FALSE){
-      .self$data <- combine(.self$data, chain$data, .self$current_depth)
-    }else{
-      links       <- data.table::setnames(chain$data, old = "row", new = "link")
-      .self$data  <- data.table::setnames(.self$data, old = "row_childparent", new = "link")
-      ## make sure other names are
-      currentlabels <- .self$data$labels
-      if(length(currentlabels) > 0){
-        newlabels <- paste("row_link_", seq.int(from = chain$data$current_depth + 1, to = chain$data$current_depth + seq_along(currentlabels)), sep = "")
-        .self$data   <- data.table::setnames(.self$data, old = currentlabels, new = newlabels)
-        .self$labels <- newlabels
-      }
-      # TODO: need to fix S3 dispatching which seems troublesome with data.table
-      .self$data  <- data.table:::merge.data.table(chain$data, .self$data,
-                                                   by.x = "link", by.y = "link", all.x = FALSE, all.y = FALSE, #allow.cartesian = TRUE,
-                                                   suffixes = c("newlink", paste("_depth", depth, sep = "")))
-      newname <- paste("row_link_", depth, sep = "")
-      .self$data <- data.table::setnames(.self$data, old = "link", new = newname)
+    links       <- data.table::setnames(chain$data, old = "row", new = "link")
+    .self$data  <- data.table::setnames(.self$data, old = "row_childparent", new = "link")
+    ## make sure no name conflicts
+    currentlabels <- .self$labels
+    if(length(currentlabels) > 0){
+      newlabels <- paste("row_link_", seq.int(from = chain$data$current_depth + 1, 
+                                              to   = chain$data$current_depth + seq_along(currentlabels)), sep = "")
+      .self$data   <- data.table::setnames(.self$data, old = currentlabels, new = newlabels)
+      .self$labels <- newlabels
     }
+    .self$data  <- merge(chain$data, .self$data, by.x = "link", by.y = "link", all.x = FALSE, all.y = FALSE, allow.cartesian = TRUE,
+                         suffixes = c("newlink", paste("_depth", depth, sep = "")))
+    .self$data <- data.table::setnames(.self$data, old = "link", new = newname)
+    ## Maintain some administration
     .self$last_matched_on <- newname
     .self$labels <- c(.self$labels, newname)
     .self$current_depth <- as.integer(depth)
+    .self$data <- data.table::setcolorder(.self$data, neworder = c("row", .self$labels, "row_childparent"))
     invisible(.self)
   },
   filter = function(subset, type = c("row_childparent", "row")){
@@ -168,7 +168,7 @@ linkChain$methods(list(
     #exclude <- c(exclude, ".hidden")
     #exclude <- c("row", "row_childparent")
     only <- setdiff(colnames(.self$data), exclude)
-    only <- union(.self$labels, only)
+    only <- union(only, .self$labels)
     lapply(seq_len(.self$n), FUN = function(i){
       x <- .self$data[row == i, only, with = FALSE]
       x <- apply(x, MARGIN=1, FUN=function(x) as.list(na.exclude(as.integer(x))))
@@ -270,7 +270,7 @@ syntaxrelation$methods(list(
       result <- chain$filter(result)
     }else if(inherits(result, "linkChain")){
       if(.self$type %in% c("child", "parent")){
-        result <- chain$merge(result)
+        result <- chain$join(result)
       }
     }else if(inherits(result, "syntaxrelation")){
       result <- result$run(DT = DT)
@@ -320,12 +320,56 @@ syntaxpatterns <- setRefClass("syntaxpatterns",
 
 
 if(FALSE){
-  library(udpipe)
+  
+  
+  #library(udpipe)
   library(data.table)
-  x <- udpipe("His was talking about marshmallows in New York which was utter bullshit", "english-ewt")
+  x <- udpipe::udpipe("His was talking about marshmallows in New York which was utter bullshit", "english-ewt")
   x <- setDT(x)
-  x <- cbind_dependencies(x, type = "parent_rowid")
-  x <- cbind_dependencies(x, type = "child_rowid")
+  x <- udpipe::cbind_dependencies(x, type = "parent_rowid")
+  x <- udpipe::cbind_dependencies(x, type = "child_rowid")
+  
+  ##
+  ## HIGH LEVEL CALLS
+  ##
   links <- new("syntaxpatterns", data = x, upos %in% "NOUN" & has_child(upos %in% c("ADJ", "ADP")))
   links <- links$run()$sequence()
+  
+  ##
+  ## LOW LEVEL CALLS
+  ##
+  chain <- new("linkChain", rowids = new("rowLinks", x$child_rowid))
+  all.equal(unclass(chain$links()), unclass(x$child_rowid))
+  str(chain$links())
+  str(x$child_rowid)
+  chain$data
+  
+  
+  # this is: has_child(dep_rel %in% "acl:relcl")
+  chain <- new("linkChain", rowids = new("rowLinks", x$child_rowid))
+  links <- list(integer(0), integer(0), integer(0), integer(0), c(12L), integer(0), integer(0), integer(0), integer(0), integer(0), integer(0), integer(0))
+  chain$match(links)
+  chain$data
+  str(chain$links())
+  chain <- new("linkChain", rowids = new("rowLinks", x$child_rowid))
+  which(x$upos %in% "NOUN")
+  chain$AND(x$upos %in% "NOUN")
+  chain$data
+  str(chain$links())
+  
+  chain <- new("linkChain", rowids = new("rowLinks", x$child_rowid))
+  chain$filter(seq_len(chain$n) %in% c(1:2), type = "row_childparent")
+  chain$data
+  chain$filter(x$upos %in% "NOUN")
+  chain$links()
+  
+  chain <- new("linkChain", rowids = new("rowLinks", x$child_rowid))
+  links <- list(integer(0), integer(0), integer(0), integer(0), c(12L, 11L), integer(0), integer(0),  integer(0), integer(0), integer(0), integer(0), integer(0))
+  chain$data
+  chain$match(links)
+  chain$links()
+  chain$sequence()
+  links <- list(integer(0), integer(0), integer(0), integer(0), integer(0), integer(0), integer(0),  integer(0), integer(0), integer(0), integer(0), c(11L))
+  chain$match(links)
+  chain$sequence()
 }
