@@ -2,10 +2,12 @@
 
 - Added txt_count
 - Added txt_overlap
+- txt_recode_ngram now also works gracefully in case ngram is set to 1 although the intention is not to use it when ngram is set to 1
 - Experimental changes regarding cbind_dependencies which might change in a subsequent release.
   - cbind_dependencies now has been implementend for type 'child'. 
   - cbind_dependencies now allows to add row numbers of the parent or children where the token is linked to using the dependency parsing output. 
 - Work on allowing to easily query dependency relations
+
 
 ## CHANGES IN udpipe VERSION 0.8.3
 

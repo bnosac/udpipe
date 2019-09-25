@@ -367,9 +367,16 @@ txt_recode_ngram <- function(x, compound, ngram, sep = " "){
     ## Overwrite word with bigram/trigram/n-gram
     x[idx] <- y[idx]
     ## Set the next values to NA
-    for(i in 1:(ngram - 1)){
-      x[idx + i] <- NA_character_
-    }  
+    size <- length(x)
+    if(ngram > 1){
+      for (i in 1:(ngram - 1)) {
+        loc <- idx + i
+        loc <- loc[loc <= size]
+        if(length(loc) > 0){
+          x[loc] <- NA_character_
+        }
+      }
+    }
   }
   x
 }
