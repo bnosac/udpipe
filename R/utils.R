@@ -569,7 +569,7 @@ txt_count <- function(x, pattern, ...){
 #' y <- c("b", "c", "e", "z")
 #' txt_overlap(x, y)
 #' txt_overlap(y, x)
-txt_overlap <- function(x, y, ...){
+txt_overlap <- function(x, y){
   y[match(x, y, nomatch = 0L)]
 }
 

@@ -4,7 +4,7 @@
 \alias{txt_overlap}
 \title{Get the overlap between 2 vectors}
 \usage{
-txt_overlap(x, y, ...)
+txt_overlap(x, y)
 }
 \arguments{
 \item{x}{a vector}
