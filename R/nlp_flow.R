@@ -619,3 +619,92 @@ dtm_colsums <- function(dtm){
 dtm_rowsums <- function(dtm){
   Matrix::rowSums(dtm)
 }
+
+
+
+
+#' @title Compare term usage across 2 document groups using the Chi-square Test for Count Data
+#' @description Perform a \code{\link{chisq.test}} to compare if groups of documents have more prevalence of specific terms.\cr
+#' The function looks to each term in the document term matrix and applies a \code{\link{chisq.test}} comparing the frequency 
+#' of occurrence of each term compared to the other terms in the document group.
+#' @param dtm a document term matrix: an object returned by \code{\link{document_term_matrix}}
+#' @param groups a logical vector with 2 groups (TRUE / FALSE) where the size of the \code{groups} vector 
+#' is the same as the number of rows of \code{dtm}
+#' @param correct passed on to \code{\link{chisq.test}}
+#' @param ... further arguments passed on to \code{\link{chisq.test}}
+#' @export
+#' @return a data.frame with columns term, chisq, p.value, freq, freq_true, freq_false indicating for each term in the \code{dtm},
+#' how frequently it occurs in each group, the Chi-Square value and it's corresponding p-value.
+#' @examples 
+#' data(brussels_reviews_anno)
+#' ##
+#' ## Which nouns occur in text containing the term 'centre'
+#' ##
+#' x <- subset(brussels_reviews_anno, xpos == "NN" & language == "fr")
+#' x <- x[, c("doc_id", "lemma")]
+#' x <- document_term_frequencies(x)
+#' dtm <- document_term_matrix(x)
+#' relevant <- dtm_chisq(dtm, groups = dtm[, "centre"] > 0)
+#' head(relevant, 10)
+#' 
+#' ##
+#' ## Which adjectives occur in text containing the term 'hote'
+#' ##
+#' x <- subset(brussels_reviews_anno, xpos == "JJ" & language == "fr")
+#' x <- x[, c("doc_id", "lemma")]
+#' x <- document_term_frequencies(x)
+#' dtm <- document_term_matrix(x)
+#' 
+#' group <- subset(brussels_reviews_anno, lemma %in% "hote")
+#' group <- rownames(dtm) %in% group$doc_id
+#' relevant <- dtm_chisq(dtm, groups = group)
+#' head(relevant, 10)
+#' 
+#' 
+#' \dontrun{
+#' # do not show scientific notation of the p-values
+#' options(scipen = 100)
+#' head(relevant, 10)
+#' }
+dtm_chisq <- function(dtm, groups, correct = TRUE, ...){
+  stopifnot(is.logical(groups))
+  stopifnot(length(unique(groups)) == 2)
+  stopifnot(length(groups) == nrow(x))
+  recode <- function(x, from, to){
+    to[match(x, from)]
+  }
+  
+  DTM <- dtm_reverse(dtm)
+  DTM <- data.frame(doc_id = recode(DTM$doc_id, from = rownames(x), to = groups), 
+                    term = DTM$term, 
+                    freq = DTM$freq, stringsAsFactors = FALSE)
+  DTM <- document_term_frequencies(DTM)
+  DTM <- document_term_matrix(DTM)
+  
+  freq_true  <- DTM["TRUE" , , drop = TRUE]
+  freq_false <- DTM["FALSE", , drop = TRUE]
+  
+  contingencies <- data.frame(term = colnames(DTM), 
+                              term_freq_true  = freq_true, 
+                              term_freq_false = freq_false,
+                              otherterms_freq_true  = sum(freq_true) - freq_true, 
+                              otherterms_freq_flase = sum(freq_false) - freq_false, 
+                              stringsAsFactors = FALSE)
+  result <- mapply(term = contingencies$term, 
+                   a = contingencies$term_freq_true, b = contingencies$term_freq_false, 
+                   c = contingencies$otherterms_freq_true, d = contingencies$otherterms_freq_flase, 
+                   FUN = function(term, a, b, c, d){
+                     tab <- matrix(c(a, b, c, d), nrow = 2, ncol = 2, byrow = TRUE)
+                     suppressWarnings(result <- chisq.test(tab, correct = correct, ...))
+                     list(term = term,
+                          chisq = result$statistic, 
+                          p.value = result$p.value,
+                          freq = a + b,
+                          freq_true = a, 
+                          freq_false = b)
+                   }, SIMPLIFY = FALSE)
+  result <- data.table::rbindlist(result)
+  result <- result[order(result$chisq, decreasing = TRUE), ]
+  result <- data.table::setDF(result)
+  result
+}

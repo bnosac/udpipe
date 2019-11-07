@@ -3,6 +3,7 @@
 #' @importFrom utils download.file head capture.output
 #' @importFrom methods cbind2 rbind2 as
 #' @importFrom Matrix sparseMatrix summary crossprod tcrossprod diag 
+#' @importFrom stats chisq.test
 #' @useDynLib udpipe
 NULL
 
