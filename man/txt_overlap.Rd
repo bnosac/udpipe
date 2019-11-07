@@ -23,4 +23,3 @@ y <- c("b", "c", "e", "z")
 txt_overlap(x, y)
 txt_overlap(y, x)
 }
-

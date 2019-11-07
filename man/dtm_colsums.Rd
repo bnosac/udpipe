@@ -3,7 +3,6 @@
 \name{dtm_colsums}
 \alias{dtm_colsums}
 \alias{dtm_rowsums}
-\alias{dtm_rowsums}
 \title{Column sums and Row sums for document term matrices}
 \usage{
 dtm_colsums(dtm)

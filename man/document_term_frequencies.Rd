@@ -8,8 +8,8 @@
 \usage{
 document_term_frequencies(x, document, ...)
 
-\method{document_term_frequencies}{data.frame}(x, document = colnames(x)[1],
-  term = colnames(x)[2], ...)
+\method{document_term_frequencies}{data.frame}(x,
+  document = colnames(x)[1], term = colnames(x)[2], ...)
 
 \method{document_term_frequencies}{character}(x, document = paste("doc",
   seq_along(x), sep = ""), split = "[[:space:][:punct:][:digit:]]+", ...)

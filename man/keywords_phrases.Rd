@@ -3,7 +3,6 @@
 \name{keywords_phrases}
 \alias{keywords_phrases}
 \alias{phrases}
-\alias{phrases}
 \title{Extract phrases - a sequence of terms which follow each other based on a sequence of Parts of Speech tags}
 \usage{
 keywords_phrases(x, term = x, pattern, is_regex = FALSE, sep = " ",

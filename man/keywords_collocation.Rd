@@ -3,10 +3,10 @@
 \name{keywords_collocation}
 \alias{keywords_collocation}
 \alias{collocation}
-\alias{collocation}
 \title{Extract collocations - a sequence of terms which follow each other}
 \usage{
-keywords_collocation(x, term, group, ngram_max = 2, n_min = 2, sep = " ")
+keywords_collocation(x, term, group, ngram_max = 2, n_min = 2,
+  sep = " ")
 
 collocation(x, term, group, ngram_max = 2, n_min = 2, sep = " ")
 }

@@ -4,7 +4,6 @@
 \alias{dtm_bind}
 \alias{dtm_cbind}
 \alias{dtm_rbind}
-\alias{dtm_rbind}
 \title{Combine 2 document term matrices either by rows or by columns}
 \usage{
 dtm_cbind(x, y)
