@@ -10,7 +10,7 @@ dtm_chisq(dtm, groups, correct = TRUE, ...)
 \item{dtm}{a document term matrix: an object returned by \code{\link{document_term_matrix}}}
 
 \item{groups}{a logical vector with 2 groups (TRUE / FALSE) where the size of the \code{groups} vector 
-is the same as the number of rows of \code{dtm}}
+is the same as the number of rows of \code{dtm} and where element i corresponds row i of \code{dtm}}
 
 \item{correct}{passed on to \code{\link{chisq.test}}}
 

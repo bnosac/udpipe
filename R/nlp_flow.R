@@ -629,7 +629,7 @@ dtm_rowsums <- function(dtm){
 #' of occurrence of each term compared to the other terms in the document group.
 #' @param dtm a document term matrix: an object returned by \code{\link{document_term_matrix}}
 #' @param groups a logical vector with 2 groups (TRUE / FALSE) where the size of the \code{groups} vector 
-#' is the same as the number of rows of \code{dtm}
+#' is the same as the number of rows of \code{dtm} and where element i corresponds row i of \code{dtm}
 #' @param correct passed on to \code{\link{chisq.test}}
 #' @param ... further arguments passed on to \code{\link{chisq.test}}
 #' @export
@@ -675,7 +675,7 @@ dtm_chisq <- function(dtm, groups, correct = TRUE, ...){
   }
   
   DTM <- dtm_reverse(dtm)
-  DTM <- data.frame(doc_id = recode(DTM$doc_id, from = rownames(x), to = groups), 
+  DTM <- data.frame(doc_id = recode(DTM$doc_id, from = rownames(dtm), to = groups), 
                     term = DTM$term, 
                     freq = DTM$freq, stringsAsFactors = FALSE)
   DTM <- document_term_frequencies(DTM)
