@@ -669,7 +669,7 @@ dtm_rowsums <- function(dtm){
 dtm_chisq <- function(dtm, groups, correct = TRUE, ...){
   stopifnot(is.logical(groups))
   stopifnot(length(unique(groups)) == 2)
-  stopifnot(length(groups) == nrow(x))
+  stopifnot(length(groups) == nrow(dtm))
   recode <- function(x, from, to){
     to[match(x, from)]
   }
