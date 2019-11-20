@@ -485,7 +485,7 @@ dtm_remove_terms <- function(dtm, terms, remove_emptydocs = TRUE){
 #' @title Pearson Correlation for Sparse Matrices
 #' @description Pearson Correlation for Sparse Matrices. 
 #' More memory and time-efficient than \code{cor(as.matrix(x))}. 
-#' @param x A matrix, potentially a sparse matrix such as a "dgTMatrix" object 
+#' @param x A matrix, potentially a sparse matrix such as a "dgCMatrix" object 
 #' which is returned by \code{\link{document_term_matrix}}
 #' @return a correlation matrix 
 #' @seealso \code{\link{document_term_matrix}}
@@ -513,8 +513,8 @@ dtm_cor <- function(x) {
 #' If there are missing rows these will be filled with NA values. \cr
 #' In case of \code{dtm_rbind}, if the columns are not ordered in the same way in x and y, it will order them based on the colnames. 
 #' If there are missing columns these will be filled with NA values.
-#' @param x a sparse matrix such as a "dgTMatrix" object which is returned by \code{\link{document_term_matrix}}
-#' @param y a sparse matrix such as a "dgTMatrix" object which is returned by \code{\link{document_term_matrix}}
+#' @param x a sparse matrix such as a "dgCMatrix" object which is returned by \code{\link{document_term_matrix}}
+#' @param y a sparse matrix such as a "dgCMatrix" object which is returned by \code{\link{document_term_matrix}}
 #' @return a sparse matrix where either rows are put below each other in case of \code{dtm_rbind}
 #' or columns are put next to each other in case of \code{dtm_cbind}
 #' @seealso \code{\link{document_term_matrix}}
@@ -707,4 +707,210 @@ dtm_chisq <- function(dtm, groups, correct = TRUE, ...){
   result <- result[order(result$chisq, decreasing = TRUE), ]
   result <- data.table::setDF(result)
   result
+}
+
+
+
+#' @title Semantic Similarity to an Singular Value Decomposition
+#' @description Calculate the similarity of a document term matrix to a set of terms based on 
+#' an Singular Value Decomposition (SVD) embedding matrix.\cr
+#' This can be used to easily construct a sentiment score based on the latent scale defined by a set of positive or negative terms.
+#' @param dtm a sparse matrix such as a "dgCMatrix" object which is returned by \code{\link{document_term_matrix}} containing frequencies of terms for each document
+#' @param embedding a matrix containing the \code{v} element from an singular value decomposition with the right singular vectors. 
+#' The rownames of that matrix should contain terms which are available in the \code{colnames(dtm)}. See the examples.
+#' @param weights a numeric vector with weights giving your definition of which terms are positive or negative, 
+#' The names of this vector should be terms available in the rownames of the embedding matrix. See the examples.
+#' @param terminology a character vector of terms to limit the calculation of the similarity for the \code{dtm} to the linear combination of the weights. 
+#' Defaults to all terms from the \code{embedding} matrix.
+#' @param type either 'cosine' or 'dot' indicating to respectively calculate cosine similarities or inner product similarities between the \code{dtm} and the SVD embedding space. Defaults to 'cosine'.
+#' @export
+#' @return an object of class 'svd_similarity' which is a list with elements
+#' \itemize{
+#' \item weights: The weights used. These are scaled to sum up to 1 as well on the positive as the negative side
+#' \item type: The type of similarity calculated (either 'cosine' or 'dot')
+#' \item terminology: A data.frame with columns term, freq and similarity where similarity indicates 
+#' the similarity between the term and the SVD embedding space of the weights and freq is how frequently the term occurs in the \code{dtm}. 
+#' This dataset is sorted in descending order by similarity.
+#' \item similarity: A data.frame with columns doc_id and similarity indicating the similarity between
+#' the \code{dtm} and the SVD embedding space of the weights. The doc_id is the identifier taken from the rownames of \code{dtm}.
+#' \item scale: A list with elements terminology and weights 
+#' indicating respectively the similarity in the SVD embedding space
+#' between the \code{terminology} and each of the weights and between the weight terms itself
+#' }
+#' @seealso \url{https://en.wikipedia.org/wiki/Latent_semantic_analysis}
+#' @examples
+#' data("brussels_reviews_anno", package = "udpipe")
+#' x <- subset(brussels_reviews_anno, language %in% "nl" & (upos %in% "ADJ" | lemma %in% "niet"))
+#' dtm <- document_term_frequencies(x, document = "doc_id", term = "lemma")
+#' dtm <- document_term_matrix(dtm)
+#' dtm <- dtm_remove_lowfreq(dtm, minfreq = 3)
+#' 
+#' ## Function performing Singular Value Decomposition on sparse/dense data
+#' dtm_svd <- function(dtm, dim = 5, type = c("RSpectra", "svd"), ...){
+#'   type <- match.arg(type)
+#'   if(type == "svd"){
+#'     SVD <- svd(dtm, nu = 0, nv = 5, ...)
+#'   }else if(type == "RSpectra"){
+#'     library(RSpectra)
+#'     SVD <- svds(A = dtm, k = dim, nu = 0, ...)
+#'   }
+#'   rownames(SVD$v) <- colnames(dtm)
+#'   SVD$v
+#' }
+#' \dontrun{
+#' embedding <- dtm_svd(dtm, dim = 5, type = "RSpectra")
+#' }
+#' embedding <- dtm_svd(dtm, dim = 5, type = "svd")
+#' 
+#' ## Define positive / negative terms and calculate the similarity to these
+#' weights <- setNames(c(1, 1, 1, 1, -1, -1, -1, -1),
+#'                     c("fantastisch", "schoon", "vriendelijk", "net",
+#'                       "lawaaiig", "lastig", "niet", "slecht"))
+#' scores <- dtm_svd_similarity(dtm, embedding = embedding, weights = weights)
+#' scores
+#' str(scores$similarity)
+#' hist(scores$similarity$similarity)
+#' 
+#' plot(scores$terminology$similarity_weight, log(scores$terminology$freq), 
+#'      type = "n")
+#' text(scores$terminology$similarity_weight, log(scores$terminology$freq), 
+#'      labels = scores$terminology$term)
+dtm_svd_similarity <- function(dtm, embedding, weights, terminology = rownames(embedding), type = c("cosine", "dot")){
+  doc_id <- term <- prop <- in_terminology <- NULL
+  embedding_similarity <- function(x, y, type = c("cosine", "dot")) {
+    if(!is.matrix(x)){
+      x <- matrix(x, nrow = 1)
+    }
+    if(!is.matrix(y)){
+      y <- matrix(y, nrow = 1)
+    }
+    type <- match.arg(type)
+    
+    if(type == "dot"){
+      similarities <- tcrossprod(x, y)
+    }else if(type == "cosine"){
+      normx <- sqrt(rowSums(x^2))
+      normy <- sqrt(rowSums(y^2))
+      similarities <- tcrossprod(x, y) / (normx %o% normy)
+    }
+    similarities
+  }
+  setNames <- function(x, labels){
+    names(x) <- labels
+    x
+  }
+  ##
+  ## DATA CHECKS
+  ##
+  type <- match.arg(type)
+  stopifnot(is.matrix(embedding))
+  stopifnot(is.vector(weights))
+  
+  object <- list(dim = ncol(embedding),
+                 terminology = rownames(embedding),
+                 embedding = as.matrix(embedding))
+  
+  if(missing(terminology)){
+    terminology <- object$terminology
+  }else{
+    terminology <- intersect(terminology, object$terminology)
+  }
+  not_known_weights <- setdiff(names(weights), object$terminology)
+  if(length(not_known_weights) > 0){
+    warning(sprintf("Removing '%s' from weights as these are not part of rownames(embedding)", paste(not_known_weights, collapse = ", ")))
+    weights <- weights[!names(weights) %in% not_known_weights]
+  }
+  stopifnot(length(weights) > 0)
+  if(length(unique(sign(weights))) != 2){
+    stop("weights should contain positive as well as negative values")
+  }
+  
+  ## rescale weights to make sure positive values sum to 1 and negative also sum to -1
+  weights_scaled <- data.frame(term = names(weights), 
+                               weight = weights, 
+                               sign = sign(weights),
+                               stringsAsFactors = FALSE)
+  weights_scaled <- lapply(X = split(weights_scaled, weights_scaled$sign),
+                           FUN = function(x){
+                             x$weight_scaled = x$weight / abs(sum(x$weight))
+                             x
+                           })
+  weights_scaled <- do.call(rbind, weights_scaled)
+  weights_scaled <- setNames(weights_scaled$weight_scaled, weights_scaled$term)
+  #weights_scaled <- setNames(weights_scaled$weight / nrow(weights_scaled), weights_scaled$term)
+  
+  
+  ####################################################################################
+  ## Calculate embedding similarity of terminology to weights, weights-to-weights
+  ## and the embedding space of the linear combination of the weights
+  ##
+  weightsterms <- names(weights_scaled)
+  
+  similarity_terminology_to_weights <- embedding_similarity(
+    object$embedding[terminology, , drop = FALSE],
+    object$embedding[weightsterms, , drop = FALSE],
+    type = type)
+
+  similarity_weights_to_weights <- embedding_similarity(
+    object$embedding[weightsterms, , drop = FALSE],
+    object$embedding[weightsterms, , drop = FALSE],
+    type = type)
+  
+  ## weighted term-to-weights similarity reflecting a scale on which -1 to +1 range lies
+  weightspace <- similarity_terminology_to_weights
+  weightspace <- similarity_terminology_to_weights %*% weights_scaled
+  weightspace <- weightspace[, 1]
+  
+  ##
+  ## Predict (for terms part of the terminology, get the weights embedding space)
+  ##
+  freq <- dtm_colsums(dtm)
+  dtf <- dtm_reverse(dtm)
+  dtf <- data.table::setDT(dtf)
+  dtf <- dtf[, in_terminology := term %in% terminology, ]
+  #dtf <- dtf[, prop := as.numeric(freq / sum(freq)), by = list(doc_id)]
+  dtf <- dtf[, prop := as.numeric(ifelse(any(in_terminology), freq[in_terminology] / sum(freq[in_terminology]), 0)), by = list(doc_id)]
+  dtm <- document_term_matrix(dtf, weight = "prop", terminology = terminology)
+  dtm <- dtm[, terminology, drop = FALSE]
+  
+  scores <- dtm %*% weightspace
+  scores <- scores[, 1]
+  scores <- data.frame(doc_id = names(scores), 
+                       similarity = as.numeric(scores), 
+                       stringsAsFactors = FALSE)
+  
+  terminology_similarity <- sort(weightspace, decreasing = TRUE)
+  terminology_similarity <- data.frame(
+    term = names(terminology_similarity), 
+    freq = txt_recode(names(terminology_similarity), from = names(freq), to = as.integer(freq)),
+    similarity_weight = as.numeric(terminology_similarity),
+    stringsAsFactors = FALSE)
+  
+  result <- list(weights = weights_scaled,
+                 type = type,
+                 terminology = terminology_similarity,
+                 similarity = scores,
+                 scale = list(
+                   terminology = similarity_terminology_to_weights,
+                   weights = similarity_weights_to_weights))
+  class(result) <- "svd_similarity"
+  result
+}
+
+#' @export
+print.svd_similarity <- function(x, n = 7, digits = 2, ...){
+  cat(sprintf("Latent Semantic Scaling using %s similarity on SVD matrix", x$type), sep = "\n")
+  cat(sprintf("Weights: %s", paste(sprintf("%s %s", names(x$weights), round(x$weights, 4)), collapse = ", ")), sep = "\n")
+  cat(sprintf("Top %s most similar terms on the high end of the scale", n), sep = "\n")
+  elements <- head(x$terminology, n = n, sep = "\n")
+  mapply(term = elements$term, freq = elements$freq, similarity = elements$similarity, FUN=function(term, freq, similarity){
+    cat(sprintf(" - %s %s (frequency: %s)", term, round(similarity, digits = digits), freq), sep = "\n")
+  })
+  cat(sprintf("Top %s most similar terms on the low end of the scale", n), sep = "\n")
+  elements <- tail(x$terminology, n = n, sep = "\n")
+  elements <- elements[order(elements$similarity, decreasing = FALSE), ]
+  mapply(term = elements$term, freq = elements$freq, similarity = elements$similarity, FUN=function(term, freq, similarity){
+    cat(sprintf(" - %s %s (frequency: %s)", term, round(similarity, digits = digits), freq), sep = "\n")
+  })
+  invisible()
 }

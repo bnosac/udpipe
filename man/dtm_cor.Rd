@@ -7,7 +7,7 @@
 dtm_cor(x)
 }
 \arguments{
-\item{x}{A matrix, potentially a sparse matrix such as a "dgTMatrix" object 
+\item{x}{A matrix, potentially a sparse matrix such as a "dgCMatrix" object 
 which is returned by \code{\link{document_term_matrix}}}
 }
 \value{
