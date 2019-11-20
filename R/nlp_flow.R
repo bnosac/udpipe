@@ -855,7 +855,6 @@ dtm_svd_similarity <- function(dtm, embedding, weights, terminology = rownames(e
     type = type)
   
   ## weighted term-to-weights similarity reflecting a scale on which -1 to +1 range lies
-  weightspace <- similarity_terminology_to_weights
   weightspace <- similarity_terminology_to_weights %*% weights_scaled
   weightspace <- weightspace[, 1]
   
