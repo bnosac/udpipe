@@ -52,17 +52,15 @@ dtm <- dtm_remove_lowfreq(dtm, minfreq = 3)
 dtm_svd <- function(dtm, dim = 5, type = c("RSpectra", "svd"), ...){
   type <- match.arg(type)
   if(type == "svd"){
-    SVD <- svd(dtm, nu = 0, nv = 5, ...)
+    SVD <- svd(dtm, nu = 0, nv = dim, ...)
   }else if(type == "RSpectra"){
-    library(RSpectra)
-    SVD <- svds(A = dtm, k = dim, nu = 0, ...)
+    #Uncomment this if you want to use the faster sparse SVD by RSpectra
+    #SVD <- RSpectra::svds(dtm, nu = 0, k = dim, ...)
   }
   rownames(SVD$v) <- colnames(dtm)
   SVD$v
 }
-\dontrun{
-embedding <- dtm_svd(dtm, dim = 5, type = "RSpectra")
-}
+#embedding <- dtm_svd(dtm, dim = 5)
 embedding <- dtm_svd(dtm, dim = 5, type = "svd")
 
 ## Define positive / negative terms and calculate the similarity to these
