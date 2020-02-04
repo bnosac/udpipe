@@ -45,7 +45,7 @@ path
 ```
 
 ```
-[1] "C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/vignettes/french-gsd-ud-2.4-190531.udpipe"
+[1] "C:/Users/Jan/Dropbox/Work/RForgeBNOSAC/BNOSAC/udpipe/vignettes/french-gsd-ud-2.5-191206.udpipe"
 ```
 
 ```r

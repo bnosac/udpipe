@@ -1,5 +1,7 @@
 ## CHANGES IN udpipe VERSION 0.8.4
 
+- Default of udpipe_download_model is now changed, downloads now models built on Universal Dependencies 2.5 instead of the models build on Universal Dependencies 2.4
+- For raw tagger models, fill MorphoGuesser=Yes where appropriate (see issue #70)
 - Added txt_count
 - Added txt_overlap
 - Added dtm_chisq
@@ -8,7 +10,7 @@
 - Experimental changes regarding cbind_dependencies which might change in a subsequent release.
   - cbind_dependencies now has been implementend for type 'child'. 
   - cbind_dependencies now allows to add row numbers of the parent or children where the token is linked to using the dependency parsing output. 
-- Work on allowing to easily query dependency relations
+- Experimental work on allowing to easily query dependency relations
 
 
 ## CHANGES IN udpipe VERSION 0.8.3
