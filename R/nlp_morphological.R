@@ -31,7 +31,9 @@ cbind_morphological <- function(x, term = "feats"){
                               old = colnames(out), 
                               new = c("has_morph", sprintf("morph_%s", setdiff(colnames(out), "has_morph"))))
   if(inherits(x, "data.table")){
-    x[, colnames(out), with = FALSE] <- out  
+    x <- setDF(x)
+    x[, colnames(out)] <- out  
+    x <- setDT(x)
   }else if(inherits(x, "data.frame")){
     x[, colnames(out)] <- out  
   }
