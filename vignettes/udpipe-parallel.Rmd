@@ -63,7 +63,7 @@ annotation <- readRDS(file = "anno.rds")
 
 ## When to run in parallel?
 
-It only makes sense to run annotation in parallel if you have many CPU cores and have enough data to annotate. As udpipe models are Rcpp pointers to the loaded models on disk which can not be passed on to the parallel threads, each thread will load the model again which takes some time next to the internal setup of the parallel backend. 
+It only makes sense to run annotation in parallel if you have many CPU cores and have enough data to annotate. As udpipe models are Rcpp pointers to the loaded models on disk which can not be passed on to the parallel processes, each process will load the model again which takes some time next to the internal setup of the parallel backend. 
 
 You can gain a speedup similar as the amount of cores you have on your machine. That can be done by using the parallel.cores argument wisely alongside parallel.chunksize argument which indicates the size of the chunks that the text data will be splitted into to perform the annotation (the default of this argument is set to the size of the data / parallel.cores). 
 
