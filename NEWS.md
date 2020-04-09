@@ -1,7 +1,6 @@
 ## CHANGES IN udpipe VERSION 0.8.4
 
 - Default of udpipe_download_model is now changed, downloads now models built on Universal Dependencies 2.5 instead of the models build on Universal Dependencies 2.4
-- For raw tagger models, fill MorphoGuesser=Yes where appropriate (see issue #70)
 - Added txt_count
 - Added txt_overlap
 - Added dtm_chisq
