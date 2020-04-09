@@ -711,6 +711,122 @@ dtm_chisq <- function(dtm, groups, correct = TRUE, ...){
 
 
 
+#' @title Make sure a document term matrix has exactly the specified rows and columns
+#' @description Makes sure the document term matrix has exactly the rows and columns which you specify. If missing rows or columns
+#' are occurring, the function fills these up either with empty cells or with the value that you provide. See the examples.
+#' @param dtm a document term matrix: an object returned by \code{\link{document_term_matrix}}
+#' @param rows a character vector of row names which \code{dtm} should have
+#' @param columns a character vector of column names which \code{dtm} should have
+#' @param fill a value to use to fill up missing rows / columns. Defaults to using an empty cell.
+#' @return the sparse matrix \code{dtm} with exactly the specified rows and columns
+#' @export
+#' @seealso \code{\link{document_term_matrix}}
+#' @examples 
+#' x <- data.frame(doc_id = c("doc_1", "doc_1", "doc_1", "doc_2"), 
+#'                 text = c("a", "a", "b", "c"), 
+#'                 stringsAsFactors = FALSE)
+#' dtm <- document_term_frequencies(x)
+#' dtm <- document_term_matrix(dtm)
+#' dtm
+#' dtm_conform(dtm, 
+#'             rows = c("doc_1", "doc_2", "doc_3"), columns = c("a", "b", "c", "Z", "Y"))
+#' dtm_conform(dtm, 
+#'             rows = c("doc_1", "doc_2", "doc_3"), columns = c("a", "b", "c", "Z", "Y"), 
+#'             fill = 1)
+#' dtm_conform(dtm, rows = c("doc_1", "doc_3"), columns = c("a", "b", "c", "Z", "Y"))
+#' dtm_conform(dtm, columns = c("a", "b", "Z"))
+#' dtm_conform(dtm, rows = c("doc_1"))
+#' dtm_conform(dtm, rows = character())
+#' dtm_conform(dtm, columns = character())
+#' dtm_conform(dtm, rows = character(), columns = character())
+#' 
+#' ##
+#' ## Some examples on border line cases
+#' ##
+#' special1 <- dtm[, character()]
+#' special2 <- dtm[character(), character()]
+#' special3 <- dtm[character(), ]
+#' 
+#' dtm_conform(special1, 
+#'             rows = c("doc_1", "doc_2", "doc_3"), columns = c("a", "b", "c", "Z", "Y"))
+#' dtm_conform(special1, 
+#'             rows = c("doc_1", "doc_2", "doc_3"), columns = c("a", "b", "c", "Z", "Y"), 
+#'             fill = 1)
+#' dtm_conform(special1, rows = c("doc_1", "doc_3"), columns = c("a", "b", "c", "Z", "Y"))
+#' dtm_conform(special1, columns = c("a", "b", "Z"))
+#' dtm_conform(special1, rows = c("doc_1"))
+#' dtm_conform(special1, rows = character())
+#' dtm_conform(special1, columns = character())
+#' dtm_conform(special1, rows = character(), columns = character())
+#' 
+#' dtm_conform(special2, 
+#'             rows = c("doc_1", "doc_2", "doc_3"), columns = c("a", "b", "c", "Z", "Y"))
+#' dtm_conform(special2, 
+#'             rows = c("doc_1", "doc_2", "doc_3"), columns = c("a", "b", "c", "Z", "Y"), 
+#'             fill = 1)
+#' dtm_conform(special2, rows = c("doc_1", "doc_3"), columns = c("a", "b", "c", "Z", "Y"))
+#' dtm_conform(special2, columns = c("a", "b", "Z"))
+#' dtm_conform(special2, rows = c("doc_1"))
+#' dtm_conform(special2, rows = character())
+#' dtm_conform(special2, columns = character())
+#' dtm_conform(special2, rows = character(), columns = character())
+#' 
+#' dtm_conform(special3, 
+#'             rows = c("doc_1", "doc_2", "doc_3"), columns = c("a", "b", "c", "Z", "Y"))
+#' dtm_conform(special3, 
+#'             rows = c("doc_1", "doc_2", "doc_3"), columns = c("a", "b", "c", "Z", "Y"), 
+#'             fill = 1)
+#' dtm_conform(special3, rows = c("doc_1", "doc_3"), columns = c("a", "b", "c", "Z", "Y"))
+#' dtm_conform(special3, columns = c("a", "b", "Z"))
+#' dtm_conform(special3, rows = c("doc_1"))
+#' dtm_conform(special3, rows = character())
+#' dtm_conform(special3, columns = character())
+#' dtm_conform(special3, rows = character(), columns = character())
+dtm_conform <- function(dtm, rows, columns, fill){
+  if(!missing(columns)){
+    missing_terms <- setdiff(columns, colnames(dtm))
+    if(length(missing_terms)){
+      if(!missing(fill)){
+        extra <- expand.grid(i = seq_len(nrow(dtm)), j = length(missing_terms))
+        extra <- Matrix::sparseMatrix(dims = c(nrow(dtm), length(missing_terms)), dimnames = list(rownames(dtm), missing_terms), i = extra$i, j = extra$j, x = fill)
+      }else{
+        extra <- Matrix::sparseMatrix(dims = c(nrow(dtm), length(missing_terms)), dimnames = list(rownames(dtm), missing_terms), i = {}, j = {})  
+      }
+      if(nrow(dtm) == 0){
+        dtm <- methods::cbind2(dtm, extra)  
+      }else{
+        dtm <- dtm_cbind(dtm, extra)
+      }
+    }  
+  }
+  if(!missing(rows)){
+    missing_docs <- setdiff(rows, rownames(dtm))
+    if(length(missing_docs) > 0){
+      if(!missing(fill)){
+        extra <- expand.grid(i = seq_len(length(missing_docs)), j = ncol(dtm))
+        extra <- Matrix::sparseMatrix(dims = c(length(missing_docs), ncol(dtm)), dimnames = list(missing_docs, colnames(dtm)), i = extra$i, j = extra$j, x = fill)
+      }else{
+        extra <- Matrix::sparseMatrix(dims = c(length(missing_docs), ncol(dtm)), dimnames = list(missing_docs, colnames(dtm)), i = {}, j = {})
+      }
+      if(ncol(dtm) == 0){
+        dtm <- methods::rbind2(dtm, extra)  
+      }else{
+        dtm <- udpipe::dtm_rbind(dtm, extra)  
+      }
+    }  
+  }
+  if(!missing(rows) & !missing(columns)){
+    dtm <- dtm[rows, columns, drop = FALSE]  
+  }else if(!missing(rows)){
+    dtm <- dtm[rows, , drop = FALSE]  
+  }else if(!missing(columns)){
+    dtm <- dtm[, columns, drop = FALSE]  
+  }
+  dtm
+}
+
+
+
 #' @title Semantic Similarity to an Singular Value Decomposition
 #' @description Calculate the similarity of a document term matrix to a set of terms based on 
 #' an Singular Value Decomposition (SVD) embedding matrix.\cr

@@ -3,6 +3,7 @@
 - Default of udpipe_download_model is now changed, downloads now models built on Universal Dependencies 2.5 instead of the models build on Universal Dependencies 2.4
 - Added txt_count
 - Added txt_overlap
+- Added dtm_conform
 - Added dtm_chisq
 - Added dtm_svd_similarity
 - txt_recode_ngram now also works gracefully in case ngram is set to 1 although the intention is not to use it when ngram is set to 1
