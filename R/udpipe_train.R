@@ -336,3 +336,34 @@ as_word2vec <- function(x){
   x <- c(line1, lines_rest)
   paste(x, collapse = "\n")
 }
+
+
+
+
+#' @title Combine labels and text as used in fasttext
+#' @description Fasttext prepends a label or different labels to text using a special string (__label__).
+#' This function takes a character vector of text and prepends the labels alongside the special string.
+#' @param x a character vector
+#' @param y a character vector of labels or a list of labels. \code{y} should be of the same length as \code{x} 
+#' @param label the string to use to prepend to the label. Defaults to __label__
+#' @return a character vector of text where \code{x} and \code{y} are combined
+#' @export 
+#' @examples 
+#' as_fasttext(x = c("just a bit of txt", "example2", "more txt please", "more"), 
+#'             y = c("pos", "neg", "neg", NA))
+#' as_fasttext(x = c("just a bit of txt", "example2", "more txt please", "more"), 
+#'             y = list(c("ok", "pos"), c("neg", "topic2"), "", NA))
+as_fasttext <- function(x, y, label = "__label__"){
+  if(is.list(y)){
+    targets <- sapply(y, FUN=function(x){
+      if(length(x) == 0 || all(is.na(x))){
+        return(NA_character_)
+      }
+      paste(paste(label, x, sep = ""), collapse = " ") 
+    })
+  }else{
+    targets <- ifelse(is.na(y), NA_character_, paste(label, y, sep = ""))
+  }
+  x <- ifelse(is.na(targets), x, paste(targets, x, sep = " "))
+  x
+}
