@@ -689,3 +689,21 @@ strsplit.data.frame <- function(data, term, group, split = "[[:space:][:punct:][
   x <- data.table::setDF(x)
   x
 }
+
+
+
+# as_tidy(strsplit(setNames(c("some text", "hi there ?"), c("a", "b")), split = " "))
+as_tidy <- function(x){
+  doc_id <- rep(names(x), sapply(x, length))
+  token  <- unlist(x, use.names = FALSE)
+  if(length(token) == 0){
+    x <- data.frame(doc_id = character(), 
+                    token = character(), 
+                    stringsAsFactors = FALSE)
+  }else{
+    x <- data.frame(doc_id = doc_id, 
+                    token = token, 
+                    stringsAsFactors = FALSE)  
+  }
+  x
+}
