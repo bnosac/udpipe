@@ -27,12 +27,12 @@
 #' Either 'jwijffels/udpipe.models.ud.2.5', 'jwijffels/udpipe.models.ud.2.4', 'jwijffels/udpipe.models.ud.2.3', 'jwijffels/udpipe.models.ud.2.0', 'jwijffels/udpipe.models.conll18.baseline' or 'bnosac/udpipe.models.ud'. \cr
 #' Defaults to 'jwijffels/udpipe.models.ud.2.5'. \cr
 #' \itemize{
+#'   \item{'bnosac/udpipe.models.ud' contains models mainly released under the CC-BY-SA license constructed on Universal Dependencies 2.1 data, and some models released under the GPL-3 and LGPL-LR license}
 #'   \item{'jwijffels/udpipe.models.ud.2.5' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.5 data}
 #'   \item{'jwijffels/udpipe.models.ud.2.4' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.4 data}
 #'   \item{'jwijffels/udpipe.models.ud.2.3' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.3 data}
 #'   \item{'jwijffels/udpipe.models.ud.2.0' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.0 data}
 #'   \item{'jwijffels/udpipe.models.conll18.baseline' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.2 data for the 2018 conll shared task}
-#'   \item{'bnosac/udpipe.models.ud' contains models mainly released under the CC-BY-SA license constructed on Universal Dependencies 2.1 data, and some models released under the GPL-3 and LGPL-LR license}
 #' }
 #' See the Details section for further information on which languages are available in each of these repositories.
 #' @param overwrite logical indicating to overwrite the file if the file was already downloaded. Defaults to \code{TRUE} indicating 
@@ -112,10 +112,14 @@
 #' x <- udpipe_download_model(language = "spanish-gsd")
 #' x <- udpipe_download_model(language = "spanish-gsd", overwrite = FALSE)
 #' 
-#' x <- udpipe_download_model(language = "dutch-alpino", udpipe_model_repo = "udpipe.models.ud.2.5")
-#' x <- udpipe_download_model(language = "dutch-alpino", udpipe_model_repo = "udpipe.models.ud.2.4")
-#' x <- udpipe_download_model(language = "dutch-alpino", udpipe_model_repo = "udpipe.models.ud.2.3")
-#' x <- udpipe_download_model(language = "dutch-alpino", udpipe_model_repo = "udpipe.models.ud.2.0")
+#' x <- udpipe_download_model(language = "dutch-alpino", 
+#'                            udpipe_model_repo = "jwijffels/udpipe.models.ud.2.5")
+#' x <- udpipe_download_model(language = "dutch-alpino", 
+#'                            udpipe_model_repo = "jwijffels/udpipe.models.ud.2.4")
+#' x <- udpipe_download_model(language = "dutch-alpino", 
+#'                            udpipe_model_repo = "jwijffels/udpipe.models.ud.2.3")
+#' x <- udpipe_download_model(language = "dutch-alpino", 
+#'                            udpipe_model_repo = "jwijffels/udpipe.models.ud.2.0")
 #' x <- udpipe_download_model(language = "english", udpipe_model_repo = "bnosac/udpipe.models.ud")
 #' x <- udpipe_download_model(language = "dutch", udpipe_model_repo = "bnosac/udpipe.models.ud")
 #' x <- udpipe_download_model(language = "afrikaans", udpipe_model_repo = "bnosac/udpipe.models.ud")
@@ -344,7 +348,10 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
   if(!dir.exists(model_dir)){
     dir.create(model_dir, recursive = TRUE)  
   }
+  NC <- TRUE
+  version <- ""
   if(udpipe_model_repo == "jwijffels/udpipe.models.ud.2.5"){
+    version <- "2.5"
     filename <- sprintf("%s-ud-2.5-191206.udpipe", language)
     url <- file.path("https://raw.githubusercontent.com/jwijffels/udpipe.models.ud.2.5/master",
                      "inst", "udpipe-ud-2.5-191206",
@@ -352,6 +359,7 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
     to <- file.path(model_dir, filename)
     license_url <- "https://github.com/jwijffels/udpipe.models.ud.2.5"
   }else if(udpipe_model_repo == "jwijffels/udpipe.models.ud.2.4"){
+    version <- "2.4"
     filename <- sprintf("%s-ud-2.4-190531.udpipe", language)
     url <- file.path("https://raw.githubusercontent.com/jwijffels/udpipe.models.ud.2.4/master",
                      "inst", "udpipe-ud-2.4-190531",
@@ -359,6 +367,7 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
     to <- file.path(model_dir, filename)
     license_url <- "https://github.com/jwijffels/udpipe.models.ud.2.4"
   }else if(udpipe_model_repo == "jwijffels/udpipe.models.ud.2.3"){
+    version <- "2.3"
     filename <- sprintf("%s-ud-2.3-181115.udpipe", language)
     url <- file.path("https://raw.githubusercontent.com/jwijffels/udpipe.models.ud.2.3/master",
                      "inst", "udpipe-ud-2.3-181115",
@@ -366,6 +375,7 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
     to <- file.path(model_dir, filename)
     license_url <- "https://github.com/jwijffels/udpipe.models.ud.2.3"
   }else if(udpipe_model_repo == "jwijffels/udpipe.models.ud.2.0"){
+    version <- "2.0"
     filename <- sprintf("%s-ud-2.0-170801.udpipe", language)
     url <- file.path("https://raw.githubusercontent.com/jwijffels/udpipe.models.ud.2.0/master",
                      "inst", "udpipe-ud-2.0-170801",
@@ -373,6 +383,7 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
     to <- file.path(model_dir, filename)
     license_url <- "https://github.com/jwijffels/udpipe.models.ud.2.0"
   }else if(udpipe_model_repo == "jwijffels/udpipe.models.conll18.baseline"){
+    version <- "2.2"
     filename <- sprintf("%s-ud-2.2-conll18-180430.udpipe", language)
     url <- file.path("https://raw.githubusercontent.com/jwijffels/udpipe.models.conll18.baseline/master",
                      "inst", "models", 
@@ -380,6 +391,8 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
     to <- file.path(model_dir, filename)
     license_url <- "https://github.com/jwijffels/udpipe.models.conll18.baseline"
   }else if(udpipe_model_repo == "bnosac/udpipe.models.ud"){
+    version <- "2.1"
+    NC <- FALSE
     if(grepl(pattern = "\\.udpipe$", x = language)){
       filename <- language
     }else{
@@ -395,7 +408,14 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
   download_message <- "OK"
   if(overwrite || !file.exists(to)){
     message(sprintf("Downloading udpipe model from %s to %s", url, to))
-    message(sprintf("Visit %s for model license details", license_url))
+    message(sprintf(" - This model has been trained on version %s of data from https://universaldependencies.org", version))
+    if(NC){
+      message(" - The model is distributed under the CC-BY-SA-NC license: https://creativecommons.org/licenses/by-nc-sa/4.0")
+    }else{
+      message(" - The models from repository bnosac/udpipe.models.ud are distributed under either CC-BY-SA, GPL-3 or the LGPL-LR license depending on the originating treebank.")
+    }
+    message(sprintf(" - Visit %s for model license details.", license_url))
+    message(" - For a list of all models and their licenses (most models you can download with this package have either a CC-BY-SA or a CC-BY-SA-NC license) read the documentation at ?udpipe_download_model")
     dl <- suppressWarnings(try(
       utils::download.file(url = url, destfile = to, mode = "wb"),  
       silent = TRUE))
@@ -405,6 +425,12 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
     }else if(inherits(dl, "integer") && dl != 0){
       download_failed  <- TRUE
       download_message <- "Download failed. Please check internet connectivity"
+    }
+    if(download_failed){
+      message("Something went wrong")
+      message(download_message)
+    }else{
+      message(sprintf("Download finished, you can now start using the model to annotate text using either ?udpipe or ?udpipe_load_model. \nNote that model downloading is only needed once. Next time just use the file which you have at path: '%s' in your calls to ?udpipe or ?udpipe_load_model when you want to annotate your text.", to))
     }
   }
   data.frame(language = language,
