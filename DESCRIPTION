@@ -32,6 +32,7 @@ Imports:
 LinkingTo: Rcpp
 Suggests:
     knitr,
+    rmarkdown,
     topicmodels,
     lattice,
     parallel
