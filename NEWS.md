@@ -7,6 +7,7 @@
 - Added dtm_chisq
 - Added dtm_svd_similarity
 - Added as_fasttext
+- Added unlist_tokens
 - txt_recode_ngram now also works gracefully in case ngram is set to 1 although the intention is not to use it when ngram is set to 1
 - Experimental changes regarding cbind_dependencies which might change in a subsequent release.
   - cbind_dependencies now has been implementend for type 'child'. 

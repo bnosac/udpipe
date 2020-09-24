@@ -691,11 +691,22 @@ strsplit.data.frame <- function(data, term, group, split = "[[:space:][:punct:][
 }
 
 
-
-# as_tidy(strsplit(setNames(c("some text", "hi there ?"), c("a", "b")), split = " "))
-as_tidy <- function(x){
-  doc_id <- rep(names(x), sapply(x, length))
-  token  <- unlist(x, use.names = FALSE)
+#' @title Create a data.frame from a list of tokens
+#' @description Create a data.frame from a list of tokens. 
+#' @param x a list where the list elements are character vectors of tokens
+#' @return the data of \code{x} converted to a data.frame.
+#' This data.frame has columns doc_id and token where the doc_id is taken from the list names of x
+#' and token contains the data of \code{x}
+#' @export
+#' @examples 
+#' x <- setNames(c("some text here", "hi  there understand this?"), c("a", "b"))
+#' x <- strsplit(x, split = " ")
+#' x
+#' unlist_tokens(x)
+unlist_tokens <- function(x){
+  stopifnot(is.list(x))
+  doc_id <- rep(x = names(x), times = sapply(x, length))
+  token  <- unlist(x, use.names = FALSE, recursive = FALSE)
   if(length(token) == 0){
     x <- data.frame(doc_id = character(), 
                     token = character(), 
