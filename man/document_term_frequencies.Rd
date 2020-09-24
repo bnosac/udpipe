@@ -8,11 +8,19 @@
 \usage{
 document_term_frequencies(x, document, ...)
 
-\method{document_term_frequencies}{data.frame}(x,
-  document = colnames(x)[1], term = colnames(x)[2], ...)
+\method{document_term_frequencies}{data.frame}(
+  x,
+  document = colnames(x)[1],
+  term = colnames(x)[2],
+  ...
+)
 
-\method{document_term_frequencies}{character}(x, document = paste("doc",
-  seq_along(x), sep = ""), split = "[[:space:][:punct:][:digit:]]+", ...)
+\method{document_term_frequencies}{character}(
+  x,
+  document = paste("doc", seq_along(x), sep = ""),
+  split = "[[:space:][:punct:][:digit:]]+",
+  ...
+)
 }
 \arguments{
 \item{x}{a data.frame or data.table containing a field which can be considered 

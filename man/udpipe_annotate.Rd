@@ -4,9 +4,16 @@
 \alias{udpipe_annotate}
 \title{Tokenising, Lemmatising, Tagging and Dependency Parsing Annotation of raw text}
 \usage{
-udpipe_annotate(object, x, doc_id = paste("doc", seq_along(x), sep = ""),
-  tokenizer = "tokenizer", tagger = c("default", "none"),
-  parser = c("default", "none"), trace = FALSE, ...)
+udpipe_annotate(
+  object,
+  x,
+  doc_id = paste("doc", seq_along(x), sep = ""),
+  tokenizer = "tokenizer",
+  tagger = c("default", "none"),
+  parser = c("default", "none"),
+  trace = FALSE,
+  ...
+)
 }
 \arguments{
 \item{object}{an object of class \code{udpipe_model} as returned by \code{\link{udpipe_load_model}}}

@@ -4,8 +4,13 @@
 \alias{dtm_svd_similarity}
 \title{Semantic Similarity to an Singular Value Decomposition}
 \usage{
-dtm_svd_similarity(dtm, embedding, weights,
-  terminology = rownames(embedding), type = c("cosine", "dot"))
+dtm_svd_similarity(
+  dtm,
+  embedding,
+  weights,
+  terminology = rownames(embedding),
+  type = c("cosine", "dot")
+)
 }
 \arguments{
 \item{dtm}{a sparse matrix such as a "dgCMatrix" object which is returned by \code{\link{document_term_matrix}} containing frequencies of terms for each document}

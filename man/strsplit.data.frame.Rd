@@ -4,8 +4,12 @@
 \alias{strsplit.data.frame}
 \title{Obtain a tokenised data frame by splitting text alongside a regular expression}
 \usage{
-strsplit.data.frame(data, term, group,
-  split = "[[:space:][:punct:][:digit:]]+")
+strsplit.data.frame(
+  data,
+  term,
+  group,
+  split = "[[:space:][:punct:][:digit:]]+"
+)
 }
 \arguments{
 \item{data}{a data.frame or data.table}

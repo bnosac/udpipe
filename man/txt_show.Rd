@@ -16,7 +16,7 @@ invisible
 Boilerplate function to cat only 1 element of a character vector.
 }
 \examples{
-txt_show(c("hello \\n\\n\\n world", "world \\n\\n\\n hello"))
+txt_show(c("hello \n\n\n world", "world \n\n\n hello"))
 }
 \seealso{
 \code{\link{txt_sample}}

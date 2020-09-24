@@ -6,11 +6,25 @@
 \alias{predict.LDA_Gibbs}
 \title{Predict method for an object of class LDA_VEM or class LDA_Gibbs}
 \usage{
-\method{predict}{LDA_VEM}(object, newdata, type = c("topics", "terms"),
-  min_posterior = -1, min_terms = 0, labels, ...)
+\method{predict}{LDA_VEM}(
+  object,
+  newdata,
+  type = c("topics", "terms"),
+  min_posterior = -1,
+  min_terms = 0,
+  labels,
+  ...
+)
 
-\method{predict}{LDA_Gibbs}(object, newdata, type = c("topics", "terms"),
-  min_posterior = -1, min_terms = 0, labels, ...)
+\method{predict}{LDA_Gibbs}(
+  object,
+  newdata,
+  type = c("topics", "terms"),
+  min_posterior = -1,
+  min_terms = 0,
+  labels,
+  ...
+)
 }
 \arguments{
 \item{object}{an object of class LDA_VEM or LDA_Gibbs as returned by \code{LDA} from the topicmodels package}

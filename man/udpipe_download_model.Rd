@@ -4,39 +4,38 @@
 \alias{udpipe_download_model}
 \title{Download an UDPipe model provided by the UDPipe community for a specific language of choice}
 \usage{
-udpipe_download_model(language = c("afrikaans-afribooms",
-  "ancient_greek-perseus", "ancient_greek-proiel", "arabic-padt",
-  "armenian-armtdp", "basque-bdt", "belarusian-hse", "bulgarian-btb",
-  "buryat-bdt", "catalan-ancora", "chinese-gsd", "chinese-gsdsimp",
-  "classical_chinese-kyoto", "coptic-scriptorium", "croatian-set",
-  "czech-cac", "czech-cltt", "czech-fictree", "czech-pdt", "danish-ddt",
-  "dutch-alpino", "dutch-lassysmall", "english-ewt", "english-gum",
-  "english-lines", "english-partut", "estonian-edt", "estonian-ewt",
-  "finnish-ftb",      "finnish-tdt", "french-gsd", "french-partut",
-  "french-sequoia", "french-spoken", "galician-ctg", "galician-treegal",
-  "german-gsd", "german-hdt", "gothic-proiel", "greek-gdt", "hebrew-htb",
-  "hindi-hdtb", "hungarian-szeged", "indonesian-gsd", "irish-idt",
-  "italian-isdt", "italian-partut", "italian-postwita", "italian-twittiro",
-  "italian-vit", "japanese-gsd", "kazakh-ktb", "korean-gsd",
-  "korean-kaist", "kurmanji-mg", "latin-ittb", "latin-perseus",
-  "latin-proiel", "latvian-lvtb", "lithuanian-alksnis",     
-  "lithuanian-hse", "maltese-mudt", "marathi-ufal", "north_sami-giella",
-  "norwegian-bokmaal", "norwegian-nynorsk", "norwegian-nynorsklia",
-  "old_church_slavonic-proiel", "old_french-srcmf", "old_russian-torot",
-  "persian-seraji", "polish-lfg", "polish-pdb", "polish-sz",
-  "portuguese-bosque", "portuguese-br", "portuguese-gsd",
-  "romanian-nonstandard", "romanian-rrt", "russian-gsd",
-  "russian-syntagrus", "russian-taiga", "sanskrit-ufal",
-  "scottish_gaelic-arcosg", "serbian-set", "slovak-snk", "slovenian-ssj",  
-     "slovenian-sst", "spanish-ancora", "spanish-gsd", "swedish-lines",
-  "swedish-talbanken", "tamil-ttb", "telugu-mtg", "turkish-imst",
-  "ukrainian-iu", "upper_sorbian-ufal", "urdu-udtb", "uyghur-udt",
-  "vietnamese-vtb", "wolof-wtb"), model_dir = getwd(),
+udpipe_download_model(
+  language = c("afrikaans-afribooms", "ancient_greek-perseus", "ancient_greek-proiel",
+    "arabic-padt", "armenian-armtdp", "basque-bdt", "belarusian-hse", "bulgarian-btb",
+    "buryat-bdt", "catalan-ancora", "chinese-gsd", "chinese-gsdsimp",
+    "classical_chinese-kyoto", "coptic-scriptorium", "croatian-set", "czech-cac",
+    "czech-cltt", "czech-fictree", "czech-pdt", "danish-ddt", "dutch-alpino",
+    "dutch-lassysmall", "english-ewt", "english-gum", "english-lines", "english-partut",
+    "estonian-edt", "estonian-ewt", "finnish-ftb",      "finnish-tdt", "french-gsd",
+    "french-partut", "french-sequoia", "french-spoken", "galician-ctg",
+    "galician-treegal", "german-gsd", "german-hdt", "gothic-proiel", "greek-gdt",
+    "hebrew-htb", "hindi-hdtb", "hungarian-szeged", "indonesian-gsd", "irish-idt",
+    "italian-isdt", "italian-partut", "italian-postwita", "italian-twittiro",
+    "italian-vit", "japanese-gsd", "kazakh-ktb", "korean-gsd", "korean-kaist",
+    "kurmanji-mg", "latin-ittb", "latin-perseus", "latin-proiel", "latvian-lvtb",
+    "lithuanian-alksnis",      "lithuanian-hse", "maltese-mudt", "marathi-ufal",
+    "north_sami-giella", "norwegian-bokmaal", "norwegian-nynorsk",
+    "norwegian-nynorsklia", "old_church_slavonic-proiel", "old_french-srcmf",
+    "old_russian-torot", "persian-seraji", "polish-lfg", "polish-pdb", "polish-sz",
+    "portuguese-bosque", "portuguese-br", "portuguese-gsd", "romanian-nonstandard",
+    "romanian-rrt", "russian-gsd", "russian-syntagrus", "russian-taiga", "sanskrit-ufal",
+    "scottish_gaelic-arcosg", "serbian-set", "slovak-snk", "slovenian-ssj",     
+    "slovenian-sst", "spanish-ancora", "spanish-gsd", "swedish-lines",
+    "swedish-talbanken", "tamil-ttb", "telugu-mtg", "turkish-imst", "ukrainian-iu",
+    "upper_sorbian-ufal", "urdu-udtb", "uyghur-udt", "vietnamese-vtb", "wolof-wtb"),
+  model_dir = getwd(),
   udpipe_model_repo = c("jwijffels/udpipe.models.ud.2.5",
-  "jwijffels/udpipe.models.ud.2.4", "jwijffels/udpipe.models.ud.2.3",
-  "jwijffels/udpipe.models.ud.2.0",
-  "jwijffels/udpipe.models.conll18.baseline", "bnosac/udpipe.models.ud"),
-  overwrite = TRUE, ...)
+    "jwijffels/udpipe.models.ud.2.4", "jwijffels/udpipe.models.ud.2.3",
+    "jwijffels/udpipe.models.ud.2.0", "jwijffels/udpipe.models.conll18.baseline",
+    "bnosac/udpipe.models.ud"),
+  overwrite = TRUE,
+  ...
+)
 }
 \arguments{
 \item{language}{a character string with a Universal Dependencies treebank which was used to build the model. Possible values are:\cr
@@ -64,12 +63,12 @@ the function will use the default treebank of that language as was used in Unive
 Either 'jwijffels/udpipe.models.ud.2.5', 'jwijffels/udpipe.models.ud.2.4', 'jwijffels/udpipe.models.ud.2.3', 'jwijffels/udpipe.models.ud.2.0', 'jwijffels/udpipe.models.conll18.baseline' or 'bnosac/udpipe.models.ud'. \cr
 Defaults to 'jwijffels/udpipe.models.ud.2.5'. \cr
 \itemize{
+  \item{'bnosac/udpipe.models.ud' contains models mainly released under the CC-BY-SA license constructed on Universal Dependencies 2.1 data, and some models released under the GPL-3 and LGPL-LR license}
   \item{'jwijffels/udpipe.models.ud.2.5' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.5 data}
   \item{'jwijffels/udpipe.models.ud.2.4' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.4 data}
   \item{'jwijffels/udpipe.models.ud.2.3' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.3 data}
   \item{'jwijffels/udpipe.models.ud.2.0' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.0 data}
   \item{'jwijffels/udpipe.models.conll18.baseline' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.2 data for the 2018 conll shared task}
-  \item{'bnosac/udpipe.models.ud' contains models mainly released under the CC-BY-SA license constructed on Universal Dependencies 2.1 data, and some models released under the GPL-3 and LGPL-LR license}
 }
 See the Details section for further information on which languages are available in each of these repositories.}
 
@@ -151,10 +150,14 @@ x <- udpipe_download_model(language = "german-gsd")
 x <- udpipe_download_model(language = "spanish-gsd")
 x <- udpipe_download_model(language = "spanish-gsd", overwrite = FALSE)
 
-x <- udpipe_download_model(language = "dutch-alpino", udpipe_model_repo = "udpipe.models.ud.2.5")
-x <- udpipe_download_model(language = "dutch-alpino", udpipe_model_repo = "udpipe.models.ud.2.4")
-x <- udpipe_download_model(language = "dutch-alpino", udpipe_model_repo = "udpipe.models.ud.2.3")
-x <- udpipe_download_model(language = "dutch-alpino", udpipe_model_repo = "udpipe.models.ud.2.0")
+x <- udpipe_download_model(language = "dutch-alpino", 
+                           udpipe_model_repo = "jwijffels/udpipe.models.ud.2.5")
+x <- udpipe_download_model(language = "dutch-alpino", 
+                           udpipe_model_repo = "jwijffels/udpipe.models.ud.2.4")
+x <- udpipe_download_model(language = "dutch-alpino", 
+                           udpipe_model_repo = "jwijffels/udpipe.models.ud.2.3")
+x <- udpipe_download_model(language = "dutch-alpino", 
+                           udpipe_model_repo = "jwijffels/udpipe.models.ud.2.0")
 x <- udpipe_download_model(language = "english", udpipe_model_repo = "bnosac/udpipe.models.ud")
 x <- udpipe_download_model(language = "dutch", udpipe_model_repo = "bnosac/udpipe.models.ud")
 x <- udpipe_download_model(language = "afrikaans", udpipe_model_repo = "bnosac/udpipe.models.ud")

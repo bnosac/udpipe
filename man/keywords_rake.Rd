@@ -4,8 +4,15 @@
 \alias{keywords_rake}
 \title{Keyword identification using Rapid Automatic Keyword Extraction (RAKE)}
 \usage{
-keywords_rake(x, term, group, relevant = rep(TRUE, nrow(x)),
-  ngram_max = 2, n_min = 2, sep = " ")
+keywords_rake(
+  x,
+  term,
+  group,
+  relevant = rep(TRUE, nrow(x)),
+  ngram_max = 2,
+  n_min = 2,
+  sep = " "
+)
 }
 \arguments{
 \item{x}{a data.frame with one row per term as returned by \code{as.data.frame(udpipe_annotate(...))}}

@@ -10,8 +10,7 @@
 \usage{
 document_term_matrix(x, vocabulary, weight = "freq", ...)
 
-\method{document_term_matrix}{data.frame}(x, vocabulary, weight = "freq",
-  ...)
+\method{document_term_matrix}{data.frame}(x, vocabulary, weight = "freq", ...)
 
 \method{document_term_matrix}{DocumentTermMatrix}(x, ...)
 

@@ -9,8 +9,13 @@
 \usage{
 cooccurrence(x, order = TRUE, ...)
 
-\method{cooccurrence}{character}(x, order = TRUE, ...,
-  relevant = rep(TRUE, length(x)), skipgram = 0)
+\method{cooccurrence}{character}(
+  x,
+  order = TRUE,
+  ...,
+  relevant = rep(TRUE, length(x)),
+  skipgram = 0
+)
 
 \method{cooccurrence}{cooccurrence}(x, order = TRUE, ...)
 

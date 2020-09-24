@@ -4,10 +4,18 @@
 \alias{txt_sentiment}
 \title{Perform dictionary-based sentiment analysis on a tokenised data frame}
 \usage{
-txt_sentiment(x, term = "lemma", polarity_terms,
-  polarity_negators = character(), polarity_amplifiers = character(),
-  polarity_deamplifiers = character(), amplifier_weight = 0.8,
-  n_before = 4, n_after = 2, constrain = FALSE)
+txt_sentiment(
+  x,
+  term = "lemma",
+  polarity_terms,
+  polarity_negators = character(),
+  polarity_amplifiers = character(),
+  polarity_deamplifiers = character(),
+  amplifier_weight = 0.8,
+  n_before = 4,
+  n_after = 2,
+  constrain = FALSE
+)
 }
 \arguments{
 \item{x}{a data.frame with the columns doc_id, paragraph_id, sentence_id, upos and the column as indicated in \code{term}. This is exactly what \code{\link{udpipe}} returns.}

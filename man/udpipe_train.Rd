@@ -4,10 +4,14 @@
 \alias{udpipe_train}
 \title{Train a UDPipe model}
 \usage{
-udpipe_train(file = file.path(getwd(), "my_annotator.udpipe"),
-  files_conllu_training, files_conllu_holdout = character(),
-  annotation_tokenizer = "default", annotation_tagger = "default",
-  annotation_parser = "default")
+udpipe_train(
+  file = file.path(getwd(), "my_annotator.udpipe"),
+  files_conllu_training,
+  files_conllu_holdout = character(),
+  annotation_tokenizer = "default",
+  annotation_tagger = "default",
+  annotation_parser = "default"
+)
 }
 \arguments{
 \item{file}{full path where the model will be saved. The model will be stored as a binary file which \code{\link{udpipe_load_model}}
@@ -76,7 +80,7 @@ slovenian, spanish, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese
 ## You need to have a file on disk in CONLL-U format, taking the toy example file put in the package
 file_conllu <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
 file_conllu
-cat(head(readLines(file_conllu), 3), sep="\\n")
+cat(head(readLines(file_conllu), 3), sep="\n")
 
 \dontrun{
 ##

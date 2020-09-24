@@ -4,8 +4,11 @@
 \alias{cbind_dependencies}
 \title{Add the dependency parsing information to an annotated dataset}
 \usage{
-cbind_dependencies(x, type = c("parent", "child", "parent_rowid",
-  "child_rowid"), recursive = FALSE)
+cbind_dependencies(
+  x,
+  type = c("parent", "child", "parent_rowid", "child_rowid"),
+  recursive = FALSE
+)
 }
 \arguments{
 \item{x}{a data.frame or data.table as returned by \code{as.data.frame(udpipe_annotate(...))}}

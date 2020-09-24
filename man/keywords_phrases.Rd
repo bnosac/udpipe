@@ -5,11 +5,25 @@
 \alias{phrases}
 \title{Extract phrases - a sequence of terms which follow each other based on a sequence of Parts of Speech tags}
 \usage{
-keywords_phrases(x, term = x, pattern, is_regex = FALSE, sep = " ",
-  ngram_max = 8, detailed = TRUE)
+keywords_phrases(
+  x,
+  term = x,
+  pattern,
+  is_regex = FALSE,
+  sep = " ",
+  ngram_max = 8,
+  detailed = TRUE
+)
 
-phrases(x, term = x, pattern, is_regex = FALSE, sep = " ",
-  ngram_max = 8, detailed = TRUE)
+phrases(
+  x,
+  term = x,
+  pattern,
+  is_regex = FALSE,
+  sep = " ",
+  ngram_max = 8,
+  detailed = TRUE
+)
 }
 \arguments{
 \item{x}{a character vector of Parts of Speech tags where we want to locate a relevant sequence of POS tags as defined in \code{pattern}}
