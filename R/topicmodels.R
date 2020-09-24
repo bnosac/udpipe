@@ -28,7 +28,6 @@
 #'  giving the posterior probability that each term is emitted by the topic}
 #' }
 #' @export
-#' @S3method predict LDA_VEM
 #' @rdname predict.LDA
 #' @aliases predict.LDA
 #' @seealso \code{\link[topicmodels]{posterior-methods}}
@@ -140,6 +139,5 @@ predict.LDA_VEM <- function(object, newdata, type = c("topics", "terms"), min_po
 }
 
 #' @export
-#' @S3method predict LDA_Gibbs
 #' @rdname predict.LDA
 predict.LDA_Gibbs <- predict.LDA_VEM
