@@ -47,7 +47,7 @@
 #' }
 cbind_dependencies <- function(x, type = c("parent", "child", "parent_rowid", "child_rowid"), recursive = FALSE){
   ## R CMD check happiness
-  .SD <- doc_id <- paragraph_id <- sentence_id <- parent_rowid <- parent_rowids <- child_rowid <- child_rowids <- NULL
+  .N <- .SD <- doc_id <- paragraph_id <- sentence_id <- parent_rowid <- parent_rowids <- child_rowid <- child_rowids <- children <- NULL
   
   type <- match.arg(type)
   stopifnot(inherits(x, "data.frame"))
@@ -65,7 +65,7 @@ cbind_dependencies <- function(x, type = c("parent", "child", "parent_rowid", "c
                  suffixes = c("", "_parent"),
                  sort = FALSE)  
   }else if(type == "child"){
-    out <- x[, children := list(lapply(udpipe:::dependency_locations(data = .SD, type = "children", recursive = FALSE), 
+    out <- x[, children := list(lapply(dependency_locations(data = .SD, type = "children", recursive = FALSE), 
                                        FUN = function(i) .SD[i, c("token", "lemma", "upos", "xpos", "feats", "dep_rel"), with = FALSE])), 
              by = list(doc_id, paragraph_id, sentence_id)]
   }else if(type == "parent_rowid"){

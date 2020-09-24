@@ -1,3 +1,9 @@
+if(FALSE){
+  library(data.table)
+  library(methods)
+}
+
+# expr_list(a = 1, b = 10, 100)
 expr_list <- function(...){
   #expr <- substitute(list(...))
   #expr <- as.list(expr[-1])
@@ -5,6 +11,8 @@ expr_list <- function(...){
   expr
 }
 
+# x <- expr_list(a = 1, b = 10, 100)
+# expr_labels(x)
 expr_labels = function(expr){
   labels <- names(expr)
   if(is.null(labels)){
@@ -18,8 +26,20 @@ expr_labels = function(expr){
 
 
 
-
-
+# x <- c(4, 3, 2, 20)
+# index_to_index(x)
+index_to_index <- function(x){
+  x <- unclass(x)
+  DT <- mapply(seq_along(x), x, FUN=function(i, id){
+    if(length(id) > 0){
+      list(row = i, row_childparent = id)
+    }else{
+      list(row = integer(0), row_childparent = integer(0))
+    }
+  }, SIMPLIFY = FALSE)
+  DT <- data.table::rbindlist(DT)
+  DT
+}
 
 
 
@@ -35,16 +55,7 @@ rowLinks$methods(list(
     invisible(.self)
   },
   as.data.table = function(x){
-    x <- unclass(x)
-    DT <- mapply(seq_along(x), x, FUN=function(i, id){
-      if(length(id) > 0){
-        list(row = i, row_childparent = id)
-      }else{
-        list(row = integer(0), row_childparent = integer(0))
-      }
-    }, SIMPLIFY=FALSE)
-    DT <- data.table::rbindlist(DT)
-    DT
+    index_to_index(x)
   }))
 
 
@@ -71,16 +82,7 @@ linkChain$methods(list(
     invisible(.self)
   },
   as.data.table = function(x){
-    x <- unclass(x)
-    DT <- mapply(seq_along(x), x, FUN=function(i, id){
-      if(length(id) > 0){
-        list(row = i,          row_childparent = id)
-      }else{
-        list(row = integer(0), row_childparent = integer(0))
-      }
-    }, SIMPLIFY=FALSE)
-    DT <- data.table::rbindlist(DT)
-    DT
+    index_to_index(x)
   },
   match = function(links, depth, label = paste("row_link_", depth, sep = "")) {
     stopifnot(inherits(links, "list"))
@@ -112,12 +114,11 @@ linkChain$methods(list(
     
     links       <- data.table::setnames(chain$data, old = "row", new = "link")
     .self$data  <- data.table::setnames(.self$data, old = "row_childparent", new = "link")
-    ## make sure no name conflicts
-    currentlabels <- .self$labels
-    if(length(currentlabels) > 0){
+    if(length(.self$labels) > 0){
+      ## rename to avoid conflicts
       newlabels <- paste("row_link_", seq.int(from = chain$data$current_depth + 1, 
-                                              to   = chain$data$current_depth + seq_along(currentlabels)), sep = "")
-      .self$data   <- data.table::setnames(.self$data, old = currentlabels, new = newlabels)
+                                              to   = chain$data$current_depth + seq_along(.self$labels)), sep = "")
+      .self$data   <- data.table::setnames(.self$data, old = .self$labels, new = newlabels)
       .self$labels <- newlabels
     }
     .self$data  <- merge(chain$data, .self$data, by.x = "link", by.y = "link", all.x = FALSE, all.y = FALSE, allow.cartesian = TRUE,
@@ -153,6 +154,9 @@ linkChain$methods(list(
     stopifnot(inherits(subset, "logical"))
     stopifnot(length(subset) == .self$n)
     
+    ## combine existing set of links in .self$data with the OR links
+    ## .self$data can have columns like row/row_link_1/row_link_2/row_childparent where row is the start and row_link_{NR} is intermediate ones
+    #browser("Need to debug OR")
     rows         <- which(!subset)
     result       <- .self$rowids$rowids
     result[rows] <- lapply(result[rows], FUN = function(i) integer(length = 0))
@@ -190,10 +194,12 @@ linkChain$methods(list(
 
 
 
-
-##################################
-## syntaxrelation
-##
+#' @title Experimental and undocumented querying of syntax relationships 
+#' @description Currently undocumented
+#' @export 
+#' @rdname syntaxrelation
+#' @param e1 Currently undocumented 
+#' @param e2 Currently undocumented
 syntaxrelation <- setRefClass("syntaxrelation",
                               fields = list(expr = "list", n = "integer", type = "character", invert = "logical"))
 has_child <- function(...){
@@ -206,7 +212,8 @@ syntaxrelation$methods(list(
   initialize = function(..., type = c("default", "child", "parent")) {
     expressions             <- expr_list(...)
     expressionlabels        <- expr_labels(expressions)
-    contains_syntaxrelation <- sapply(expressions, FUN = function(e) any(c("relationship", "has_child", "has_parent") %in% all.names(e)), USE.NAMES = FALSE)
+    contains_syntaxrelation <- sapply(expressions, FUN = function(e) 
+      any(c("relationship", "has_child", "has_parent") %in% all.names(e)), USE.NAMES = FALSE)
     .self$n    <- length(expressions)
     .self$expr <- list(expr = expressions,
                        label = expressionlabels,
@@ -262,47 +269,79 @@ syntaxrelation$methods(list(
     stopifnot(.self$n == 1L) ## THIS IS NO LONGER POSSIBLE DUE TO CHAINING AND COPY SEMANTICS OF DATA.TABLE
     
     chain  <- new("linkChain", new("rowLinks", .self$rowids(DT)))
-    
     expression  <- .self$expr$expr[[1]]
+    #cat("START>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", sep = "\n")
+    #print(expression)
+    #print(class(DT))
     label       <- .self$expr$expr[[1]]
     result      <- eval(expression, DT)
+    #cat("DONE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", sep = "\n")
+    #print(expression)
+    #print(class(result))
+    #print(.self$type)
     if(is.logical(result)){
-      result <- chain$filter(result)
+      ## FILTER OUTPUT
+      #print(expression)
+      #print(.self$type)
+      # TODO same point here, in case of default, 
+      # we need to flag somehow that the 2nd level is not usefull yet in order not to display it when using sequence
+      if(.self$type == "default"){
+        result <- chain$filter(result, type = "row")  
+      }else if(.self$type %in% c("child", "parent")){
+        result <- chain$filter(result, type = "row_childparent")  
+      }
+      
     }else if(inherits(result, "linkChain")){
+      ## CHILD/PARENT LOGIC
       if(.self$type %in% c("child", "parent")){
         result <- chain$join(result)
       }
     }else if(inherits(result, "syntaxrelation")){
+      ## GO DEEPER
       result <- result$run(DT = DT)
     }
     result
   }))
 
 
+#' @rdname syntaxrelation
+#' @aliases |,syntaxrelation,logical-method
 setMethod("|", signature = c("syntaxrelation", "logical"),
           definition = function(e1, e2) {
             chain <- e1$run(parent.frame())
             chain$OR(e2)
             .NotYetImplemented() ## Give error as long as issue with labels is not solved yet
           })
+
+#' @rdname syntaxrelation
+#' @aliases |,logical,syntaxrelation-method
 setMethod("|", signature = c("logical", "syntaxrelation"),
           definition = function(e1, e2) {
             chain <- e2$run(parent.frame())
             chain$OR(e1)
             .NotYetImplemented() ## Give error as long as issue with labels is not solved yet
           })
+
+#' @rdname syntaxrelation
+#' @aliases &,syntaxrelation,logical-method
 setMethod("&", signature = c("syntaxrelation", "logical"),
           definition = function(e1, e2) {
             chain <- e1$run(parent.frame())
             chain$AND(e2)
           })
+
+#' @rdname syntaxrelation
+#' @aliases &,logical,syntaxrelation-method
 setMethod("&", signature = c("logical", "syntaxrelation"),
           definition = function(e1, e2) {
             chain <- e2$run(parent.frame())
             chain$AND(e1)
           })
 
-
+#' @title Experimental and undocumented querying of syntax patterns 
+#' @description Currently undocumented
+#' @export 
+#' @rdname syntaxpatterns
 syntaxpatterns <- setRefClass("syntaxpatterns",
                               fields = list(data = "data.table", relations = "syntaxrelation"),
                               methods = list(
@@ -310,7 +349,7 @@ syntaxpatterns <- setRefClass("syntaxpatterns",
                                   .self$data        <- data
                                   .self$relations   <- new("syntaxrelation", ...)
                                   if(!.self$relations$has_child_parent_logic()){
-                                    stop("This does not make sense, there is no call to has_child or has_parent in your code")
+                                    #stop("This does not make sense, there is no call to has_child or has_parent in your code")
                                   }
                                   invisible(.self)
                                 },
@@ -320,20 +359,38 @@ syntaxpatterns <- setRefClass("syntaxpatterns",
 
 
 if(FALSE){
-  
-  
   #library(udpipe)
   library(data.table)
   x <- udpipe::udpipe("His was talking about marshmallows in New York which was utter bullshit", "english-ewt")
   x <- setDT(x)
   x <- udpipe::cbind_dependencies(x, type = "parent_rowid")
   x <- udpipe::cbind_dependencies(x, type = "child_rowid")
+  #x <- udpipe::cbind_dependencies(x, type = "parent_rowid", recursive = TRUE)
+  #x <- udpipe::cbind_dependencies(x, type = "child_rowid", recursive = TRUE)
+  saveRDS(x, file = "x.rds")
+  library(data.table)
+  x <- readRDS("x.rds")
   
   ##
   ## HIGH LEVEL CALLS
   ##
   links <- new("syntaxpatterns", data = x, upos %in% "NOUN" & has_child(upos %in% c("ADJ", "ADP")))
   links <- links$run()$sequence()
+  
+  cp <- new("syntaxpatterns", data = x, upos %in% "NOUN")
+  links <- cp$run()$sequence()
+  cp <- new("syntaxpatterns", data = x, has_child(upos %in% "ADJ"))
+  cp <- new("syntaxpatterns", data = x, upos %in% "PROPN" | has_child(upos %in% c("ADJ", "ADP")))
+  cp <- new("syntaxpatterns", data = x, upos %in% "NOUN" | has_child(upos %in% c("ADJ", "ADP")))
+  cp <- new("syntaxpatterns", data = x, upos %in% "NOUN" & has_child(upos %in% c("ADJ", "ADP")))
+  cp <- new("syntaxpatterns", data = x, upos %in% "VERB" & has_child(adj = upos %in% c("NOUN", "AUX")))
+  cp <- new("syntaxpatterns", data = x, upos %in% "VERB" & has_child(upos %in% c("NOUN", "AUX") & has_child(!is.na(upos))))
+  cp <- new("syntaxpatterns", data = x, has_child(!is.na(upos) & has_child(grandchild = upos %in% "NOUN")))
+  cp <- new("syntaxpatterns", data = x, has_child(upos %in% "NOUN" & has_child(grandchild = upos %in% "NOUN")))
+  cp <- new("syntaxpatterns", data = x, has_child(upos %in% "NOUN" & has_child(grandchild = upos %in% "NOUN" & has_parent(!is.na(upos)))))
+  ok <- cp$run()
+  str(ok$sequence())
+  str(ok)
   
   ##
   ## LOW LEVEL CALLS
