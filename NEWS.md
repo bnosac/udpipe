@@ -1,5 +1,8 @@
 ## CHANGES IN udpipe VERSION 0.8.4
 
+- Update to UDPipe 1.2.1 (28 Sep 2018) 
+    - this adds segment_size and learning_rate_final parameters to tokenizer training
+    - correctly set SpaceAfter for last token when normalizing spaces.
 - Default of udpipe_download_model is now changed, downloads now models built on Universal Dependencies 2.5 instead of the models build on Universal Dependencies 2.4
 - Added txt_count
 - Added txt_overlap
