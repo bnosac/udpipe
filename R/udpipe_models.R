@@ -415,7 +415,7 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
       message(" - The models from repository bnosac/udpipe.models.ud are distributed under either CC-BY-SA, GPL-3 or the LGPL-LR license depending on the originating treebank.")
     }
     message(sprintf(" - Visit %s for model license details.", license_url))
-    message(" - For a list of all models and their licenses (most models you can download with this package have either a CC-BY-SA or a CC-BY-SA-NC license) read the documentation at ?udpipe_download_model")
+    message(" - For a list of all models and their licenses (most models you can download with this package have either a CC-BY-SA or a CC-BY-SA-NC license) read the documentation at ?udpipe_download_model. For building your own models: visit the documentation by typing vignette('udpipe-train')")
     dl <- suppressWarnings(try(
       utils::download.file(url = url, destfile = to, mode = "wb"),  
       silent = TRUE))

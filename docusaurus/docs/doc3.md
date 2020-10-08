@@ -8,7 +8,7 @@ sidebar_label: Model building
 
 This package vignette shows how to build your own text annotation models based on UDPipe, allowing you to have full control over how you like that the model will execute: Tokenization (1), Parts of Speech tagging (2), Lemmatization (3) and Dependency Parsing (4). 
 
-This section is also relevant if you work in a commercial setting where you would like to build and use your own models to annotate text. Note that some pre-trained models which you can download with `udpipe_download_model` were released under the CC-BY-NC-SA license, others were released under the CC-BY-SA license, the latter allowing for more liberal use. Mark that if you want to see how these models have been built, you can take inspiration from the training code which is available at https://github.com/bnosac/udpipe.models.ud. 
+This section is also relevant if you work in a commercial setting where you would like to build and use your own models to annotate text. Note that some pre-trained models which you can download with `udpipe_download_model` were released under the CC-BY-NC-SA license, others were released under the CC-BY-SA license, the latter allowing for more liberal use. 
 
 In order to train annotation models, you need to have data in **CONLL-U format**, a format which is described at http://universaldependencies.org/format.html. At the time of writing this, for more than 60 languages, open treebanks in CONLL-U format are made available for download at http://universaldependencies.org/#ud-treebanks. Most of these treebanks are distributed under the CC-BY-SA license which allows commercial use.
 
