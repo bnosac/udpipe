@@ -30,6 +30,7 @@ Imports:
     methods,
     stats
 LinkingTo: Rcpp
+VignetteBuilder: knitr
 Suggests:
     knitr,
     rmarkdown,
