@@ -827,9 +827,9 @@ dtm_conform <- function(dtm, rows, columns, fill){
 
 
 
-#' @title Semantic Similarity to an Singular Value Decomposition
+#' @title Semantic Similarity to a Singular Value Decomposition
 #' @description Calculate the similarity of a document term matrix to a set of terms based on 
-#' an Singular Value Decomposition (SVD) embedding matrix.\cr
+#' a Singular Value Decomposition (SVD) embedding matrix.\cr
 #' This can be used to easily construct a sentiment score based on the latent scale defined by a set of positive or negative terms.
 #' @param dtm a sparse matrix such as a "dgCMatrix" object which is returned by \code{\link{document_term_matrix}} containing frequencies of terms for each document
 #' @param embedding a matrix containing the \code{v} element from an singular value decomposition with the right singular vectors. 
