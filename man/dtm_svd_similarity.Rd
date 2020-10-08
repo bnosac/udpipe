@@ -2,7 +2,7 @@
 % Please edit documentation in R/nlp_flow.R
 \name{dtm_svd_similarity}
 \alias{dtm_svd_similarity}
-\title{Semantic Similarity to an Singular Value Decomposition}
+\title{Semantic Similarity to a Singular Value Decomposition}
 \usage{
 dtm_svd_similarity(
   dtm,
@@ -43,7 +43,7 @@ between the \code{terminology} and each of the weights and between the weight te
 }
 \description{
 Calculate the similarity of a document term matrix to a set of terms based on 
-an Singular Value Decomposition (SVD) embedding matrix.\cr
+a Singular Value Decomposition (SVD) embedding matrix.\cr
 This can be used to easily construct a sentiment score based on the latent scale defined by a set of positive or negative terms.
 }
 \examples{
