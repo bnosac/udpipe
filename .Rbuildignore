@@ -1,5 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+.github
 dev
 udpipe-ud-2.0-170801.zip
 .udpipe_process.log
