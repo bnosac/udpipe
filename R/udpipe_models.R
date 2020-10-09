@@ -1,6 +1,6 @@
 #' @title Download an UDPipe model provided by the UDPipe community for a specific language of choice
 #' @description 
-#' Ready-made models for 65 languages trained on 101 treebanks from \url{http://universaldependencies.org/} are provided to you.
+#' Ready-made models for 65 languages trained on 101 treebanks from \url{https://universaldependencies.org/} are provided to you.
 #' Some of these models were provided by the UDPipe community. Other models were build using this R package.
 #' You can either download these models manually in order to use it for annotation purposes 
 #' or use \code{udpipe_download_model} to download these models for a specific language of choice. You have the following options: \cr

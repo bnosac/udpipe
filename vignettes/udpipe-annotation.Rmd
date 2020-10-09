@@ -35,14 +35,14 @@ The udpipe R package was designed with the following things in mind when buildin
 
 - Give R users simple access in order to easily tokenize, tag, lemmatize or perform dependency parsing on text in any language
 - Provide easy access to pre-trained annotation models
-- Allow R users to easily construct your own annotation model based on data in CONLL-U format as provided in more than 100 treebanks available at http://universaldependencies.org/#ud-treebanks
+- Allow R users to easily construct your own annotation model based on data in CONLL-U format as provided in more than 100 treebanks available at https://universaldependencies.org
 - Don't rely on Python or Java so that R users can easily install this package without configuration hassle
 - No external R package dependencies except the strict necessary (Rcpp and data.table, no tidyverse)
 
 ### UDPipe the C++ library
 
 - UDPipe provides language-agnostic tokenization, tagging, lemmatization and dependency parsing of raw text, which is an essential part in natural language processing.
-- UDPipe allows to work with data in CONLL-U format as described at http://universaldependencies.org/format.html
+- UDPipe allows to work with data in CONLL-U format as described at https://universaldependencies.org/format.html
 - The techniques used are explained in detail in the paper: "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>. In that paper, you'll also find accuracies on different languages and process flow speed (measured in words per second).
 
 ## udpipe models
@@ -91,7 +91,7 @@ udmodel_dutch <- udpipe_load_model(file = dl$file_model)
 
 #### Tokenisation, tagging and parsing
 
-Once you have this model, you can start on annotating. Provide a vector of text and use `udpipe_annotate`. The resulting tagged output is in CONLL-U format as described at http://universaldependencies.org/format.html. You can put this in a data.frame format with `as.data.frame`.
+Once you have this model, you can start on annotating. Provide a vector of text and use `udpipe_annotate`. The resulting tagged output is in CONLL-U format as described at https://universaldependencies.org/format.html. You can put this in a data.frame format with `as.data.frame`.
 
 ```{r}
 txt <- c("Ik ben de weg kwijt, kunt u me zeggen waar de Lange Wapper ligt? Jazeker meneer", 

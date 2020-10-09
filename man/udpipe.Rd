@@ -43,13 +43,13 @@ the morphological features and the dependency relationship along the tokens. The
  \item{token_id: }{Token index, integer starting at 1 for each new sentence. May be a range for multiword tokens or a decimal number for empty nodes.}
  \item{token: }{The token.}
  \item{lemma: }{The lemma of the token.}
- \item{upos: }{The universal parts of speech tag of the token. See \url{http://universaldependencies.org/format.html}}
- \item{xpos: }{The treebank-specific parts of speech tag of the token. See \url{http://universaldependencies.org/format.html}}
- \item{feats: }{The morphological features of the token, separated by |. See \url{http://universaldependencies.org/format.html}}
- \item{head_token_id: }{Indicating what is the token_id of the head of the token, indicating to which other token in the sentence it is related. See \url{http://universaldependencies.org/format.html}}
- \item{dep_rel: }{The type of relation the token has with the head_token_id. See \url{http://universaldependencies.org/format.html}}
- \item{deps: }{Enhanced dependency graph in the form of a list of head-deprel pairs. See \url{http://universaldependencies.org/format.html}}
- \item{misc: }{SpacesBefore/SpacesAfter/SpacesInToken spaces before/after/inside the token. Used to reconstruct the original text. See \url{http://ufal.mff.cuni.cz/udpipe/users-manual}}
+ \item{upos: }{The universal parts of speech tag of the token. See \url{https://universaldependencies.org/format.html}}
+ \item{xpos: }{The treebank-specific parts of speech tag of the token. See \url{https://universaldependencies.org/format.html}}
+ \item{feats: }{The morphological features of the token, separated by |. See \url{https://universaldependencies.org/format.html}}
+ \item{head_token_id: }{Indicating what is the token_id of the head of the token, indicating to which other token in the sentence it is related. See \url{https://universaldependencies.org/format.html}}
+ \item{dep_rel: }{The type of relation the token has with the head_token_id. See \url{https://universaldependencies.org/format.html}}
+ \item{deps: }{Enhanced dependency graph in the form of a list of head-deprel pairs. See \url{https://universaldependencies.org/format.html}}
+ \item{misc: }{SpacesBefore/SpacesAfter/SpacesInToken spaces before/after/inside the token. Used to reconstruct the original text. See \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual}}
 }
 The columns paragraph_id, sentence_id, term_id, start, end are integers, the other fields
 are character data in UTF-8 encoding. \cr
@@ -99,7 +99,7 @@ if(file.exists(model$file_model)) file.remove(model$file_model)
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}, \url{https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2364}, 
-\url{http://universaldependencies.org/format.html}
+\url{https://universaldependencies.org/format.html}
 }
 \seealso{
 \code{\link{udpipe_load_model}}, \code{\link{as.data.frame.udpipe_connlu}}, \code{\link{udpipe_download_model}}, \code{\link{udpipe_annotate}}

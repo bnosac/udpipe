@@ -13,7 +13,7 @@ The udpipe R package was designed with the following things in mind when buildin
 
 - Give R users simple access in order to easily tokenize, tag, lemmatize or perform dependency parsing on text in any language
 - Provide easy access to pre-trained annotation models
-- Allow R users to easily construct your own annotation model based on data in CONLL-U format as provided in more than 100 treebanks available at http://universaldependencies.org/#ud-treebanks
+- Allow R users to easily construct your own annotation model based on data in CONLL-U format as provided in more than 100 treebanks available at http://universaldependencies.org
 - Don't rely on Python or Java so that R users can easily install this package without configuration hassle
 - No external R package dependencies except the strict necessary (Rcpp and data.table, no tidyverse)
 
@@ -84,7 +84,7 @@ These have been made available easily to users of the package by using `udpipe_d
 ## Train your own models based on CONLL-U data
 
 The package also allows you to build your own annotation model. For this, you need to provide data in CONLL-U format.
-These are provided for many languages at http://universaldependencies.org/#ud-treebanks, mostly under the CC-BY-SA license.
+These are provided for many languages at https://universaldependencies.org, mostly under the CC-BY-SA license.
 How this is done is detailed in the package vignette.
 
 ```

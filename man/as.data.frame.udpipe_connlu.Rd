@@ -18,7 +18,7 @@ token_id, token, lemma, upos, xpos, feats, head_token_id, dep_rel, deps, misc \c
 The columns paragraph_id, sentence_id are integers, the other fields
 are character data in UTF-8 encoding. \cr
 
-To get more information on these fields, visit \url{http://universaldependencies.org/format.html} 
+To get more information on these fields, visit \url{https://universaldependencies.org/format.html} 
 or look at \code{\link{udpipe}}.
 }
 \description{
