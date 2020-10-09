@@ -32,7 +32,7 @@ x <- udpipe(x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en g
 ```
 
 
-The annotation returns paragraphs, sentences, tokens, the location of the token in the original text, morphology elements like the lemma, the universal part of speech tag and the treebank-specific parts of speech tag, morphosyntactic features and returns as well the dependency relationship. More information at http://universaldependencies.org/guidelines.html
+The annotation returns paragraphs, sentences, tokens, the location of the token in the original text, morphology elements like the lemma, the universal part of speech tag and the treebank-specific parts of speech tag, morphosyntactic features and returns as well the dependency relationship. More information at https://universaldependencies.org/guidelines.html
 
 ```
  doc_id paragraph_id sentence_id start end term_id token_id     token     lemma  upos                                        xpos                               feats head_token_id      dep_rel            misc
