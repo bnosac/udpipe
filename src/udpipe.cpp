@@ -2810,7 +2810,7 @@ class pipeline {
   static const string DEFAULT;
   static const string NONE;
 
- private:
+ //private:
   const model* m;
   string input, tokenizer, tagger, parser, output;
   string document_id;

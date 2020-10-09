@@ -114,10 +114,28 @@ udpipe_annotate <- function(object, x, doc_id = paste("doc", seq_along(x), sep="
     as.character(Sys.time())
   }
   ## Annotate
-  x_conllu <- udp_tokenise_tag_parse(object$model, x, doc_id, tokenizer, tagger, parser, log_every, log_now)
-  Encoding(x_conllu$conllu) <- "UTF-8"
-  class(x_conllu) <- "udpipe_connlu"
-  x_conllu
+  if("basic" %in% names(list(...))){
+    ## Undocumented as not frequently tested up to now
+    x <- mapply(x = x, doc_id = doc_id, FUN = function(x, doc_id, tokenizer, tagger, parser, log_every, log_now){
+      udp_tokenise_tag_parse_basic(object$model, x, doc_id, tokenizer, tagger, parser, log_every, log_now)
+    }, MoreArgs = list(tokenizer = tokenizer, tagger = tagger, parser = parser, log_every = log_every, log_now = log_now), 
+    SIMPLIFY = FALSE)
+    x <- data.table::rbindlist(x)
+    x <- setDF(x)
+    if(nrow(x) > 0){
+      feats <- c("doc_id", "token", "lemma", "upos", "xpos", "feats", "dep_rel", "misc")
+      x[, feats] <- lapply(x[, feats], FUN = function(x){
+        Encoding(x) <- "UTF-8"
+        x
+      })  
+    }
+    x
+  }else{
+    x_conllu <- udp_tokenise_tag_parse(object$model, x, doc_id, tokenizer, tagger, parser, log_every, log_now)
+    Encoding(x_conllu$conllu) <- "UTF-8"
+    class(x_conllu) <- "udpipe_connlu"
+    x_conllu 
+  }
 }
 
 
@@ -466,7 +484,9 @@ udpipe.character <- function(x, object, ...){
   }else{
     x <- udpipe_annotate(udmodel, x = x, doc_id = names(x), ...)
   }
-  x <- as.data.frame(x, detailed = TRUE)
+  if(inherits(x, "udpipe_connlu")){
+    x <- as.data.frame(x, detailed = TRUE)  
+  }
   x
 }
 
@@ -475,7 +495,9 @@ udpipe.data.frame <- function(x, object, ...){
   udmodel <- getmodel(object, ...)
   stopifnot(all(c("doc_id", "text") %in% colnames(x)))
   x <- udpipe_annotate(udmodel, x = x$text, doc_id = x$doc_id, ...)
-  x <- as.data.frame(x, detailed = TRUE)
+  if(inherits(x, "udpipe_connlu")){
+    x <- as.data.frame(x, detailed = TRUE)  
+  }
   x
 }
 
@@ -486,5 +508,10 @@ udpipe.list <- function(x, object, ...){
   x <- udpipe_annotate(udmodel, 
                        x = sapply(x, FUN=function(x) paste(x, collapse = "\n")), 
                        doc_id = names(x), tokenizer = "vertical", ...)
-  x <- as.data.frame(x, detailed = TRUE)
+  if(inherits(x, "udpipe_connlu")){
+    x <- as.data.frame(x, detailed = TRUE) 
+  }
+  x
 }
+
+

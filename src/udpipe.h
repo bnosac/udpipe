@@ -207,7 +207,7 @@ class pipeline {
   static const std::string DEFAULT;
   static const std::string NONE;
 
- private:
+ //private:
   const model* m;
   std::string input, tokenizer, tagger, parser, output;
   std::string document_id;
