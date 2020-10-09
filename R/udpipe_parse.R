@@ -405,7 +405,7 @@ udpipe <- function(x, object, parallel.cores = 1L, parallel.chunksize, ...) {
     if(.Platform$OS.type %in% c("unix")) {
       anno <- parallel::mclapply(anno, 
                                  FUN = function(x, object, parallel.chunksize, ...){
-                                   udpipe(x, object, parallel.cores = 1, parallel.chunksize = parallel.chunksize, ...) 
+                                   udpipe::udpipe(x, object, parallel.cores = 1, parallel.chunksize = parallel.chunksize, ...) 
                                  }, 
                                  object = object,
                                  parallel.chunksize = parallel.chunksize, 
@@ -417,7 +417,7 @@ udpipe <- function(x, object, parallel.cores = 1L, parallel.chunksize, ...) {
       anno <- parallel::parLapply(cl = cl, 
                                   X = anno, 
                                   fun = function(x, object, parallel.chunksize, ...){
-                                    udpipe(x, object, parallel.cores = 1, parallel.chunksize = parallel.chunksize,...) 
+                                    udpipe::udpipe(x, object, parallel.cores = 1, parallel.chunksize = parallel.chunksize,...) 
                                   }, object = object, parallel.chunksize = parallel.chunksize, ...)
       
     }else{
