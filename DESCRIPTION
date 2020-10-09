@@ -21,7 +21,7 @@ Description: This natural language processing toolkit provides language-agnostic
     which are enriched with the output of the parser. Namely functionalities and algorithms 
     for collocations, cooccurrences, document term matrix handling, 
     term frequency inverse document frequency calculations,
-    information retrieval metrics (Okapi BM25), 
+    information retrieval metrics (Okapi BM25), handling of multi-word expressions,
     keyword detection (Rapid Automatic Keyword Extraction, noun phrase extraction, syntactical patterns) 
     sentiment scoring and semantic similarity analysis.
 License: MPL-2.0
