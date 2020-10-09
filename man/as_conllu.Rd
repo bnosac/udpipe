@@ -52,5 +52,5 @@ conllu <- as_conllu(x[, c('doc_id', 'sentence_id', 'sentence',
 cat(conllu)
 }
 \references{
-\url{http://universaldependencies.org/format.html}
+\url{https://universaldependencies.org/format.html}
 }

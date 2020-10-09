@@ -3,7 +3,7 @@
 #' how each word is linked to another word and the relation between these 2 words.\cr
 #' This information is available in the fields token_id, head_token_id and dep_rel which indicates how each token
 #' is linked to the parent. The type of relation (dep_rel) is defined at 
-#' \url{http://universaldependencies.org/u/dep/index.html}. \cr
+#' \url{https://universaldependencies.org/u/dep/index.html}. \cr
 #' For example in the text 'The economy is weak but the outlook is bright', the term economy is linked to weak
 #' as the term economy is the nominal subject of weak. \cr\cr
 #' This function adds the parent or child information to the annotated data.frame.

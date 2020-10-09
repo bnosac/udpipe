@@ -71,7 +71,7 @@ The resulting data.frame has a field called `upos` which is the Universal Parts 
 
 ## Basic frequency statistics
 
-In most languages, nouns (NOUN) are the most common types of words, next to verbs (VERB) and these are the most relevant for analytical purposes, next to the adjectives (ADJ) and proper nouns (PROPN). For a detailed list of all POS tags: visit http://universaldependencies.org/u/pos/index.html.
+In most languages, nouns (NOUN) are the most common types of words, next to verbs (VERB) and these are the most relevant for analytical purposes, next to the adjectives (ADJ) and proper nouns (PROPN). For a detailed list of all POS tags: visit https://universaldependencies.org/u/pos/index.html.
 
 ```{r}
 library(lattice)

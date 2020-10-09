@@ -23,19 +23,19 @@ can handle. Defaults to 'my_annotator.udpipe' in the current working directory.}
 
 \item{annotation_tokenizer}{a string containing options for the tokenizer. This can be either 'none' or 'default' or a list 
 of options as mentioned in the UDPipe manual. See the vignette \code{vignette("udpipe-train", package = "udpipe")} or
-go directly to \url{http://ufal.mff.cuni.cz/udpipe/users-manual#model_training_tokenizer} for a full description of the options
+go directly to \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_tokenizer} for a full description of the options
 or see the examples below.
 Defaults to 'default'. If you specify 'none', the model will not be able to perform tokenization.}
 
 \item{annotation_tagger}{a string containing options for the pos tagger and lemmatiser. This can be either 'none' or 'default' or a list 
 of options as mentioned in the UDPipe manual. See the vignette \code{vignette("udpipe-train", package = "udpipe")} or
-go directly to \url{http://ufal.mff.cuni.cz/udpipe/users-manual#model_training_tagger} for a full description of the options
+go directly to \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_tagger} for a full description of the options
 or see the examples below.
 Defaults to 'default'. If you specify 'none', the model will not be able to perform POS tagging or lemmatization.}
 
 \item{annotation_parser}{a string containing options for the dependency parser.  This can be either 'none' or 'default' or a list 
 of options as mentioned in the UDPipe manual. See the vignette \code{vignette("udpipe-train", package = "udpipe")} or
-go directly to \url{http://ufal.mff.cuni.cz/udpipe/users-manual#model_training_parser} for a full description of the options
+go directly to \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_parser} for a full description of the options
 or see the examples below.
 Defaults to 'default'. If you specify 'none', the model will not be able to perform dependency parsing.}
 }
@@ -55,8 +55,8 @@ Train a UDPipe model which allows to do
 Tokenization, Parts of Speech Tagging, Lemmatization and Dependency Parsing or a combination of those. \cr
 
 This function allows you to build models based on data in in CONLL-U format
-as described at \url{http://universaldependencies.org/format.html}. At the time of writing open data in CONLL-U
-format for 50 languages are available at \url{http://universaldependencies.org/#ud-treebanks}. 
+as described at \url{https://universaldependencies.org/format.html}. At the time of writing open data in CONLL-U
+format for more than 50 languages are available at \url{https://universaldependencies.org}. 
 Most of these are distributed under the CC-BY-SA licence or the CC-BY-NC-SA license. \cr
 
 This function allows to build annotation tagger models based on these data in CONLL-U format, allowing you 
@@ -66,10 +66,10 @@ or if you don't want to use ready-made models provided under the CC-BY-NC-SA lic
 \details{
 In order to train a model, you need to provide files which are in CONLL-U format in argument \code{files_conllu_training}. 
 This can be a vector of files or just one file. If you do not have your own CONLL-U files, you can download files for your language of 
-choice at \url{http://universaldependencies.org/#ud-treebanks}. \cr
+choice at \url{https://universaldependencies.org}. \cr
 
 At the time of writing open data in CONLL-U
-format for 50 languages are available at \url{http://universaldependencies.org/#ud-treebanks}, namely for: 
+format for 50 languages are available at \url{https://universaldependencies.org}, namely for: 
 ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, 
 czech, danish, dutch, english, estonian, finnish, french, galician, german, gothic, greek, hebrew, hindi, hungarian, 
 indonesian, irish, italian, japanese, kazakh, korean, latin, latvian, lithuanian, norwegian, 
@@ -121,7 +121,7 @@ vignette("udpipe-train", package = "udpipe")
 }
 }
 \references{
-\url{http://ufal.mff.cuni.cz/udpipe/users-manual}
+\url{http://ufal.mff.cuni.cz/udpipe/1/users-manual}
 }
 \seealso{
 \code{\link{udpipe_annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}},

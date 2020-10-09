@@ -59,7 +59,7 @@ if(file.exists(model$file_model)) file.remove(model$file_model)
 }
 \references{
 \url{https://ufal.mff.cuni.cz/udpipe}, 
-\url{http://universaldependencies.org/format.html}
+\url{https://universaldependencies.org/format.html}
 }
 \seealso{
 \code{\link{udpipe_load_model}}

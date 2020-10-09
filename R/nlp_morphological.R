@@ -1,7 +1,7 @@
 #' @title Add morphological features to an annotated dataset
 #' @description The result of \code{\link{udpipe_annotate}} which is put into a data.frame 
 #' returns a field called \code{feats} containing morphological features as defined at 
-#' \url{http://universaldependencies.org/u/feat/index.html}. If there are several of these features,
+#' \url{https://universaldependencies.org/u/feat/index.html}. If there are several of these features,
 #' these are concatenated with the \code{|} symbol. This function extracts each of these morphological 
 #' features separately and adds these as extra columns to the data.frame
 #' @param x a data.frame or data.table as returned by \code{as.data.frame(udpipe_annotate(...))}
