@@ -10,7 +10,7 @@ This package vignette shows how to build your own text annotation models based o
 
 This section is also relevant if you work in a commercial setting where you would like to build and use your own models to annotate text. Note that some pre-trained models which you can download with `udpipe_download_model` were released under the CC-BY-NC-SA license, others were released under the CC-BY-SA license, the latter allowing for more liberal use. 
 
-In order to train annotation models, you need to have data in **CONLL-U format**, a format which is described at http://universaldependencies.org/format.html. At the time of writing this, for more than 60 languages, open treebanks in CONLL-U format are made available for download at http://universaldependencies.org/#ud-treebanks. Most of these treebanks are distributed under the CC-BY-SA license which allows commercial use.
+In order to train annotation models, you need to have data in **CONLL-U format**, a format which is described at https://universaldependencies.org/format.html. At the time of writing this, for more than 60 languages, open treebanks in CONLL-U format are made available for download at https://universaldependencies.org. Most of these treebanks are distributed under the CC-BY-SA license which allows commercial use.
 
 Mark that if you will build your own models, you will probably be interested in reading the paper with the details of the techniques used by UDPipe: "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>. 
 
@@ -19,9 +19,9 @@ Mark that if you will build your own models, you will probably be interested in 
 
 ### Basic example
 
-Currently the package allows you to fit a text annotation model by using the function `udpipe_train`. You have to give it a character vector of files which are in CONLL-U format (which you might have downloaded at http://universaldependencies.org/#ud-treebanks).
+Currently the package allows you to fit a text annotation model by using the function `udpipe_train`. You have to give it a character vector of files which are in CONLL-U format (which you might have downloaded at https://universaldependencies.org).
 
-Such at file basically looks like this, or has a similar format. You can just download these from http://universaldependencies.org for the language of your choice.
+Such at file basically looks like this, or has a similar format. You can just download these from https://universaldependencies.org for the language of your choice.
 
 
 ```r
@@ -269,7 +269,7 @@ The tokenizer is trained using the SpaceAfter=No features in the CoNLL-U files. 
 
 In order to use the detokenizer, use the `detokenizer=file:filename_with_plaintext` option. In UD 1.2 models, the optimal performance is achieved with very small plain texts â€“ only 500kB.
 
-In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the tokenizer settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at http://universaldependencies.org/#ud-treebanks.
+In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the tokenizer settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at https://universaldependencies.org.
 
 
 ```r
@@ -355,7 +355,7 @@ The tagger recognizes the following options:
 
 During random hyperparameter search, guesser_suffix_rules is chosen uniformly from {5,6,7,8,9,10,11,12} and guesser_enrich_dictionary is chosen uniformly from {3,4,5,6,7,8,9,10}. 
 
-In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the tagger settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at http://universaldependencies.org/#ud-treebanks.
+In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the tagger settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at https://universaldependencies.org.
 
 
 ```r
@@ -490,7 +490,7 @@ The neural-network training options:
 
 During random hyperparameter search, structured_interval is chosen uniformly from {0,8,10}, learning_rate is chosen logarithmically from <0.005,0.04) and l2 is chosen uniformly from <0.2,0.6). 
 
-In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the parser settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at http://universaldependencies.org/#ud-treebanks.
+In order to show the settings which were used by the UDPipe community when building the models made available when using `udpipe_download_model`, the parser settings used for the different treebanks are shown below, so that you can easily use this to retrain your model directly on the corresponding UD treebank which you can download at https://universaldependencies.org.
 
 
 ```r
