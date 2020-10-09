@@ -26,6 +26,7 @@ Installation can be done as follows. Please visit the package documentation at h
 install.packages("udpipe")
 vignette("udpipe-tryitout", package = "udpipe")
 vignette("udpipe-annotation", package = "udpipe")
+vignette("udpipe-universe", package = "udpipe")
 vignette("udpipe-usecase-postagging-lemmatisation", package = "udpipe")
 # An overview of keyword extraction techniques: https://bnosac.github.io/udpipe/docs/doc7.html
 vignette("udpipe-usecase-topicmodelling", package = "udpipe")
