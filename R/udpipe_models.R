@@ -415,7 +415,7 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
       message(" - The models from repository bnosac/udpipe.models.ud are distributed under either CC-BY-SA, GPL-3 or the LGPL-LR license depending on the originating treebank.")
     }
     message(sprintf(" - Visit %s for model license details.", license_url))
-    message(" - For a list of all models and their licenses (most models you can download with this package have either a CC-BY-SA or a CC-BY-SA-NC license) read the documentation at ?udpipe_download_model. For building your own models: visit the documentation by typing vignette('udpipe-train')")
+    message(" - For a list of all models and their licenses (most models you can download with this package have either a CC-BY-SA or a CC-BY-SA-NC license) read the documentation at ?udpipe_download_model. For building your own models: visit the documentation by typing vignette('udpipe-train', package = 'udpipe')")
     dl <- suppressWarnings(try(
       utils::download.file(url = url, destfile = to, mode = "wb"),  
       silent = TRUE))
@@ -430,7 +430,7 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
       message("Something went wrong")
       message(download_message)
     }else{
-      message(sprintf("Download finished, you can now start using the model to annotate text using either ?udpipe or ?udpipe_load_model. \nNote that model downloading is only needed once. Next time just use the file which you have at path: '%s' in your calls to ?udpipe or ?udpipe_load_model when you want to annotate your text.", to))
+      message(sprintf("Downloading finished, model stored at '%s'", to))
     }
   }
   data.frame(language = language,
