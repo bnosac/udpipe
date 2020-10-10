@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.4-1
+
+- Fixing the Solaris compilation issue in ufal::udpipe::multiword_splitter::append_token
+
 ## CHANGES IN udpipe VERSION 0.8.4
 
 - Update to UDPipe 1.2.1 (28 Sep 2018) 

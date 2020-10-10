@@ -2,7 +2,7 @@ Package: udpipe
 Type: Package
 Title: Tokenization, Parts of Speech Tagging, Lemmatization and Dependency
     Parsing with the 'UDPipe' 'NLP' Toolkit
-Version: 0.8.4
+Version: 0.8.4-1
 Maintainer: Jan Wijffels <jwijffels@bnosac.be>
 Authors@R: c(
     person('Jan', 'Wijffels', role = c('aut', 'cre', 'cph'), email = 'jwijffels@bnosac.be'), 
@@ -25,8 +25,7 @@ Description: This natural language processing toolkit provides language-agnostic
     keyword detection (Rapid Automatic Keyword Extraction, noun phrase extraction, syntactical patterns) 
     sentiment scoring and semantic similarity analysis.
 License: MPL-2.0
-URL: https://bnosac.github.io/udpipe/en/index.html, https://github.com/bnosac/
-    udpipe
+URL: https://bnosac.github.io/udpipe/en/index.html, https://github.com/bnosac/udpipe
 Encoding: UTF-8
 Depends:
     R (>= 2.10)
