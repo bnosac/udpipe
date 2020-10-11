@@ -43,6 +43,7 @@
 #' dtm <- dtm_remove_lowfreq(dtm, minfreq = 10)
 #' dtm <- dtm_remove_tfidf(dtm, top = 100)
 #' 
+#' \dontshow{if(require(topicmodels))\{}
 #' ## Fit a topicmodel using VEM
 #' library(topicmodels)
 #' mymodel <- LDA(x = dtm, k = 4, method = "VEM")
@@ -67,6 +68,7 @@
 #' mymodel <- LDA(x = dtm, k = 4, method = "Gibbs")
 #' terminology <- predict(mymodel, type = "terms", min_posterior = 0.05, min_terms = 3)
 #' scores <- predict(mymodel, type = "topics", newdata = dtm)
+#' \dontshow{\} # End of main if statement running only if the required packages are installed}
 predict.LDA_VEM <- function(object, newdata, type = c("topics", "terms"), min_posterior=-1, min_terms=0, labels, ...){
   requireNamespace("topicmodels")
   type <- match.arg(type)
