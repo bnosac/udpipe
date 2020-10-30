@@ -1005,13 +1005,13 @@ dtm_conform <- function(dtm, rows, columns, fill){
 }
 
 
-#' @title Reorder a document term matrix alongised a vector or data.frame 
-#' @description This utility function is useful to align a document term matrix with 
+#' @title Reorder a Document-Term-Matrix alongside a vector or data.frame 
+#' @description This utility function is useful to align a Document-Term-Matrix with 
 #' information in a data.frame or a vector to predict, such that both the predictive information as well as the target 
 #' is available in the same order. \cr
 #' Matching is done based on the identifiers in the rownames of \code{x} and either the names of the vector \code{y} 
 #' or the first column of the data.frame \code{y}.
-#' @param x a document term matrix of class dgCMatrix (like an object returned by \code{\link{document_term_matrix}})
+#' @param x a Document-Term-Matrix of class dgCMatrix (which can be an object returned by \code{\link{document_term_matrix}})
 #' @param y either a vector or data.frame containing something to align with \code{x} (e.g. for predictive purposes).
 #' \itemize{
 #' \item{In case \code{y} is a vector, it should have names which are available in the rownames of \code{x}.}
@@ -1092,7 +1092,7 @@ dtm_align <- function(x, y, FUN, ...){
 
 #' @title Random samples and permutations from a document term matrix
 #' @description Takes the specified number of sample of rows from the document term matrix using either with or without replacement. 
-#' @param x a document term matrix of class dgCMatrix (like an object returned by \code{\link{document_term_matrix}})
+#' @param x a document term matrix of class dgCMatrix (which can be an object returned by \code{\link{document_term_matrix}})
 #' @param size a positive number, the number of rows to sample
 #' @param replace should sampling be with replacement
 #' @param prob a vector of probability weights, one for each row of \code{x}

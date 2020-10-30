@@ -2,12 +2,12 @@
 % Please edit documentation in R/nlp_flow.R
 \name{dtm_align}
 \alias{dtm_align}
-\title{Reorder a document term matrix alongised a vector or data.frame}
+\title{Reorder a Document-Term-Matrix alongside a vector or data.frame}
 \usage{
 dtm_align(x, y, FUN, ...)
 }
 \arguments{
-\item{x}{a document term matrix of class dgCMatrix (like an object returned by \code{\link{document_term_matrix}})}
+\item{x}{a Document-Term-Matrix of class dgCMatrix (which can be an object returned by \code{\link{document_term_matrix}})}
 
 \item{y}{either a vector or data.frame containing something to align with \code{x} (e.g. for predictive purposes).
 \itemize{
@@ -29,7 +29,7 @@ a list with elements \code{x} and \code{y} containing the document term matrix \
 Only returns data of \code{x} with overlapping identifiers in \code{y}.
 }
 \description{
-This utility function is useful to align a document term matrix with 
+This utility function is useful to align a Document-Term-Matrix with 
 information in a data.frame or a vector to predict, such that both the predictive information as well as the target 
 is available in the same order. \cr
 Matching is done based on the identifiers in the rownames of \code{x} and either the names of the vector \code{y} 

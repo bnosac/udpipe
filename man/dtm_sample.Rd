@@ -13,7 +13,7 @@ dtm_sample(dtm, size = nrow(dtm), replace = FALSE, prob = NULL)
 
 \item{prob}{a vector of probability weights, one for each row of \code{x}}
 
-\item{x}{a document term matrix of class dgCMatrix (like an object returned by \code{\link{document_term_matrix}})}
+\item{x}{a document term matrix of class dgCMatrix (which can be an object returned by \code{\link{document_term_matrix}})}
 }
 \value{
 \code{x} with as many rows as specified in \code{size}
