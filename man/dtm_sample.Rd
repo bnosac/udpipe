@@ -2,24 +2,24 @@
 % Please edit documentation in R/nlp_flow.R
 \name{dtm_sample}
 \alias{dtm_sample}
-\title{Random samples and permutations from a document term matrix}
+\title{Random samples and permutations from a Document-Term-Matrix}
 \usage{
 dtm_sample(dtm, size = nrow(dtm), replace = FALSE, prob = NULL)
 }
 \arguments{
+\item{dtm}{a document term matrix of class dgCMatrix (which can be an object returned by \code{\link{document_term_matrix}})}
+
 \item{size}{a positive number, the number of rows to sample}
 
 \item{replace}{should sampling be with replacement}
 
 \item{prob}{a vector of probability weights, one for each row of \code{x}}
-
-\item{x}{a document term matrix of class dgCMatrix (which can be an object returned by \code{\link{document_term_matrix}})}
 }
 \value{
-\code{x} with as many rows as specified in \code{size}
+\code{dtm} with as many rows as specified in \code{size}
 }
 \description{
-Takes the specified number of sample of rows from the document term matrix using either with or without replacement.
+Sample the specified number of rows from the Document-Term-Matrix using either with or without replacement.
 }
 \examples{
 x <- list(doc1 = c("aa", "bb", "cc", "aa", "b"), 

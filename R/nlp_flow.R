@@ -1009,21 +1009,21 @@ dtm_conform <- function(dtm, rows, columns, fill){
 #' @description This utility function is useful to align a Document-Term-Matrix with 
 #' information in a data.frame or a vector to predict, such that both the predictive information as well as the target 
 #' is available in the same order. \cr
-#' Matching is done based on the identifiers in the rownames of \code{x} and either the names of the vector \code{y} 
-#' or the first column of the data.frame \code{y}.
+#' Matching is done based on the identifiers in the rownames of \code{x} and either the names of the \code{y} vector 
+#' or the first column of \code{y} in case it is a data.frame.
 #' @param x a Document-Term-Matrix of class dgCMatrix (which can be an object returned by \code{\link{document_term_matrix}})
 #' @param y either a vector or data.frame containing something to align with \code{x} (e.g. for predictive purposes).
 #' \itemize{
 #' \item{In case \code{y} is a vector, it should have names which are available in the rownames of \code{x}.}
-#' \item{In case \code{y} is a vector, it's first column should contain identifiers which are available in the rownames of \code{x}.}
+#' \item{In case \code{y} is a data.frame, it's first column should contain identifiers which are available in the rownames of \code{x}.}
 #' }
 #' @param FUN a function to be applied on \code{x} before aligning it to \code{y}. See the examples
 #' @param ... further arguments passed on to FUN
 #' @return a list with elements \code{x} and \code{y} containing the document term matrix \code{x} in the same order as \code{y}.
 #' \itemize{
-#' \item{If in \code{y} a vector was passed, the returned \code{y} list element will be a vector}
-#' \item{If in \code{y} a data.frame was passed with more than 2 columns, the returned \code{y} list element will be a data.frame, if it w}
-#' \item{If in \code{y} a data.frame was passed with exactly 2 columns, the returned \code{y} list element will be a data.frame, if it w}
+#' \item{If in \code{y} a vector was passed, the returned \code{y} element will be a vector}
+#' \item{If in \code{y} a data.frame was passed with more than 2 columns, the returned \code{y} element will be a data.frame}
+#' \item{If in \code{y} a data.frame was passed with exactly 2 columns, the returned \code{y} element will be a vector}
 #' }
 #' Only returns data of \code{x} with overlapping identifiers in \code{y}.
 #' @export
@@ -1091,14 +1091,14 @@ dtm_align <- function(x, y, FUN, ...){
   structure(list(x = X, y = Y), class = "dtm_aligned")
 }
 
-#' @title Random samples and permutations from a document term matrix
-#' @description Takes the specified number of sample of rows from the document term matrix using either with or without replacement. 
-#' @param x a document term matrix of class dgCMatrix (which can be an object returned by \code{\link{document_term_matrix}})
+#' @title Random samples and permutations from a Document-Term-Matrix
+#' @description Sample the specified number of rows from the Document-Term-Matrix using either with or without replacement. 
+#' @param dtm a document term matrix of class dgCMatrix (which can be an object returned by \code{\link{document_term_matrix}})
 #' @param size a positive number, the number of rows to sample
 #' @param replace should sampling be with replacement
 #' @param prob a vector of probability weights, one for each row of \code{x}
 #' @export
-#' @return \code{x} with as many rows as specified in \code{size}
+#' @return \code{dtm} with as many rows as specified in \code{size}
 #' @examples 
 #' x <- list(doc1 = c("aa", "bb", "cc", "aa", "b"), 
 #'           doc2 = c("bb", "bb", "dd", ""), 
