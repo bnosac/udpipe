@@ -1037,6 +1037,7 @@ dtm_conform <- function(dtm, rows, columns, fill){
 #' x <- document_term_matrix(x)
 #' y <- brussels_listings$price
 #' names(y) <- brussels_listings$listing_id
+#' 
 #' ## align a matrix of predictors with a vector to predict
 #' traindata <- dtm_align(x = x, y = y)
 #' traindata <- dtm_align(x = x, y = y, FUN = function(dtm){
