@@ -185,22 +185,24 @@ document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
 #' dtm <- document_term_matrix(x, weight = "bm25")
 #' x <- split(brussels_reviews_anno$lemma, brussels_reviews_anno$doc_id)
 #' dtm <- document_term_matrix(x)
+#' ## example showing the vocubulary argument
+#' ## allowing you to making sure terms which are not in the data are provided in the resulting dtm
+#' allterms <- unique(x$term)
+#' dtm <- document_term_matrix(head(x, 1000), vocabulary = allterms)
+#' 
+#' ## example for a list of tokens
 #' x <- list(doc1 = c("aa", "bb", "cc", "aa", "b"), 
 #'           doc2 = c("bb", "bb", "dd", ""), 
 #'           doc3 = character(),
 #'           doc4 = c("cc", NA), 
 #'           doc5 = character())
-#' dtm <- document_term_matrix(x)
+#' document_term_matrix(x)
 #' dtm <- document_term_matrix(x, vocabulary = c("a", "bb", "cc"))
 #' dtm <- dtm_conform(dtm, rows = c("doc1", "doc2", "doc7"), columns = c("a", "bb", "cc"))
 #' data(brussels_reviews)
 #' x <- strsplit(setNames(brussels_reviews$feedback, brussels_reviews$id), split = " +")
 #' x <- document_term_matrix(x)
 #' 
-#' ## example showing the vocubulary argument
-#' ## allowing you to making sure terms which are not in the data are provided in the resulting dtm
-#' allterms <- unique(x$term)
-#' dtm <- document_term_matrix(head(x, 1000), vocabulary = allterms)
 #' 
 #' ##
 #' ## Example adding bigrams/trigrams to the document term matrix
