@@ -12,7 +12,7 @@ dtm_rowsums(dtm, groups)
 \arguments{
 \item{dtm}{an object returned by \code{\link{document_term_matrix}}}
 
-\item{groups}{optionally, a list with column names or column indexes of the \code{dtm} which should be combined by 
+\item{groups}{optionally, a list with column/row names or column/row indexes of the \code{dtm} which should be combined by 
 taking the sum over the rows or columns of these. See the examples}
 }
 \value{

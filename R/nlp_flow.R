@@ -655,7 +655,7 @@ dtm_rbind <- function(x, y){
 #' @title Column sums and Row sums for document term matrices
 #' @description Column sums and Row sums for document term matrices
 #' @param dtm an object returned by \code{\link{document_term_matrix}}
-#' @param groups optionally, a list with column names or column indexes of the \code{dtm} which should be combined by 
+#' @param groups optionally, a list with column/row names or column/row indexes of the \code{dtm} which should be combined by 
 #' taking the sum over the rows or columns of these. See the examples
 #' @return 
 #' Returns either a vector in case argument \code{groups} is not provided or a sparse matrix of class \code{dgCMatrix}
