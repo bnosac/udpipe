@@ -12,10 +12,12 @@ dtm_rowsums(dtm, groups)
 \arguments{
 \item{dtm}{an object returned by \code{\link{document_term_matrix}}}
 
-\item{groups}{optionally, a list with column names or column indexes of \code{dtm} which should be combined by 
-taking the sum over the rows of these}
+\item{groups}{optionally, a list with column names or column indexes of the \code{dtm} which should be combined by 
+taking the sum over the rows or columns of these. See the examples}
 }
 \value{
+Returns either a vector in case argument \code{groups} is not provided or a sparse matrix of class \code{dgCMatrix}
+in case argument \code{groups} is provided
 \itemize{
 \item{in case \code{groups} is not provided: a vector of row/column sums with corresponding names}
 \item{in case \code{groups} is provided: a sparse matrix containing summed information over the groups of rows/columns}
