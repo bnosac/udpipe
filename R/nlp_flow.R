@@ -1005,6 +1005,117 @@ dtm_conform <- function(dtm, rows, columns, fill){
 }
 
 
+#' @title Reorder a document term matrix alongised a vector or data.frame 
+#' @description This utility function is useful to align a document term matrix with 
+#' information in a data.frame or a vector to predict, such that both the predictive information as well as the target 
+#' is available in the same order. \cr
+#' Matching is done based on the identifiers in the rownames of \code{x} and either the names of the vector \code{y} 
+#' or the first column of the data.frame \code{y}.
+#' @param x a document term matrix of class dgCMatrix (like an object returned by \code{\link{document_term_matrix}})
+#' @param y either a vector or data.frame containing something to align with \code{x} (e.g. for predictive purposes).
+#' \itemize{
+#' \item{In case \code{y} is a vector, it should have names which are available in the rownames of \code{x}.}
+#' \item{In case \code{y} is a vector, it's first column should contain identifiers which are available in the rownames of \code{x}.}
+#' }
+#' @param FUN a function to be applied on \code{x} before aligning it to \code{y}. See the examples
+#' @param ... further arguments passed on to FUN
+#' @return a list with elements \code{x} and \code{y} containing the document term matrix \code{x} in the same order as \code{y}.
+#' \itemize{
+#' \item{If in \code{y} a vector was passed, the returned \code{y} list element will be a vector}
+#' \item{If in \code{y} a data.frame was passed with more than 2 columns, the returned \code{y} list element will be a data.frame, if it w}
+#' \item{If in \code{y} a data.frame was passed with exactly 2 columns, the returned \code{y} list element will be a data.frame, if it w}
+#' }
+#' Only returns data of \code{x} with overlapping identifiers in \code{y}.
+#' @export
+#' @seealso \code{\link{document_term_matrix}}
+#' @examples 
+#' data(brussels_reviews)
+#' data(brussels_listings)
+#' x <- subset(brussels_reviews, language %in% "fr")
+#' x <- strsplit.data.frame(x, term = "feedback", group = "listing_id")
+#' x <- document_term_frequencies(x)
+#' x <- document_term_matrix(x)
+#' y <- brussels_listings$price
+#' names(y) <- brussels_listings$listing_id
+#' ## align a matrix of predictors with a vector to predict
+#' traindata <- dtm_align(x = x, y = y)
+#' traindata <- dtm_align(x = x, y = y, FUN = function(dtm){
+#'   dtm <- dtm_remove_lowfreq(dtm, minfreq = 5)
+#'   dtm <- dtm_sample(dtm)
+#'   dtm
+#' })
+#' head(names(y))
+#' head(rownames(x))
+#' head(names(traindata$y))
+#' head(rownames(traindata$x))
+#' 
+#' ## align a matrix of predictors with a data.frame
+#' traindata <- dtm_align(x = x, y = brussels_listings[, c("listing_id", "price")])
+#' traindata <- dtm_align(x = x, y = brussels_listings[, c("listing_id", "price", "room_type")])
+#' head(traindata$y$listing_id)
+#' head(rownames(traindata$x))
+dtm_align <- function(x, y, FUN, ...){
+  if(!inherits(x, "dgCMatrix")){
+    warning(sprintf("expecting x to be of class dgCMatrix, while you passed a %s", paste(class(x), collapse = " ")))
+  }
+  if(!missing(FUN)){
+    x <- FUN(x, ...)
+  }
+  if(is.data.frame(y)){
+    if(ncol(y) < 2){
+      stop("y is a data.frame, it should have at least 2 columns, where the first is a document id")
+    }
+    nm <- y[[1]]
+    #y <- y[[2]]
+    #names(y) <- nm
+  }else if(is.vector(y)){
+    nm <- names(y)
+    if(is.null(nm)){
+      stop("y is required to be a vector which has names otherwise we can not align it with the rownames of x")
+    }
+  }else{
+    stop("dtm_match is only implemented for y of type data.frame or with vectors")
+  }
+  X <- x[which(rownames(x) %in% nm), , drop = FALSE]
+  idx <- match(rownames(X), nm)
+  if(is.vector(y)){
+    Y <- y[idx]
+  }else if(ncol(y) == 2){
+    Y <- y[[2]]
+    names(Y) <- nm
+    Y <- Y[idx]
+  }else{
+    Y <- y[idx, , drop = FALSE]
+  }
+  structure(list(x = X, y = Y), class = "dtm_aligned")
+}
+
+#' @title Random samples and permutations from a document term matrix
+#' @description Takes the specified number of sample of rows from the document term matrix using either with or without replacement. 
+#' @param x a document term matrix of class dgCMatrix (like an object returned by \code{\link{document_term_matrix}})
+#' @param size a positive number, the number of rows to sample
+#' @param replace should sampling be with replacement
+#' @param prob a vector of probability weights, one for each row of \code{x}
+#' @export
+#' @return \code{x} with as many rows as specified in \code{size}
+#' @examples 
+#' x <- list(doc1 = c("aa", "bb", "cc", "aa", "b"), 
+#'           doc2 = c("bb", "bb", "dd", ""), 
+#'           doc3 = character(),
+#'           doc4 = c("cc", NA), 
+#'           doc5 = character())
+#' dtm <- document_term_matrix(x)
+#' dtm_sample(dtm, size = 2)
+#' dtm_sample(dtm, size = 3)
+#' dtm_sample(dtm, size = 2)
+#' dtm_sample(dtm, size = 8, replace = TRUE)
+#' dtm_sample(dtm, size = 8, replace = TRUE, prob = c(1, 1, 0.01, 0.5, 0.01))
+dtm_sample <- function(dtm, size = nrow(dtm), replace = FALSE, prob = NULL){
+  idx <- sample.int(n = nrow(dtm), size = size, replace = replace, prob = prob)
+  dtm[idx, ]
+}
+
+
 
 #' @title Semantic Similarity to a Singular Value Decomposition
 #' @description Calculate the similarity of a document term matrix to a set of terms based on 
