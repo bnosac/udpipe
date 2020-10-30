@@ -1,3 +1,8 @@
+## CHANGES IN udpipe VERSION 0.8.5
+
+- Added document_term_matrix.default
+- Added groups argument to dtm_colsums and dtm_rowsums
+
 ## CHANGES IN udpipe VERSION 0.8.4-1
 
 - Fixing the Solaris compilation issue in ufal::udpipe::multiword_splitter::append_token

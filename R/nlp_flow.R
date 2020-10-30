@@ -146,9 +146,14 @@ document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
 
 
 
-#' @title Create a document/term matrix from a data.frame with 1 row per document/term
-#' @description Create a document/term matrix from a data.frame with 1 row per document/term as returned
-#' by \code{\link{document_term_frequencies}}
+#' @title Create a document/term matrix 
+#' @description Create a document/term matrix from either
+#' \itemize{
+#' \item a data.frame with 1 row per document/term as returned by \code{\link{document_term_frequencies}}
+#' \item a list of tokens from e.g. from package sentencepiece, tokenizers.bpe or just by using strsplit
+#' \item an object of class DocumentTermMatrix or TermDocumentMatrix from the tm package
+#' \item an object of class simple_triplet_matrix from the slam package
+#' }
 #' @param x a data.frame with columns doc_id, term and freq indicating how many times a term occurred in that specific document. This is what \code{\link{document_term_frequencies}} returns.\cr
 #' This data.frame will be reshaped to a matrix with 1 row per doc_id, the terms will be put 
 #' in the columns and the freq in the matrix cells. Note that the column name to use for freq can be set in the \code{weight} argument.
@@ -178,6 +183,19 @@ document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
 #' dtm <- document_term_matrix(x, weight = "freq")
 #' dtm <- document_term_matrix(x, weight = "tf_idf")
 #' dtm <- document_term_matrix(x, weight = "bm25")
+#' x <- split(brussels_reviews_anno$lemma, brussels_reviews_anno$doc_id)
+#' dtm <- document_term_matrix(x)
+#' x <- list(doc1 = c("aa", "bb", "cc", "aa", "b"), 
+#'           doc2 = c("bb", "bb", "dd", ""), 
+#'           doc3 = character(),
+#'           doc4 = c("cc", NA), 
+#'           doc5 = character())
+#' dtm <- document_term_matrix(x)
+#' dtm <- document_term_matrix(x, vocabulary = c("a", "bb", "cc"))
+#' dtm <- dtm_conform(dtm, rows = c("doc1", "doc2", "doc7"), columns = c("a", "bb", "cc"))
+#' data(brussels_reviews)
+#' x <- strsplit(setNames(brussels_reviews$feedback, brussels_reviews$id), split = " +")
+#' x <- document_term_matrix(x)
 #' 
 #' ## example showing the vocubulary argument
 #' ## allowing you to making sure terms which are not in the data are provided in the resulting dtm
@@ -226,6 +244,44 @@ document_term_matrix.data.frame <- function(x, vocabulary, weight = "freq", ...)
                       dimnames = list(doclabels, termlabels))
   dtm
 }
+
+
+#' @describeIn document_term_matrix Construct a document term matrix from a list of tokens
+#' @export
+document_term_matrix.default <- function(x, vocabulary, ...){  
+  stopifnot(is.list(x))
+  .N <- document <- term <- NULL
+  docs <- names(x)
+  if(is.null(docs)){
+    docs <- seq_along(x)
+  }else{
+    if(anyDuplicated(docs)){
+      stop("x has duplicate names")
+    }
+  }
+  x <- list(document = rep(x = docs, times = sapply(x, length)),
+            term     = unlist(x, use.names = FALSE, recursive = FALSE))
+  x$document <- factor(x$document, levels = docs)
+  if(!missing(vocabulary)){
+    x$term <- factor(x$term, levels = setdiff(unique(c(vocabulary, levels(factor(x$term)))), NA))
+  }else{
+    x$term <- factor(x$term)
+  }
+  x <- data.table::setDT(x)
+  x <- x[!is.na(term), list(freq = .N), by = list(document, term)]
+  
+  doclabels  <- levels(x$document)
+  termlabels <- levels(x$term)
+  
+  x$document <- as.integer(x$document)
+  x$term     <- as.integer(x$term)
+  
+  dtm <- Matrix::sparseMatrix(i=x$document, j = x$term, x = x$freq, 
+                      dims = c(length(doclabels), length(termlabels)),
+                      dimnames = list(doclabels, termlabels))
+  dtm
+}
+
 
 
 #' @describeIn document_term_matrix Convert an object of class \code{DocumentTermMatrix} from the tm package to a sparseMatrix
@@ -597,7 +653,13 @@ dtm_rbind <- function(x, y){
 #' @title Column sums and Row sums for document term matrices
 #' @description Column sums and Row sums for document term matrices
 #' @param dtm an object returned by \code{\link{document_term_matrix}}
-#' @return a vector of row/column sums with corresponding names
+#' @param groups optionally, a list with column names or column indexes of \code{dtm} which should be combined by 
+#' taking the sum over the rows of these
+#' @return 
+#' \itemize{
+#' \item{in case \code{groups} is not provided: a vector of row/column sums with corresponding names}
+#' \item{in case \code{groups} is provided: a sparse matrix containing summed information over the groups of rows/columns}
+#' }
 #' @export
 #' @aliases dtm_colsums dtm_rowsums
 #' @examples 
@@ -610,14 +672,129 @@ dtm_rbind <- function(x, y){
 #' x
 #' x <- dtm_rowsums(dtm)
 #' head(x)
-dtm_colsums <- function(dtm){
-  Matrix::colSums(dtm)
+#' 
+#' ## 
+#' ## Grouped column summation
+#' ## 
+#' x <- list(doc1 = c("aa", "bb", "aa", "b"), doc2 = c("bb", "bb", "BB"))
+#' dtm <- document_term_matrix(x)
+#' dtm
+#' dtm_colsums(dtm, groups = list(combinedB = c("b", "bb"), combinedA = c("aa", "A")))
+#' dtm_colsums(dtm, groups = list(combinedA = c("aa", "A")))
+#' dtm_colsums(dtm, groups = list(
+#'   combinedB = grep(pattern = "b", colnames(dtm), ignore.case = TRUE, value = TRUE), 
+#'   combinedA = c("aa", "A", "ZZZ"),
+#'   test      = character()))
+#' dtm_colsums(dtm, groups = list())
+#' 
+#' ## 
+#' ## Grouped row summation
+#' ## 
+#' x <- list(doc1 = c("aa", "bb", "aa", "b"), 
+#'           doc2 = c("bb", "bb", "BB"),
+#'           doc3 = c("bb", "bb", "BB"),
+#'           doc4 = c("bb", "bb", "BB", "b"))
+#' dtm <- document_term_matrix(x)
+#' dtm
+#' dtm_rowsums(dtm, groups = list(doc1 = "doc1", combi = c("doc2", "doc3", "doc4")))
+#' dtm_rowsums(dtm, groups = list(unknown = "docUnknown", combi = c("doc2", "doc3", "doc4")))
+#' dtm_rowsums(dtm, groups = list())
+dtm_colsums <- function(dtm, groups){
+  if(missing(groups)){
+    Matrix::colSums(dtm)
+  }else{
+    dtm_colsums_group(dtm, groups)
+  }
 }
 
 #' @export
 #' @rdname dtm_colsums
-dtm_rowsums <- function(dtm){
-  Matrix::rowSums(dtm)
+dtm_rowsums <- function(dtm, groups){
+  if(missing(groups)){
+    Matrix::rowSums(dtm)
+  }else{
+    dtm_rowsums_group(dtm, groups)
+  }
+}
+
+
+dtm_colsums_group <- function(x, groups){
+  stopifnot(is.list(groups))
+  if(length(groups) == 0){
+     extra <- matrix(nrow = nrow(x), ncol = 0, byrow = FALSE, dimnames = list(rownames(x)))
+     extra <- as(extra, "dgCMatrix")
+     return(extra)
+  }
+  #stopifnot(length(groups) > 0)
+  #stopifnot(all(sapply(groups, is.character)))
+  if(is.null(names(groups))){
+    stop("groups should have names")
+  }
+  x_fields <- colnames(x)
+  groups <- lapply(groups, FUN=function(x){
+    if(is.character(x)){
+      x
+    }else if(is.integer(x) | is.numeric(x)){
+      x_fields[x]
+    }else{
+      stop("groups should contain a list of column names")
+    }
+  })
+  extra <- mapply(fields = groups, column_j = seq_along(groups), FUN=function(fields, column_j){
+    fields <- which(x_fields %in% fields)
+    if(length(fields) == 0){
+      list(i = integer(), j = integer(), x = numeric())
+    }else{
+      values <- dtm_rowsums(x[, fields, drop = FALSE])
+      idx <- which(values != 0)
+      list(i = idx, j = rep(column_j, length(idx)), x = values[idx])
+    } 
+  }, SIMPLIFY = FALSE)
+  extra <- data.table::rbindlist(extra)
+  extra <- Matrix::sparseMatrix(dims = c(nrow(x), length(groups)), 
+                                dimnames = list(rownames(x), names(groups)), 
+                                i = extra$i, j = extra$j, x = extra$x)
+  extra
+}
+
+
+dtm_rowsums_group <- function(x, groups){
+  stopifnot(is.list(groups))
+  if(length(groups) == 0){
+     extra <- matrix(nrow = 0, ncol = ncol(x), byrow = FALSE, dimnames = list(character(), colnames(x)))
+     extra <- as(extra, "dgCMatrix")
+     return(extra)
+  }
+  #stopifnot(length(groups) > 0)
+  #stopifnot(all(sapply(groups, is.character)))
+  if(is.null(names(groups))){
+    stop("groups should have names")
+  }
+  x_rows <- rownames(x)
+  groups <- lapply(groups, FUN=function(x){
+    if(is.character(x)){
+      x
+    }else if(is.integer(x) | is.numeric(x)){
+      x_rows[x]
+    }else{
+      stop("groups should contain a list of row names")
+    }
+  })
+  extra <- mapply(rows = groups, row_i = seq_along(groups), FUN=function(rows, row_i){
+    rows <- which(x_rows %in% rows)
+    if(length(rows) == 0){
+      list(i = integer(), j = integer(), x = numeric())
+    }else{
+      values <- dtm_colsums(x[rows, , drop = FALSE])
+      idx <- which(values != 0)
+      list(i = rep(row_i, length(idx)), j = idx, x = values[idx])
+    } 
+  }, SIMPLIFY = FALSE)
+  extra <- data.table::rbindlist(extra)
+  extra <- Matrix::sparseMatrix(dims = c(length(groups), ncol(x)), 
+                                dimnames = list(names(groups), colnames(x)), 
+                                i = extra$i, j = extra$j, x = extra$x)
+  extra
 }
 
 
@@ -1027,3 +1204,7 @@ print.svd_similarity <- function(x, n = 7, digits = 2, ...){
   })
   invisible()
 }
+
+
+
+

@@ -5,15 +5,21 @@
 \alias{dtm_rowsums}
 \title{Column sums and Row sums for document term matrices}
 \usage{
-dtm_colsums(dtm)
+dtm_colsums(dtm, groups)
 
-dtm_rowsums(dtm)
+dtm_rowsums(dtm, groups)
 }
 \arguments{
 \item{dtm}{an object returned by \code{\link{document_term_matrix}}}
+
+\item{groups}{optionally, a list with column names or column indexes of \code{dtm} which should be combined by 
+taking the sum over the rows of these}
 }
 \value{
-a vector of row/column sums with corresponding names
+\itemize{
+\item{in case \code{groups} is not provided: a vector of row/column sums with corresponding names}
+\item{in case \code{groups} is provided: a sparse matrix containing summed information over the groups of rows/columns}
+}
 }
 \description{
 Column sums and Row sums for document term matrices
@@ -28,4 +34,31 @@ x <- dtm_colsums(dtm)
 x
 x <- dtm_rowsums(dtm)
 head(x)
+
+## 
+## Grouped column summation
+## 
+x <- list(doc1 = c("aa", "bb", "aa", "b"), doc2 = c("bb", "bb", "BB"))
+dtm <- document_term_matrix(x)
+dtm
+dtm_colsums(dtm, groups = list(combinedB = c("b", "bb"), combinedA = c("aa", "A")))
+dtm_colsums(dtm, groups = list(combinedA = c("aa", "A")))
+dtm_colsums(dtm, groups = list(
+  combinedB = grep(pattern = "b", colnames(dtm), ignore.case = TRUE, value = TRUE), 
+  combinedA = c("aa", "A", "ZZZ"),
+  test      = character()))
+dtm_colsums(dtm, groups = list())
+
+## 
+## Grouped row summation
+## 
+x <- list(doc1 = c("aa", "bb", "aa", "b"), 
+          doc2 = c("bb", "bb", "BB"),
+          doc3 = c("bb", "bb", "BB"),
+          doc4 = c("bb", "bb", "BB", "b"))
+dtm <- document_term_matrix(x)
+dtm
+dtm_rowsums(dtm, groups = list(doc1 = "doc1", combi = c("doc2", "doc3", "doc4")))
+dtm_rowsums(dtm, groups = list(unknown = "docUnknown", combi = c("doc2", "doc3", "doc4")))
+dtm_rowsums(dtm, groups = list())
 }
