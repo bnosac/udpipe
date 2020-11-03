@@ -4,12 +4,22 @@
 \alias{cbind_morphological}
 \title{Add morphological features to an annotated dataset}
 \usage{
-cbind_morphological(x, term = "feats")
+cbind_morphological(x, term = "feats", which)
 }
 \arguments{
 \item{x}{a data.frame or data.table as returned by \code{as.data.frame(udpipe_annotate(...))}}
 
 \item{term}{the name of the field in \code{x} which contains the morphological features. Defaults to 'feats'.}
+
+\item{which}{a character vector with names of morphological features to uniquely parse out. These 
+features are one of the 24 lexical and grammatical properties of words defined at \url{https://universaldependencies.org/u/feat/index.html}.
+Possible values are:
+\itemize{
+\item{"lexical": "PronType", "NumType", "Poss", "Reflex", "Foreign", "Abbr", "Typo"}
+\item{"inflectional_noun": "Gender", "Animacy", "NounClass", "Number", "Case", "Definite", "Degree"}
+\item{"inflectional_verb": "VerbForm", "Mood", "Tense", "Aspect", "Voice", "Evident", "Polarity", "Person", "Polite", "Clusivity"}
+}
+See the examples.}
 }
 \value{
 \code{x} in the same order with extra columns added (at least the column has_morph is added indicating
@@ -35,4 +45,15 @@ x <- cbind_morphological(x, term = "feats")
 f <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
 x <- udpipe_read_conllu(f)
 x <- cbind_morphological(x, term = "feats")
+
+f <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
+x <- udpipe_read_conllu(f)
+x <- cbind_morphological(x, term = "feats", 
+                         which = c("Mood", "Gender", "VerbForm", "Polarity", "Polite"))
+
+# extract all features from the feats column even if not present in the data
+f <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
+x <- udpipe_read_conllu(f)
+x <- cbind_morphological(x, term = "feats", 
+                         which = c("lexical", "inflectional_noun", "inflectional_verb"))
 }

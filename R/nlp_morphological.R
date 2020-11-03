@@ -6,6 +6,15 @@
 #' features separately and adds these as extra columns to the data.frame
 #' @param x a data.frame or data.table as returned by \code{as.data.frame(udpipe_annotate(...))}
 #' @param term the name of the field in \code{x} which contains the morphological features. Defaults to 'feats'.
+#' @param which a character vector with names of morphological features to uniquely parse out. These 
+#' features are one of the 24 lexical and grammatical properties of words defined at \url{https://universaldependencies.org/u/feat/index.html}.
+#' Possible values are:
+#' \itemize{
+#' \item{"lexical": "PronType", "NumType", "Poss", "Reflex", "Foreign", "Abbr", "Typo"}
+#' \item{"inflectional_noun": "Gender", "Animacy", "NounClass", "Number", "Case", "Definite", "Degree"}
+#' \item{"inflectional_verb": "VerbForm", "Mood", "Tense", "Aspect", "Voice", "Evident", "Polarity", "Person", "Polite", "Clusivity"}
+#' }
+#' See the examples.
 #' @return \code{x} in the same order with extra columns added (at least the column has_morph is added indicating
 #' if any morphological features are present and as well extra columns for each possible morphological feature in the data)
 #' @export
@@ -22,20 +31,65 @@
 #' f <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
 #' x <- udpipe_read_conllu(f)
 #' x <- cbind_morphological(x, term = "feats")
-cbind_morphological <- function(x, term = "feats"){
+#' 
+#' f <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
+#' x <- udpipe_read_conllu(f)
+#' x <- cbind_morphological(x, term = "feats", 
+#'                          which = c("Mood", "Gender", "VerbForm", "Polarity", "Polite"))
+#' 
+#' # extract all features from the feats column even if not present in the data
+#' f <- system.file(package = "udpipe", "dummydata", "traindata.conllu")
+#' x <- udpipe_read_conllu(f)
+#' x <- cbind_morphological(x, term = "feats", 
+#'                          which = c("lexical", "inflectional_noun", "inflectional_verb"))
+cbind_morphological <- function(x, term = "feats", which){
   stopifnot(inherits(x, "data.frame"))
   stopifnot(length(term) == 1)
   stopifnot(term %in% colnames(x))
+  oldfields <- colnames(x)
   out <- txt_morphological(x[[term]])
   out <- data.table::setnames(out, 
                               old = colnames(out), 
                               new = c("has_morph", sprintf("morph_%s", setdiff(colnames(out), "has_morph"))))
+  newfields <- setdiff(colnames(out), c("has_morph", oldfields))
   if(inherits(x, "data.table")){
     x <- setDF(x)
     x[, colnames(out)] <- out  
     x <- setDT(x)
   }else if(inherits(x, "data.frame")){
     x[, colnames(out)] <- out  
+  }
+  
+  if(!missing(which)){
+    morpho_feats <- list()
+    morpho_feats$lexical <- c("PronType", "NumType", "Poss", "Reflex", "Foreign", "Abbr", "Typo")
+    morpho_feats$inflectional_noun <- c("Gender", "Animacy", "NounClass", "Number", "Case", "Definite", "Degree")
+    morpho_feats$inflectional_verb <- c("VerbForm", "Mood", "Tense", "Aspect", "Voice", "Evident", "Polarity", "Person", "Polite", "Clusivity")
+    if(any(!which %in% c("lexical", "inflectional_noun", "inflectional_verb"))){
+      morpho_feats <- as.character(which)
+    }else{
+      morpho_feats <- c(unlist(morpho_feats[c("lexical", "inflectional_noun", "inflectional_verb") %in% which]), setdiff(which, c("lexical", "inflectional_noun", "inflectional_verb"))) 
+    }
+    morpho_feats <- tolower(morpho_feats)
+    morpho_feats <- sprintf("morph_%s", morpho_feats)
+    missing <- setdiff(morpho_feats, colnames(x))
+    if(inherits(x, "data.table")){
+      for(field in missing){
+        x[, eval(field) := NA_character_]  
+      }
+      x <- x[, unique(c(oldfields, "has_morph", morpho_feats)), drop = FALSE]
+      x <- data.table::setcolorder(x, neworder = unique(c(oldfields, "has_morph", morpho_feats)))
+    }else if(inherits(x, "data.frame")){
+      x <- data.table::setDT(x)
+      for(field in missing){
+        x[, eval(field) := NA_character_]  
+      }
+      x <- data.table::setDF(x)
+      x <- x[, unique(c(oldfields, "has_morph", morpho_feats)), drop = FALSE]
+      x <- data.table::setDT(x)
+      x <- data.table::setcolorder(x, neworder = unique(c(oldfields, "has_morph", morpho_feats)))
+      x <- data.table::setDF(x)
+    }
   }
   x
 }
