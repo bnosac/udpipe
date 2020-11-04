@@ -4,6 +4,7 @@
 - Added groups argument to dtm_colsums and dtm_rowsums
 - Added dtm_align
 - Added dtm_sample
+- cbind_morphological gains argument which to specify which morphological features to extract
 
 ## CHANGES IN udpipe VERSION 0.8.4-1
 
