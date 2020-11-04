@@ -22,7 +22,7 @@ Pattern counting is performed by executing a regular expression using \code{\lin
 checking how many times the regular expression occurs.
 }
 \examples{
-x <- c("abracadabra", "ababcdab")
+x <- c("abracadabra", "ababcdab", NA)
 txt_count(x, pattern = "ab")
 txt_count(x, pattern = "AB", ignore.case = TRUE)
 txt_count(x, pattern = "AB", ignore.case = FALSE)

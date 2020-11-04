@@ -543,14 +543,19 @@ txt_contains <- function(x, patterns, value = FALSE, ignore.case = TRUE, ...){
 #' @return an integer vector of the same length as \code{x} indicating how many times the pattern is occurring in \code{x}
 #' @export
 #' @examples 
-#' x <- c("abracadabra", "ababcdab")
+#' x <- c("abracadabra", "ababcdab", NA)
 #' txt_count(x, pattern = "ab")
 #' txt_count(x, pattern = "AB", ignore.case = TRUE)
 #' txt_count(x, pattern = "AB", ignore.case = FALSE)
 txt_count <- function(x, pattern, ...){
+  idx <- which(is.na(x))
   result <- gregexpr(pattern = pattern, text = x, ...)
   sapply(result, FUN = function(x){
-    if(length(x) == 1 && x < 0){
+    test <- length(x) == 1 && x < 0
+    if(is.na(test)){
+      return(NA_integer_) 
+    }
+    if(test){
       0L
     }else{
       length(x)
