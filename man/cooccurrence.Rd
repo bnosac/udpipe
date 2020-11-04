@@ -71,8 +71,12 @@ term1 and term2 co-occurred. This dataset can be constructed
   \item based upon a vector of words in which case we look how many times each word is followed by another word.
   \item based upon a vector of words in which case we look how many times each word is followed by another word or is followed by another word if we skip a number of words in between.
 }
-You can also aggregate cooccurrences if you decide to do any of these 3 by a certain group and next want to have
-an overall aggregate.
+Note that 
+\itemize{
+  \item For cooccurrence.data.frame no ordering is assumed which implies that the function does not return self-occurrences if a word occurs several times in the same group of text and term1 is always smaller than term2 in the output
+  \item For cooccurrence.character we assume text is ordered from left to right, the function as well returns self-occurrences
+}
+You can also aggregate cooccurrences if you decide to do any of these 3 by a certain group and next want to obtain an overall aggregate.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -93,7 +97,7 @@ x <- cooccurrence(x, group = "doc_id", term = "lemma")
 head(x)
 
 ## Which words follow each other
-x <- c("A", "B", "A", "B", "c")
+x <- c("A", "B", "A", "A", "B", "c")
 cooccurrence(x)
 
 data(brussels_reviews_anno)
