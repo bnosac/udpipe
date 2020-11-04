@@ -6,6 +6,7 @@
 - Added dtm_sample
 - cbind_morphological gains argument which to specify which morphological features to extract
 - txt_count now returns NA when NA is provided instead of an error
+- txt_contains now returns NA when NA is provided instead of FALSE, unless value is set to TRUE
 
 ## CHANGES IN udpipe VERSION 0.8.4-1
 

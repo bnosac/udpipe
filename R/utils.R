@@ -501,7 +501,8 @@ txt_tagsequence <- function(x, entities){
 #' @examples
 #' x <- c("The cats are eating catfood", 
 #'        "Our cat is eating the catfood", 
-#'        "the dog eats catfood, he likes it")
+#'        "the dog eats catfood, he likes it", 
+#'        NA)
 #' txt_contains(x, patterns = c("cat", "dog")) 
 #' txt_contains(x, patterns = c("cat", "dog"), value = TRUE) 
 #' txt_contains(x, patterns = c("eats"), value = TRUE) 
@@ -510,6 +511,7 @@ txt_tagsequence <- function(x, entities){
 #'              value = TRUE) 
 #' txt_contains(x, "cat") & txt_contains(x, "dog")
 txt_contains <- function(x, patterns, value = FALSE, ignore.case = TRUE, ...){
+  
   if(is.list(patterns)){
     include <- rep_len(FALSE, length(x))
     exclude <- rep_len(FALSE, length(x))
@@ -528,6 +530,9 @@ txt_contains <- function(x, patterns, value = FALSE, ignore.case = TRUE, ...){
   }
   if(value == TRUE){
     result <- x[result]
+  }else{
+    idx <- which(is.na(x))
+    result[idx] <- NA
   }
   result
 }

@@ -29,7 +29,8 @@ Look up text which has a certain pattern. This pattern lookup is performed by ex
 \examples{
 x <- c("The cats are eating catfood", 
        "Our cat is eating the catfood", 
-       "the dog eats catfood, he likes it")
+       "the dog eats catfood, he likes it", 
+       NA)
 txt_contains(x, patterns = c("cat", "dog")) 
 txt_contains(x, patterns = c("cat", "dog"), value = TRUE) 
 txt_contains(x, patterns = c("eats"), value = TRUE) 
