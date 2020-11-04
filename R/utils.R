@@ -532,7 +532,7 @@ txt_contains <- function(x, patterns, value = FALSE, ignore.case = TRUE, ...){
     result <- x[result]
   }else{
     idx <- which(is.na(x))
-    result[idx] <- NA
+    result[idx] <- as.logical(NA)
   }
   result
 }
