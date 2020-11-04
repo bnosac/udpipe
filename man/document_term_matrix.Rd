@@ -3,6 +3,7 @@
 \name{document_term_matrix}
 \alias{document_term_matrix}
 \alias{document_term_matrix.data.frame}
+\alias{document_term_matrix.matrix}
 \alias{document_term_matrix.default}
 \alias{document_term_matrix.DocumentTermMatrix}
 \alias{document_term_matrix.TermDocumentMatrix}
@@ -12,6 +13,8 @@
 document_term_matrix(x, vocabulary, weight = "freq", ...)
 
 \method{document_term_matrix}{data.frame}(x, vocabulary, weight = "freq", ...)
+
+\method{document_term_matrix}{matrix}(x, ...)
 
 \method{document_term_matrix}{default}(x, vocabulary, ...)
 
@@ -44,11 +47,14 @@ Create a document/term matrix from either
 \item a list of tokens from e.g. from package sentencepiece, tokenizers.bpe or just by using strsplit
 \item an object of class DocumentTermMatrix or TermDocumentMatrix from the tm package
 \item an object of class simple_triplet_matrix from the slam package
+\item a regular dense matrix
 }
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{data.frame}: Construct a document term matrix from a data.frame with columns doc_id, term, freq
+
+\item \code{matrix}: Construct a sparse document term matrix from a matrix
 
 \item \code{default}: Construct a document term matrix from a list of tokens
 
@@ -111,6 +117,14 @@ x <- document_term_frequencies(x = x,
                                document = "doc_id", 
                                term = c("token", "token_bigram", "token_trigram"))
 dtm <- document_term_matrix(x)
+
+##
+## Convert dense matrix to sparse matrix
+##
+x <- matrix(c(0, 0, 0, 1, NA, 3, 4, 5, 6, 7), nrow = 2)
+x
+dtm <- document_term_matrix(x)
+dtm
 }
 \seealso{
 \code{\link[Matrix]{sparseMatrix}}, \code{\link{document_term_frequencies}}

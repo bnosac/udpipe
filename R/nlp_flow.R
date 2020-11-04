@@ -153,6 +153,7 @@ document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
 #' \item a list of tokens from e.g. from package sentencepiece, tokenizers.bpe or just by using strsplit
 #' \item an object of class DocumentTermMatrix or TermDocumentMatrix from the tm package
 #' \item an object of class simple_triplet_matrix from the slam package
+#' \item a regular dense matrix
 #' }
 #' @param x a data.frame with columns doc_id, term and freq indicating how many times a term occurred in that specific document. This is what \code{\link{document_term_frequencies}} returns.\cr
 #' This data.frame will be reshaped to a matrix with 1 row per doc_id, the terms will be put 
@@ -216,6 +217,14 @@ document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
 #'                                document = "doc_id", 
 #'                                term = c("token", "token_bigram", "token_trigram"))
 #' dtm <- document_term_matrix(x)
+#' 
+#' ##
+#' ## Convert dense matrix to sparse matrix
+#' ##
+#' x <- matrix(c(0, 0, 0, 1, NA, 3, 4, 5, 6, 7), nrow = 2)
+#' x
+#' dtm <- document_term_matrix(x)
+#' dtm
 document_term_matrix <- function(x, vocabulary, weight = "freq", ...){
   UseMethod("document_term_matrix")
 }
@@ -245,6 +254,14 @@ document_term_matrix.data.frame <- function(x, vocabulary, weight = "freq", ...)
   dtm <- sparseMatrix(i=x$document, j = x$term, x = x[[weight]], dims = c(length(doclabels), length(termlabels)),
                       dimnames = list(doclabels, termlabels))
   dtm
+}
+
+
+#' @describeIn document_term_matrix Construct a sparse document term matrix from a matrix
+#' @export
+document_term_matrix.matrix <- function(x, ...){
+  x <- as(x, "dgCMatrix")
+  x
 }
 
 
