@@ -646,6 +646,7 @@ paste.data.frame <- function(data, term, group, collapse=" "){
   stopifnot(inherits(group, "character"))
   stopifnot(all(c(term, group) %in% colnames(data)))
   if(inherits(data, "data.table")){
+    x <- data
   }else{
     x <- data.table::as.data.table(data[, c(term, group)])  
   }
