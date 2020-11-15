@@ -264,6 +264,22 @@ document_term_matrix.matrix <- function(x, ...){
   x
 }
 
+#' @describeIn document_term_matrix Construct a sparse document term matrix from an integer vector
+#' @export
+document_term_matrix.integer <- function(x, ...){
+  x <- as.matrix(x)
+  x <- document_term_matrix.matrix(x)
+  x
+}
+
+#' @describeIn document_term_matrix Construct a sparse document term matrix from a numeric vector
+#' @export
+document_term_matrix.numeric <- function(x, ...){
+  x <- as.matrix(x)
+  x <- document_term_matrix.matrix(x)
+  x
+}
+
 
 #' @describeIn document_term_matrix Construct a document term matrix from a list of tokens
 #' @export

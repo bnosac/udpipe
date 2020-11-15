@@ -1,6 +1,6 @@
 ## CHANGES IN udpipe VERSION 0.8.5
 
-- Added document_term_matrix.default
+- Added document_term_matrix.default, document_term_matrix.integer and document_term_matrix.numeric
 - Added groups argument to dtm_colsums and dtm_rowsums
 - Added dtm_align
 - Added dtm_sample

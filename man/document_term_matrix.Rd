@@ -4,6 +4,8 @@
 \alias{document_term_matrix}
 \alias{document_term_matrix.data.frame}
 \alias{document_term_matrix.matrix}
+\alias{document_term_matrix.integer}
+\alias{document_term_matrix.numeric}
 \alias{document_term_matrix.default}
 \alias{document_term_matrix.DocumentTermMatrix}
 \alias{document_term_matrix.TermDocumentMatrix}
@@ -15,6 +17,10 @@ document_term_matrix(x, vocabulary, weight = "freq", ...)
 \method{document_term_matrix}{data.frame}(x, vocabulary, weight = "freq", ...)
 
 \method{document_term_matrix}{matrix}(x, ...)
+
+\method{document_term_matrix}{integer}(x, ...)
+
+\method{document_term_matrix}{numeric}(x, ...)
 
 \method{document_term_matrix}{default}(x, vocabulary, ...)
 
@@ -55,6 +61,10 @@ Create a document/term matrix from either
 \item \code{data.frame}: Construct a document term matrix from a data.frame with columns doc_id, term, freq
 
 \item \code{matrix}: Construct a sparse document term matrix from a matrix
+
+\item \code{integer}: Construct a sparse document term matrix from an integer vector
+
+\item \code{numeric}: Construct a sparse document term matrix from a numeric vector
 
 \item \code{default}: Construct a document term matrix from a list of tokens
 
