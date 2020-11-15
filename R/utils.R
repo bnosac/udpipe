@@ -1,19 +1,36 @@
 #' @title Collapse a character vector while removing missing data.
 #' @description Collapse a character vector while removing missing data.
-#' @param x a character vector
+#' @param x a character vector or a list of character vectors
 #' @param collapse a character string to be used to collapse the vector. Defaults to a space: ' '.
 #' @return a character vector of length 1 with the content of x collapsed using paste
 #' @export
 #' @seealso \code{\link{paste}}
 #' @examples 
 #' txt_collapse(c(NA, "hello", "world", NA))
+#' 
+#' x <- list(a = c("h", "i"), b = c("some", "more", "text"), 
+#'           c = character(), d = NA)
+#' txt_collapse(x, collapse = " ")
 txt_collapse <- function(x, collapse=" "){
-  x <- as.character(x)
-  x <- x[!is.na(x)]
-  if(length(x) == 0){
-    return(NA_character_)
-  }else if(length(x) > 1){
-    x <- paste(x, collapse = collapse)
+  if(!is.list(x)){
+    x <- as.character(x)
+    x <- x[!is.na(x)]
+    if(length(x) == 0){
+      return(NA_character_)
+    }else if(length(x) > 1){
+      x <- paste(x, collapse = collapse)
+    } 
+  }else{
+    x <- sapply(x, FUN = function(x, collapse){
+      x <- as.character(x)
+      x <- x[!is.na(x)]
+      if(length(x) == 0){
+        return(NA_character_)
+      }else if(length(x) > 1){
+        x <- paste(x, collapse = collapse)
+      } 
+      x
+    }, collapse = collapse)
   }
   x
 }

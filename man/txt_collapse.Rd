@@ -7,7 +7,7 @@
 txt_collapse(x, collapse = " ")
 }
 \arguments{
-\item{x}{a character vector}
+\item{x}{a character vector or a list of character vectors}
 
 \item{collapse}{a character string to be used to collapse the vector. Defaults to a space: ' '.}
 }
@@ -19,6 +19,10 @@ Collapse a character vector while removing missing data.
 }
 \examples{
 txt_collapse(c(NA, "hello", "world", NA))
+
+x <- list(a = c("h", "i"), b = c("some", "more", "text"), 
+          c = character(), d = NA)
+txt_collapse(x, collapse = " ")
 }
 \seealso{
 \code{\link{paste}}
