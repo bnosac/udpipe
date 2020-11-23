@@ -1091,7 +1091,7 @@ dtm_conform <- function(dtm, rows, columns, fill){
 #' head(traindata$y$listing_id)
 #' head(rownames(traindata$x))
 dtm_align <- function(x, y, FUN, ...){
-  if(!inherits(x, "dgCMatrix")){
+  if(!inherits(x, c("dgCMatrix", "matrix"))){
     warning(sprintf("expecting x to be of class dgCMatrix, while you passed a %s", paste(class(x), collapse = " ")))
   }
   if(!missing(FUN)){
