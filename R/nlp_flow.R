@@ -606,6 +606,7 @@ dtm_cor <- function(x) {
 #' If there are missing columns these will be filled with NA values.
 #' @param x a sparse matrix such as a "dgCMatrix" object which is returned by \code{\link{document_term_matrix}}
 #' @param y a sparse matrix such as a "dgCMatrix" object which is returned by \code{\link{document_term_matrix}}
+#' @param ... more sparse matrices
 #' @return a sparse matrix where either rows are put below each other in case of \code{dtm_rbind}
 #' or columns are put next to each other in case of \code{dtm_cbind}
 #' @seealso \code{\link{document_term_matrix}}
@@ -623,22 +624,35 @@ dtm_cor <- function(x) {
 #' dtm2 <- document_term_frequencies(x = subset(x, doc_id %in% c("10789408", "12285061", "35509091")),
 #'                                   document = "doc_id", term = "token")
 #' dtm2 <- document_term_matrix(dtm2)
+#' dtm3 <- document_term_frequencies(x = subset(x, doc_id %in% c("31133394", "36224131")),
+#'                                   document = "doc_id", term = "token")
+#' dtm3 <- document_term_matrix(dtm3)
 #' m <- dtm_rbind(dtm1, dtm2)
+#' dim(m)
+#' m <- dtm_rbind(dtm1, dtm2, dtm3)
 #' dim(m)
 #' 
 #' ## cbind
 #' library(data.table)
 #' x <- as.data.table(brussels_reviews_anno)
-#' x <- x[, token_bigram := txt_nextgram(token, n = 2), by = list(doc_id, sentence_id)]
+#' x <- x[, token_bigram  := txt_nextgram(token, n = 2), by = list(doc_id, sentence_id)]
+#' x <- x[, lemma_upos    := sprintf("%s//%s", lemma, upos)]
 #' dtm1 <- document_term_frequencies(x = x, document = "doc_id", term = c("token"))
 #' dtm1 <- document_term_matrix(dtm1)
 #' dtm2 <- document_term_frequencies(x = x, document = "doc_id", term = c("token_bigram"))
 #' dtm2 <- document_term_matrix(dtm2)
+#' dtm3 <- document_term_frequencies(x = x, document = "doc_id", term = c("upos"))
+#' dtm3 <- document_term_matrix(dtm3)
+#' dtm4 <- document_term_frequencies(x = x, document = "doc_id", term = c("lemma_upos"))
+#' dtm4 <- document_term_matrix(dtm4)
 #' m <- dtm_cbind(dtm1, dtm2)
+#' dim(m)
+#' m <- dtm_cbind(dtm1, dtm2, dtm3, dtm4)
 #' dim(m)
 #' m <- dtm_cbind(dtm1[-c(100, 999), ], dtm2[-1000,])
 #' dim(m)
-dtm_cbind <- function(x, y){
+dtm_cbind <- function(x, y, ...){
+  ldots <- list(...)
   if(is.null(rownames(x))) stop("x needs to have rownames")
   if(is.null(rownames(y))) stop("y needs to have rownames")
   if(length(intersect(colnames(x), colnames(y))) > 0) stop("x and y should not have overlapping column names")
@@ -657,12 +671,20 @@ dtm_cbind <- function(x, y){
                                      dims = c(length(addright), ncol(y)), dimnames = list(addright, colnames(y)))
     y <- methods::rbind2(y, addright)
   }
-  cbind2(x[r, , drop = FALSE], y[r, , drop = FALSE])
+  out <- cbind2(x[r, , drop = FALSE], y[r, , drop = FALSE])
+  if(length(ldots) > 0){
+    largs <- ldots[-1]
+    largs$x <- out
+    largs$y <- ldots[[1]]
+    out <- do.call(dtm_cbind, largs)
+  }
+  out
 }
 
 #' @export
 #' @rdname dtm_bind
-dtm_rbind <- function(x, y){
+dtm_rbind <- function(x, y, ...){
+  ldots <- list(...)
   if(is.null(colnames(x))) stop("x needs to have colnames")
   if(is.null(colnames(y))) stop("y needs to have colnames")
   if(length(intersect(rownames(x), rownames(y))) > 0) stop("x and y should not have overlapping row names")
@@ -681,7 +703,14 @@ dtm_rbind <- function(x, y){
                                      dims = c(nrow(y), length(addright)), dimnames = list(rownames(y), addright))
     y <- methods::cbind2(y, addright)
   }
-  rbind2(x[, r, drop = FALSE], y[, r, drop = FALSE])
+  out <- rbind2(x[, r, drop = FALSE], y[, r, drop = FALSE])
+  if(length(ldots) > 0){
+    largs <- ldots[-1]
+    largs$x <- out
+    largs$y <- ldots[[1]]
+    out <- do.call(dtm_rbind, largs)
+  }
+  out
 }
 
 

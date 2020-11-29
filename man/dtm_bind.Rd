@@ -6,14 +6,16 @@
 \alias{dtm_rbind}
 \title{Combine 2 document term matrices either by rows or by columns}
 \usage{
-dtm_cbind(x, y)
+dtm_cbind(x, y, ...)
 
-dtm_rbind(x, y)
+dtm_rbind(x, y, ...)
 }
 \arguments{
 \item{x}{a sparse matrix such as a "dgCMatrix" object which is returned by \code{\link{document_term_matrix}}}
 
 \item{y}{a sparse matrix such as a "dgCMatrix" object which is returned by \code{\link{document_term_matrix}}}
+
+\item{...}{more sparse matrices}
 }
 \value{
 a sparse matrix where either rows are put below each other in case of \code{dtm_rbind}
@@ -39,18 +41,30 @@ dtm1 <- document_term_matrix(dtm1)
 dtm2 <- document_term_frequencies(x = subset(x, doc_id \%in\% c("10789408", "12285061", "35509091")),
                                   document = "doc_id", term = "token")
 dtm2 <- document_term_matrix(dtm2)
+dtm3 <- document_term_frequencies(x = subset(x, doc_id \%in\% c("31133394", "36224131")),
+                                  document = "doc_id", term = "token")
+dtm3 <- document_term_matrix(dtm3)
 m <- dtm_rbind(dtm1, dtm2)
+dim(m)
+m <- dtm_rbind(dtm1, dtm2, dtm3)
 dim(m)
 
 ## cbind
 library(data.table)
 x <- as.data.table(brussels_reviews_anno)
-x <- x[, token_bigram := txt_nextgram(token, n = 2), by = list(doc_id, sentence_id)]
+x <- x[, token_bigram  := txt_nextgram(token, n = 2), by = list(doc_id, sentence_id)]
+x <- x[, lemma_upos    := sprintf("\%s//\%s", lemma, upos)]
 dtm1 <- document_term_frequencies(x = x, document = "doc_id", term = c("token"))
 dtm1 <- document_term_matrix(dtm1)
 dtm2 <- document_term_frequencies(x = x, document = "doc_id", term = c("token_bigram"))
 dtm2 <- document_term_matrix(dtm2)
+dtm3 <- document_term_frequencies(x = x, document = "doc_id", term = c("upos"))
+dtm3 <- document_term_matrix(dtm3)
+dtm4 <- document_term_frequencies(x = x, document = "doc_id", term = c("lemma_upos"))
+dtm4 <- document_term_matrix(dtm4)
 m <- dtm_cbind(dtm1, dtm2)
+dim(m)
+m <- dtm_cbind(dtm1, dtm2, dtm3, dtm4)
 dim(m)
 m <- dtm_cbind(dtm1[-c(100, 999), ], dtm2[-1000,])
 dim(m)
