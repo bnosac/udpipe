@@ -225,6 +225,28 @@ document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
 #' x
 #' dtm <- document_term_matrix(x)
 #' dtm
+#' 
+#' ##
+#' ## Convert vectors to sparse matrices
+#' ##
+#' x   <- setNames(-3:3, c("a", "b", "c", "d", "e", "f"))
+#' dtm <- document_term_matrix(x)
+#' dtm
+#' x   <- setNames(runif(6), c("a", "b", "c", "d", "e", "f"))
+#' dtm <- document_term_matrix(x)
+#' dtm
+#' 
+#' ##
+#' ## Convert lists to sparse matrices
+#' ##
+#' x   <- list(a = c("some", "set", "of", "words"), 
+#'             b1 = NA,
+#'             b2 = NA,  
+#'             c1 = character(),
+#'             c2 = 0,  
+#'             d = c("words", "words", "words"))
+#' dtm <- document_term_matrix(x)
+#' dtm
 document_term_matrix <- function(x, vocabulary, weight = "freq", ...){
   UseMethod("document_term_matrix")
 }
@@ -264,22 +286,27 @@ document_term_matrix.matrix <- function(x, ...){
   x
 }
 
-#' @describeIn document_term_matrix Construct a sparse document term matrix from an integer vector
+#' @describeIn document_term_matrix Construct a sparse document term matrix from an named integer vector
 #' @export
 document_term_matrix.integer <- function(x, ...){
+  if(anyDuplicated(names(x))){
+    stop("x has duplicate names")
+  }
   x <- as.matrix(x)
   x <- document_term_matrix.matrix(x)
   x
 }
 
-#' @describeIn document_term_matrix Construct a sparse document term matrix from a numeric vector
+#' @describeIn document_term_matrix Construct a sparse document term matrix from a named numeric vector
 #' @export
 document_term_matrix.numeric <- function(x, ...){
+  if(anyDuplicated(names(x))){
+    stop("x has duplicate names")
+  }
   x <- as.matrix(x)
   x <- document_term_matrix.matrix(x)
   x
 }
-
 
 #' @describeIn document_term_matrix Construct a document term matrix from a list of tokens
 #' @export
@@ -295,7 +322,7 @@ document_term_matrix.default <- function(x, vocabulary, ...){
     }
   }
   x <- list(document = rep(x = docs, times = sapply(x, length)),
-            term     = unlist(x, use.names = FALSE, recursive = FALSE))
+            term     = unlist(x, use.names = FALSE))
   x$document <- factor(x$document, levels = docs)
   if(!missing(vocabulary)){
     x$term <- factor(x$term, levels = setdiff(unique(c(vocabulary, levels(factor(x$term)))), NA))

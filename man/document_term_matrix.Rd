@@ -62,9 +62,9 @@ Create a document/term matrix from either
 
 \item \code{matrix}: Construct a sparse document term matrix from a matrix
 
-\item \code{integer}: Construct a sparse document term matrix from an integer vector
+\item \code{integer}: Construct a sparse document term matrix from an named integer vector
 
-\item \code{numeric}: Construct a sparse document term matrix from a numeric vector
+\item \code{numeric}: Construct a sparse document term matrix from a named numeric vector
 
 \item \code{default}: Construct a document term matrix from a list of tokens
 
@@ -133,6 +133,28 @@ dtm <- document_term_matrix(x)
 ##
 x <- matrix(c(0, 0, 0, 1, NA, 3, 4, 5, 6, 7), nrow = 2)
 x
+dtm <- document_term_matrix(x)
+dtm
+
+##
+## Convert vectors to sparse matrices
+##
+x   <- setNames(-3:3, c("a", "b", "c", "d", "e", "f"))
+dtm <- document_term_matrix(x)
+dtm
+x   <- setNames(runif(6), c("a", "b", "c", "d", "e", "f"))
+dtm <- document_term_matrix(x)
+dtm
+
+##
+## Convert lists to sparse matrices
+##
+x   <- list(a = c("some", "set", "of", "words"), 
+            b1 = NA,
+            b2 = NA,  
+            c1 = character(),
+            c2 = 0,  
+            d = c("words", "words", "words"))
 dtm <- document_term_matrix(x)
 dtm
 }
