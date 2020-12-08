@@ -81,6 +81,8 @@ txt_show <- function(x){
 #' @param from a character vector with values of \code{x} which you want to recode
 #' @param to a character vector with values of you want to use to recode to where you
 #' want to replace values of \code{x} which correspond to \code{from[i]} to \code{to[i]}
+#' @param na.rm logical, if set to TRUE, will put all values of \code{x} which have no
+#' matching value in \code{from} to NA. Defaults to \code{FALSE}
 #' @return a character vector of the same length of \code{x} where values of \code{x}
 #' which are given in \code{from} will be replaced by the corresponding element in \code{to}
 #' @seealso \code{\link{match}}
@@ -90,11 +92,22 @@ txt_show <- function(x){
 #' txt_recode(x = x,
 #'            from = c("VERB", "ADV"),
 #'            to = c("conjugated verb", "adverb"))
-txt_recode <- function(x, from = c(), to = c()){
+#' txt_recode(x = x,
+#'            from = c("VERB", "ADV"),
+#'            to = c("conjugated verb", "adverb"),
+#'            na.rm = TRUE)
+#' txt_recode(x = x,
+#'            from = c("VERB", "ADV", "NOUN"),
+#'            to = c("conjugated verb", "adverb", "noun"),
+#'            na.rm = TRUE)
+txt_recode <- function(x, from = c(), to = c(), na.rm = FALSE){
   if(length(x) == 0){
     return(x)
   }
   stopifnot(length(from) == length(to))
+  if(na.rm){
+    return(recode(x = x, from = from, to = to))
+  }
   nongiven <- unique(x[!is.na(x)])
   nongiven <- setdiff(nongiven, from)
   if(length(nongiven) > 0) {
@@ -570,7 +583,6 @@ txt_contains <- function(x, patterns, value = FALSE, ignore.case = TRUE, ...){
 #' txt_count(x, pattern = "AB", ignore.case = TRUE)
 #' txt_count(x, pattern = "AB", ignore.case = FALSE)
 txt_count <- function(x, pattern, ...){
-  idx <- which(is.na(x))
   result <- gregexpr(pattern = pattern, text = x, ...)
   sapply(result, FUN = function(x){
     test <- length(x) == 1 && x < 0

@@ -11,6 +11,7 @@
 - txt_contains now returns NA when NA is provided instead of FALSE, unless value is set to TRUE
 - txt_collapse now also works if provided a list of character vectors
 - paste.data.frame now works as well if a data.table is passed instead of a data.frame
+- txt_recode gains an extra argument na.rm
 
 ## CHANGES IN udpipe VERSION 0.8.4-1
 
