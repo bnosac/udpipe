@@ -29,6 +29,7 @@ Hereby a small list of loosely coupled packages by the same author which contain
 - **nametagger**: Build named entity recognition models using markov models: https://CRAN.R-project.org/package=nametagger
 - **torch.ner**: Named Entity Recognition using torch
 - **word2vec**: Training and applying the word2vec algorithm: https://CRAN.R-project.org/package=word2vec
+- **doc2vec**: Building paragraph vector models also known as doc2vec https://CRAN.R-project.org/package=doc2vec
 - **ruimtehol**: Text embedding techniques using Starspace: https://CRAN.R-project.org/package=ruimtehol
 - **textrank**: Text summarisation and keyword detection using textrank: https://CRAN.R-project.org/package=textrank
 - **brown**: Brown word clustering on texts
@@ -36,4 +37,5 @@ Hereby a small list of loosely coupled packages by the same author which contain
 - **tokenizers.bpe**: Byte Pair Encoding tokenisation using YouTokenToMe: https://CRAN.R-project.org/package=tokenizers.bpe
 - **text.alignment**: Find text similarities using Smith-Waterman: https://CRAN.R-project.org/package=text.alignment 
 - **textplot**: Visualise complex relations in texts: https://CRAN.R-project.org/package=textplot
+- **udpipe**: Tokenization, Parts of Speech Tagging, Lemmatization, Dependency Parsing, Keyword detection and NLP processing: https://CRAN.R-project.org/package=udpipe
 
