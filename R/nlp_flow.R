@@ -1120,9 +1120,16 @@ dtm_conform <- function(dtm, rows, columns, fill){
 #' @export
 #' @seealso \code{\link{document_term_matrix}}
 #' @examples 
+#' x <- matrix(1:9, nrow = 3, dimnames = list(c("a", "b", "c")))
+#' x
+#' dtm_align(x = x, 
+#'           y = c(b = 1, a = 2, c = 6, d = 6))
+#' dtm_align(x = x, 
+#'           y = c(b = 1, a = 2, c = 6, d = 6, d = 7, a = -1))
+#'           
 #' data(brussels_reviews)
 #' data(brussels_listings)
-#' x <- subset(brussels_reviews, language %in% "fr")
+#' x <- brussels_reviews
 #' x <- strsplit.data.frame(x, term = "feedback", group = "listing_id")
 #' x <- document_term_frequencies(x)
 #' x <- document_term_matrix(x)
@@ -1130,22 +1137,33 @@ dtm_conform <- function(dtm, rows, columns, fill){
 #' names(y) <- brussels_listings$listing_id
 #' 
 #' ## align a matrix of predictors with a vector to predict
-#' traindata <- dtm_align(x = x, y = y)
-#' traindata <- dtm_align(x = x, y = y, FUN = function(dtm){
+#' trainset <- dtm_align(x = x, y = y)
+#' trainset <- dtm_align(x = x, y = y, FUN = function(dtm){
 #'   dtm <- dtm_remove_lowfreq(dtm, minfreq = 5)
 #'   dtm <- dtm_sample(dtm)
 #'   dtm
 #' })
 #' head(names(y))
 #' head(rownames(x))
-#' head(names(traindata$y))
-#' head(rownames(traindata$x))
+#' head(names(trainset$y))
+#' head(rownames(trainset$x))
 #' 
 #' ## align a matrix of predictors with a data.frame
-#' traindata <- dtm_align(x = x, y = brussels_listings[, c("listing_id", "price")])
-#' traindata <- dtm_align(x = x, y = brussels_listings[, c("listing_id", "price", "room_type")])
-#' head(traindata$y$listing_id)
-#' head(rownames(traindata$x))
+#' trainset <- dtm_align(x = x, y = brussels_listings[, c("listing_id", "price")])
+#' trainset <- dtm_align(x = x, 
+#'                 y = brussels_listings[, c("listing_id", "price", "room_type")])
+#' head(trainset$y$listing_id)
+#' head(rownames(trainset$x))
+#' 
+#' ## example with duplicate data in case of data balancing
+#' dtm_align(x = matrix(1:30, nrow = 3, dimnames = list(c("a", "b", "c"))), 
+#'           y = c(a = 1, a = 2, b = 3, d = 6, b = 6))
+#' target   <- subset(brussels_listings, listing_id %in% brussels_reviews$listing_id)
+#' target   <- rbind(target[1:3, ], target[c(2, 3), ], target[c(1, 4), ])
+#' trainset <- dtm_align(x = x, y = target[, c("listing_id", "price")])
+#' trainset <- dtm_align(x = x, y = setNames(target$price, target$listing_id))
+#' names(trainset$y)
+#' rownames(trainset$x)
 dtm_align <- function(x, y, FUN, ...){
   if(!inherits(x, c("dgCMatrix", "matrix"))){
     warning(sprintf("expecting x to be of class dgCMatrix, while you passed a %s", paste(class(x), collapse = " ")))
@@ -1160,7 +1178,7 @@ dtm_align <- function(x, y, FUN, ...){
     nm <- y[[1]]
     #y <- y[[2]]
     #names(y) <- nm
-  }else if(is.vector(y)){
+  }else if(is.vector(y) | is.factor(y)){
     nm <- names(y)
     if(is.null(nm)){
       stop("y is required to be a vector which has names otherwise we can not align it with the rownames of x")
@@ -1168,9 +1186,10 @@ dtm_align <- function(x, y, FUN, ...){
   }else{
     stop("dtm_match is only implemented for y of type data.frame or with vectors")
   }
-  X <- x[which(rownames(x) %in% nm), , drop = FALSE]
-  idx <- match(rownames(X), nm)
-  if(is.vector(y)){
+  X   <- x[which(rownames(x) %in% nm), , drop = FALSE]
+  #idx <- match(rownames(X), nm)
+  idx <- which(nm %in% rownames(X))
+  if(is.vector(y) | is.factor(y)){
     Y <- y[idx]
   }else if(ncol(y) == 2){
     Y <- y[[2]]
@@ -1179,6 +1198,7 @@ dtm_align <- function(x, y, FUN, ...){
   }else{
     Y <- y[idx, , drop = FALSE]
   }
+  X   <- X[match(nm[idx], rownames(X)), , drop = FALSE]
   structure(list(x = X, y = Y), class = "dtm_aligned")
 }
 

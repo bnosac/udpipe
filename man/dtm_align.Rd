@@ -36,9 +36,16 @@ Matching is done based on the identifiers in the rownames of \code{x} and either
 or the first column of \code{y} in case it is a data.frame.
 }
 \examples{
+x <- matrix(1:9, nrow = 3, dimnames = list(c("a", "b", "c")))
+x
+dtm_align(x = x, 
+          y = c(b = 1, a = 2, c = 6, d = 6))
+dtm_align(x = x, 
+          y = c(b = 1, a = 2, c = 6, d = 6, d = 7, a = -1))
+          
 data(brussels_reviews)
 data(brussels_listings)
-x <- subset(brussels_reviews, language \%in\% "fr")
+x <- brussels_reviews
 x <- strsplit.data.frame(x, term = "feedback", group = "listing_id")
 x <- document_term_frequencies(x)
 x <- document_term_matrix(x)
@@ -46,22 +53,33 @@ y <- brussels_listings$price
 names(y) <- brussels_listings$listing_id
 
 ## align a matrix of predictors with a vector to predict
-traindata <- dtm_align(x = x, y = y)
-traindata <- dtm_align(x = x, y = y, FUN = function(dtm){
+trainset <- dtm_align(x = x, y = y)
+trainset <- dtm_align(x = x, y = y, FUN = function(dtm){
   dtm <- dtm_remove_lowfreq(dtm, minfreq = 5)
   dtm <- dtm_sample(dtm)
   dtm
 })
 head(names(y))
 head(rownames(x))
-head(names(traindata$y))
-head(rownames(traindata$x))
+head(names(trainset$y))
+head(rownames(trainset$x))
 
 ## align a matrix of predictors with a data.frame
-traindata <- dtm_align(x = x, y = brussels_listings[, c("listing_id", "price")])
-traindata <- dtm_align(x = x, y = brussels_listings[, c("listing_id", "price", "room_type")])
-head(traindata$y$listing_id)
-head(rownames(traindata$x))
+trainset <- dtm_align(x = x, y = brussels_listings[, c("listing_id", "price")])
+trainset <- dtm_align(x = x, 
+                y = brussels_listings[, c("listing_id", "price", "room_type")])
+head(trainset$y$listing_id)
+head(rownames(trainset$x))
+
+## example with duplicate data in case of data balancing
+dtm_align(x = matrix(1:30, nrow = 3, dimnames = list(c("a", "b", "c"))), 
+          y = c(a = 1, a = 2, b = 3, d = 6, b = 6))
+target   <- subset(brussels_listings, listing_id \%in\% brussels_reviews$listing_id)
+target   <- rbind(target[1:3, ], target[c(2, 3), ], target[c(1, 4), ])
+trainset <- dtm_align(x = x, y = target[, c("listing_id", "price")])
+trainset <- dtm_align(x = x, y = setNames(target$price, target$listing_id))
+names(trainset$y)
+rownames(trainset$x)
 }
 \seealso{
 \code{\link{document_term_matrix}}
