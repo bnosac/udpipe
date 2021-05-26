@@ -251,7 +251,7 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
       grepl(pattern = prefix, x = x)
     }
   }
-  txt <- strsplit(x$conllu, "\n")[[1]]
+  txt <- strsplit(x$conllu, "\n", fixed = TRUE)[[1]]
   is_sentence_boundary <- txt == ""
   is_comment <- startsWith(txt, "#")
   is_newdoc <- startsWith(txt, "# newdoc")

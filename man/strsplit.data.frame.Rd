@@ -8,7 +8,8 @@ strsplit.data.frame(
   data,
   term,
   group,
-  split = "[[:space:][:punct:][:digit:]]+"
+  split = "[[:space:][:punct:][:digit:]]+",
+  ...
 )
 }
 \arguments{
@@ -21,6 +22,8 @@ The text in \code{term} will be split into tokens by group.}
 
 \item{split}{a regular expression indicating how to split the \code{term} column. 
 Defaults to splitting by spaces, punctuation symbols or digits. This will be passed on to \code{\link{strsplit}}.}
+
+\item{...}{further arguments passed on to \code{\link{strsplit}}}
 }
 \value{
 A tokenised data frame containing one row per token.\cr
@@ -38,6 +41,9 @@ head(x)
 x <- strsplit.data.frame(brussels_reviews, 
                          term = c("feedback"), 
                          group = c("listing_id", "language"))
+head(x)  
+x <- strsplit.data.frame(brussels_reviews, term = "feedback", group = "id", 
+                         split = " ", fixed = TRUE)
 head(x)                          
 }
 \seealso{

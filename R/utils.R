@@ -693,6 +693,7 @@ paste.data.frame <- function(data, term, group, collapse=" "){
 #' The text in \code{term} will be split into tokens by group.
 #' @param split a regular expression indicating how to split the \code{term} column. 
 #' Defaults to splitting by spaces, punctuation symbols or digits. This will be passed on to \code{\link{strsplit}}.
+#' @param ... further arguments passed on to \code{\link{strsplit}}
 #' @return A tokenised data frame containing one row per token.\cr
 #' This data.frame has the columns from \code{group} and \code{term} where the text in column \code{term}
 #' will be split by the provided regular expression into tokens. 
@@ -705,8 +706,11 @@ paste.data.frame <- function(data, term, group, collapse=" "){
 #' x <- strsplit.data.frame(brussels_reviews, 
 #'                          term = c("feedback"), 
 #'                          group = c("listing_id", "language"))
+#' head(x)  
+#' x <- strsplit.data.frame(brussels_reviews, term = "feedback", group = "id", 
+#'                          split = " ", fixed = TRUE)
 #' head(x)                          
-strsplit.data.frame <- function(data, term, group, split = "[[:space:][:punct:][:digit:]]+"){
+strsplit.data.frame <- function(data, term, group, split = "[[:space:][:punct:][:digit:]]+", ...){
   .SDcols <- .SD <- NULL
   stopifnot(inherits(data, "data.frame"))
   stopifnot(inherits(term, "character"))
@@ -719,13 +723,13 @@ strsplit.data.frame <- function(data, term, group, split = "[[:space:][:punct:][
   }else{
     data <- data.table::as.data.table(data[, c(term, group)])  
   }
-  x <- data[, lapply(.SD, FUN=function(txt){
-    terms <- unlist(strsplit(txt, split = split))
+  x <- data[, lapply(.SD, FUN=function(txt, ...){
+    terms <- unlist(strsplit(txt, split = split, ...))
     terms <- as.character(terms)
     terms <- terms[!is.na(terms)]
     terms <- terms[nchar(terms) > 0]
     terms
-  }), by = group, .SDcols = term]
+  }, ...), by = group, .SDcols = term]
   x <- data.table::setDF(x)
   x
 }
