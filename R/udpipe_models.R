@@ -479,6 +479,8 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
 #' ## cleanup for CRAN
 #' if(file.exists(x$file_model)) file.remove(x$file_model)
 udpipe_load_model <- function(file) {
+  oldwd <- getwd()
+  on.exit(setwd(oldwd))
   if(is.data.frame(file) && nrow(file) == 1 && "file_model" %in% colnames(file)){
     file <- file$file_model
   }
@@ -486,7 +488,8 @@ udpipe_load_model <- function(file) {
   if(!file.exists(file)){
     stop(sprintf("File %s containing the language model does not exist", file))
   }
-  ptr <- udp_load_model(file)
+  setwd(dirname(file))
+  ptr <- udp_load_model(basename(file))
   out <- structure(
     list(file = file, model = ptr), 
     class = "udpipe_model")

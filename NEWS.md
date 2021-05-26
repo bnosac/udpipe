@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.6
+
+- Downloading models to paths containing non-ASCII characters now works (issue #95)
+
 ## CHANGES IN udpipe VERSION 0.8.5
 
 - Added document_term_matrix.default, document_term_matrix.integer and document_term_matrix.numeric
