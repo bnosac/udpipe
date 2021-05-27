@@ -11,7 +11,7 @@
 #' x <- list(a = c("h", "i"), b = c("some", "more", "text"), 
 #'           c = character(), d = NA)
 #' txt_collapse(x, collapse = " ")
-txt_collapse <- function(x, collapse=" "){
+txt_collapse <- function(x, collapse = " "){
   if(!is.list(x)){
     x <- as.character(x)
     x <- x[!is.na(x)]
@@ -34,6 +34,49 @@ txt_collapse <- function(x, collapse=" "){
   }
   x
 }
+
+#' @title Concatenate strings with options how to handle missing data
+#' @description NA friendly version for concatenating string
+#' @param ... character vectors
+#' @param collapse a character string to be used to paste the vectors together. Defaults to a space: ' '.
+#' @param na.rm logical, if set to \code{TRUE}, will replace NA with ''. If set to \code{FALSE}, will have a resulting value of NA
+#' if at least one element is \code{NA}, in a similar spirit as \code{mean}. Defaults to \code{FALSE}.
+#' @return a character vector
+#' @export
+#' @seealso \code{\link{paste}}
+#' @examples 
+#' x <- c(1, 2, 3, NA, NA)
+#' y <- c("a", "b", "c", NA, "OK")
+#' paste(x, y, sep = "-")
+#' txt_paste(x, y, collapse = "-", na.rm = TRUE)
+#' txt_paste(x, y, collapse = "-", na.rm = FALSE)
+#' 
+#' x <- c(NA, "a", "b")
+#' y <- c("1", "2", NA)
+#' z <- c("-", "*", NA)
+#' txt_paste(x, y, z, collapse = "", na.rm = TRUE)
+#' txt_paste(x, y, z, "_____", collapse = "", na.rm = TRUE)
+#' txt_paste(x, y, z, "_____", collapse = "", na.rm = FALSE)
+txt_paste <- function(..., collapse = " ", na.rm = FALSE){
+  x <- data.frame(list(...), stringsAsFactors = FALSE)
+  if(na.rm){
+    apply(x, MARGIN = 1, FUN = function(x){
+      x <- x[!is.na(x)]
+      if(length(x) == 0){
+        return(NA_character_)
+      }
+      paste(x, collapse = collapse)
+    })    
+  }else{
+    apply(x, MARGIN = 1, FUN = function(x){
+      if(anyNA(x)){
+        return(NA_character_)
+      }
+      paste(x[!is.na(x)], collapse = collapse)   
+    })
+  }
+}
+
 
 
 
@@ -219,6 +262,67 @@ txt_previousgram <- function(x, n = 2, sep = " "){
   #out[max((length(out)-(nextel-1L)), 1L):length(out)] <- NA
   out[idx] <- NA
   out
+}
+
+#' @title Based on a vector with a word sequence, get n-grams (looking forward + backward)
+#' @description If you have annotated your text using \code{\link{udpipe_annotate}},
+#' your text is tokenised in a sequence of words. Based on this vector of words in sequence
+#' getting n-grams comes down to looking at the previous/next word and the subsequent previous/next word andsoforth.
+#' These words can be \code{pasted} together to form an n-gram.
+#' @param x a character vector where each element is just 1 term or word
+#' @param n an integer vector indicating how many terms to look back and ahead
+#' @param sep a character element indicating how to \code{\link{paste}} the subsequent words together
+#' @param na.rm logical, if set to \code{TRUE}, will keep all text even if it can not look back/ahead the amount specified by \code{n}. 
+#' If set to \code{FALSE}, will have a resulting value of \code{NA}
+#' if at least one element is \code{NA} or it can not look back/ahead the amount specified by \code{n}.
+#' @return a character vector of the same length of \code{x} with the n-grams
+#' @seealso \code{\link{txt_paste}}, \code{\link{txt_next}}, \code{\link{txt_previous}}, \code{\link[data.table]{shift}}
+#' @export
+#' @examples 
+#' x <- c("We", "walked", "anxiously", "to", "the", "doctor", "!")
+#' 
+#' ## Look 1 word before + word itself
+#' y <- txt_context(x, n = c(-1, 0), na.rm = FALSE)
+#' data.frame(x, y)
+#' ## Look 1 word before + word itself + 1 word after
+#' y <- txt_context(x, n = c(-1, 0, 1), na.rm = FALSE)
+#' data.frame(x, y)
+#' y <- txt_context(x, n = c(-1, 0, 1), na.rm = TRUE)
+#' data.frame(x, y)
+#' 
+#' ## Look 2 words before + word itself + 1 word after 
+#' ## even if not all words are there
+#' y <- txt_context(x, n = c(-2, -1, 0, 1), na.rm = TRUE, sep = "_")
+#' data.frame(x, y)
+#' y <- txt_context(x, n = c(-2, -1, 1, 2), na.rm = FALSE, sep = "_")
+#' data.frame(x, y)
+#' 
+#' x <- c("We", NA, NA, "to", "the", "doctor", "!")
+#' y <- txt_context(x, n = c(-1, 0), na.rm = FALSE)
+#' data.frame(x, y)
+#' y <- txt_context(x, n = c(-1, 0), na.rm = TRUE)
+#' data.frame(x, y)
+#' 
+#' library(data.table)
+#' data(brussels_reviews_anno, package = "udpipe")
+#' x      <- as.data.table(brussels_reviews_anno)
+#' x      <- x[, context := txt_context(lemma), by = list(doc_id, sentence_id)]
+#' head(x, 20)
+#' x$term <- sprintf("%s/%s", x$lemma, x$upos)
+#' x      <- x[, context := txt_context(term), by = list(doc_id, sentence_id)]
+#' head(x, 20)
+txt_context <- function(x, n = c(-1, 0, 1), sep = " ", na.rm = FALSE){
+  context <- lapply(n, FUN=function(i){
+    if(i >= 0){
+      out <- txt_next(x, n = i)
+    }else{
+      out <- txt_previous(x, n = -i)
+    }
+    out
+  })
+  context$collapse <- sep
+  context$na.rm <- na.rm
+  do.call(txt_paste, context)
 }
 
 #' @title Get the n-th previous element of a vector

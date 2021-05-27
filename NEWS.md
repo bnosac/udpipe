@@ -2,7 +2,9 @@
 
 - Downloading models to paths containing non-ASCII characters now works (issue #95)
 - strsplit.data.frame gains ... which are passed on to strsplit (e.g. to use fixed=TRUE for speeding up)
-- read_connlu is now using fixed=TRUE when splitting by newline symbol (for speeding up)
+- read_connlu is now using fixed=TRUE when splitting by newline symbol (for speeding up parsing with function udpipe)
+- Added txt_paste
+- Added txt_context
 
 ## CHANGES IN udpipe VERSION 0.8.5
 
