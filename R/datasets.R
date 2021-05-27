@@ -35,7 +35,7 @@ NULL
 #' to be able to comply to CRAN policies.
 #' @name brussels_listings
 #' @docType data
-#' @source \url{http://data.insideairbnb.com/belgium/bru/brussels/2015-10-03/visualisations/listings.csv}
+#' @source \url{http://insideairbnb.com/brussels}: information of 2015-10-03
 #' @seealso \code{\link{brussels_reviews}}, \code{\link{brussels_reviews_anno}}
 #' @examples
 #' data(brussels_listings)
@@ -53,7 +53,7 @@ NULL
 #' to be able to comply to CRAN policies.
 #' @name brussels_reviews
 #' @docType data
-#' @source \url{http://data.insideairbnb.com/belgium/bru/brussels/2015-10-03/visualisations/reviews.csv}
+#' @source \url{http://insideairbnb.com/brussels}: information of 2015-10-03
 #' @seealso \code{\link{brussels_listings}}, \code{\link{brussels_reviews_anno}}
 #' @examples
 #' data(brussels_reviews)

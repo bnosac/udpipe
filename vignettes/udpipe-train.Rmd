@@ -29,7 +29,7 @@ This section is also relevant if you work in a commercial setting where you woul
 
 In order to train annotation models, you need to have data in **CONLL-U format**, a format which is described at https://universaldependencies.org/format.html. At the time of writing this, for more than 60 languages, open treebanks in CONLL-U format are made available for download at https://universaldependencies.org. Most of these treebanks are distributed under the CC-BY-SA license which allows commercial use.
 
-Mark that if you will build your own models, you will probably be interested in reading the paper with the details of the techniques used by UDPipe: "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf> as well as the paper
+Mark that if you will build your own models, you will probably be interested in reading the paper with the details of the techniques used by UDPipe: "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <https://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf> as well as the paper
 "UDPipe: Trainable Pipeline for Processing CoNLL-U Files Performing Tokenization, Morphological Analysis, POS Tagging and Parsing", available at <http://www.lrec-conf.org/proceedings/lrec2016/pdf/873_Paper.pdf>. 
 
 
@@ -90,7 +90,7 @@ m <- udpipe_train(file = "toymodel.udpipe", files_conllu_training = file_conllu,
                   annotation_parser = "default")
 ```
 
-When you want to train the model with specific tokenizer/tagger/parser settings, you need to provide these settings as a list to the respective arguments `annotation_tokenizer`, `annotation_tagger` and `annotation_parser`. The possible options for each of these settings are explained in detail below and their logic is detailed in the paper "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>.
+When you want to train the model with specific tokenizer/tagger/parser settings, you need to provide these settings as a list to the respective arguments `annotation_tokenizer`, `annotation_tagger` and `annotation_parser`. The possible options for each of these settings are explained in detail below and their logic is detailed in the paper "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <https://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>.
 
 ```{r}
 params <- list()
@@ -172,7 +172,7 @@ as.list(hyperparams_nl)
 
 ## Settings for the tagger:
 
-The tagging is currently performed using MorphoDiTa (http://ufal.mff.cuni.cz/morphodita). The UDPipe tagger consists of possibly several MorphoDiTa models, each tagging some of the POS tags and/or lemmas.
+The tagging is currently performed using MorphoDiTa (https://ufal.mff.cuni.cz/morphodita). The UDPipe tagger consists of possibly several MorphoDiTa models, each tagging some of the POS tags and/or lemmas.
 
 By default, only one model is constructed, which generates all available tags (UPOS, XPOS, Feats and Lemma). However, we found out during the UD 1.2 models training that performance improves if one model tags the UPOS, XPOS and Feats tags, while the other is performing lemmatization. Therefore, if you utilize two MorphoDiTa models, by default the first one generates all tags (except lemmas) and the second one performs lemmatization.
 
@@ -210,7 +210,7 @@ as.list(hyperparams_nl)
 
 ## Settings for the dependency parser:
 
-The parsing is performed using Parsito (http://ufal.mff.cuni.cz/parsito), which is a transition-based parser using a neural-network classifier.
+The parsing is performed using Parsito (https://ufal.mff.cuni.cz/parsito), which is a transition-based parser using a neural-network classifier.
 
 The transition-based systems can be configured by the following options:
 

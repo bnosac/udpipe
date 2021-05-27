@@ -49,7 +49,7 @@ the morphological features and the dependency relationship along the tokens. The
  \item{head_token_id: }{Indicating what is the token_id of the head of the token, indicating to which other token in the sentence it is related. See \url{https://universaldependencies.org/format.html}}
  \item{dep_rel: }{The type of relation the token has with the head_token_id. See \url{https://universaldependencies.org/format.html}}
  \item{deps: }{Enhanced dependency graph in the form of a list of head-deprel pairs. See \url{https://universaldependencies.org/format.html}}
- \item{misc: }{SpacesBefore/SpacesAfter/SpacesInToken spaces before/after/inside the token. Used to reconstruct the original text. See \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual}}
+ \item{misc: }{SpacesBefore/SpacesAfter/SpacesInToken spaces before/after/inside the token. Used to reconstruct the original text. See \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual}}
 }
 The columns paragraph_id, sentence_id, term_id, start, end are integers, the other fields
 are character data in UTF-8 encoding. \cr

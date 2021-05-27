@@ -26,17 +26,17 @@ contains text which you like to tokenize, tag and perform dependency parsing.}
 
 \item{tokenizer}{a character string of length 1, which is either 'tokenizer' (default udpipe tokenisation)
 or a character string with more complex tokenisation options 
-as specified in \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual} in which case \code{tokenizer} should be a character string where the options
+as specified in \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual} in which case \code{tokenizer} should be a character string where the options
 are put after each other using the semicolon as separation.}
 
 \item{tagger}{a character string of length 1, which is either 'default' (default udpipe POS tagging and lemmatisation)
 or 'none' (no POS tagging and lemmatisation needed) or a character string with more complex tagging options 
-as specified in \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual} in which case \code{tagger} should be a character string where the options
+as specified in \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual} in which case \code{tagger} should be a character string where the options
 are put after each other using the semicolon as separation.}
 
 \item{parser}{a character string of length 1, which is either 'default' (default udpipe dependency parsing) or
 'none' (no dependency parsing needed) or a character string with more complex parsing options 
-as specified in \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual} in which case \code{parser} should be a character string where the options
+as specified in \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual} in which case \code{parser} should be a character string where the options
 are put after each other using the semicolon as separation.}
 
 \item{trace}{A non-negative integer indicating to show progress on the annotation. 

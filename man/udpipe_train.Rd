@@ -23,19 +23,19 @@ can handle. Defaults to 'my_annotator.udpipe' in the current working directory.}
 
 \item{annotation_tokenizer}{a string containing options for the tokenizer. This can be either 'none' or 'default' or a list 
 of options as mentioned in the UDPipe manual. See the vignette \code{vignette("udpipe-train", package = "udpipe")} or
-go directly to \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_tokenizer} for a full description of the options
+go directly to \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_tokenizer} for a full description of the options
 or see the examples below.
 Defaults to 'default'. If you specify 'none', the model will not be able to perform tokenization.}
 
 \item{annotation_tagger}{a string containing options for the pos tagger and lemmatiser. This can be either 'none' or 'default' or a list 
 of options as mentioned in the UDPipe manual. See the vignette \code{vignette("udpipe-train", package = "udpipe")} or
-go directly to \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_tagger} for a full description of the options
+go directly to \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_tagger} for a full description of the options
 or see the examples below.
 Defaults to 'default'. If you specify 'none', the model will not be able to perform POS tagging or lemmatization.}
 
 \item{annotation_parser}{a string containing options for the dependency parser.  This can be either 'none' or 'default' or a list 
 of options as mentioned in the UDPipe manual. See the vignette \code{vignette("udpipe-train", package = "udpipe")} or
-go directly to \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_parser} for a full description of the options
+go directly to \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_parser} for a full description of the options
 or see the examples below.
 Defaults to 'default'. If you specify 'none', the model will not be able to perform dependency parsing.}
 }
@@ -121,7 +121,7 @@ vignette("udpipe-train", package = "udpipe")
 }
 }
 \references{
-\url{http://ufal.mff.cuni.cz/udpipe/1/users-manual}
+\url{https://ufal.mff.cuni.cz/udpipe/1/users-manual}
 }
 \seealso{
 \code{\link{udpipe_annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}},

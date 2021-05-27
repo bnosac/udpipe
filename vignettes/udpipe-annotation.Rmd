@@ -27,7 +27,7 @@ The data preparation part of any Natural Language Processing flow consists of a 
 
 ![](udpipe-rlogo.png)
 
-It does this by providing an Rcpp wrapper around the UDPipe C++ library which is described at http://ufal.mff.cuni.cz/udpipe and is available at https://github.com/ufal/udpipe.
+It does this by providing an Rcpp wrapper around the UDPipe C++ library which is described at https://ufal.mff.cuni.cz/udpipe and is available at https://github.com/ufal/udpipe.
 
 ### udpipe the R package
 
@@ -43,7 +43,7 @@ The udpipe R package was designed with the following things in mind when buildin
 
 - UDPipe provides language-agnostic tokenization, tagging, lemmatization and dependency parsing of raw text, which is an essential part in natural language processing.
 - UDPipe allows to work with data in CONLL-U format as described at https://universaldependencies.org/format.html
-- The techniques used are explained in detail in the paper: "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <http://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>. In that paper, you'll also find accuracies on different languages and process flow speed (measured in words per second).
+- The techniques used are explained in detail in the paper: "Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe", available at <https://ufal.mff.cuni.cz/~straka/papers/2017-conll_udpipe.pdf>. In that paper, you'll also find accuracies on different languages and process flow speed (measured in words per second).
 
 ## udpipe models
 

@@ -9,15 +9,15 @@
 #' \code{doc_id[i]} corresponds to \code{x[i]}.
 #' @param tokenizer a character string of length 1, which is either 'tokenizer' (default udpipe tokenisation)
 #' or a character string with more complex tokenisation options 
-#' as specified in \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual} in which case \code{tokenizer} should be a character string where the options
+#' as specified in \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual} in which case \code{tokenizer} should be a character string where the options
 #' are put after each other using the semicolon as separation.
 #' @param tagger a character string of length 1, which is either 'default' (default udpipe POS tagging and lemmatisation)
 #' or 'none' (no POS tagging and lemmatisation needed) or a character string with more complex tagging options 
-#' as specified in \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual} in which case \code{tagger} should be a character string where the options
+#' as specified in \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual} in which case \code{tagger} should be a character string where the options
 #' are put after each other using the semicolon as separation.
 #' @param parser a character string of length 1, which is either 'default' (default udpipe dependency parsing) or
 #' 'none' (no dependency parsing needed) or a character string with more complex parsing options 
-#' as specified in \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual} in which case \code{parser} should be a character string where the options
+#' as specified in \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual} in which case \code{parser} should be a character string where the options
 #' are put after each other using the semicolon as separation.
 #' @param trace A non-negative integer indicating to show progress on the annotation. 
 #' If positive it prints out a message before each \code{trace} number of elements of \code{x} for which annotation is to be executed,
@@ -337,7 +337,7 @@ read_connlu <- function(x, is_udpipe_annotation = FALSE, ...){
 #'  \item{head_token_id: }{Indicating what is the token_id of the head of the token, indicating to which other token in the sentence it is related. See \url{https://universaldependencies.org/format.html}}
 #'  \item{dep_rel: }{The type of relation the token has with the head_token_id. See \url{https://universaldependencies.org/format.html}}
 #'  \item{deps: }{Enhanced dependency graph in the form of a list of head-deprel pairs. See \url{https://universaldependencies.org/format.html}}
-#'  \item{misc: }{SpacesBefore/SpacesAfter/SpacesInToken spaces before/after/inside the token. Used to reconstruct the original text. See \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual}}
+#'  \item{misc: }{SpacesBefore/SpacesAfter/SpacesInToken spaces before/after/inside the token. Used to reconstruct the original text. See \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual}}
 #' }
 #' The columns paragraph_id, sentence_id, term_id, start, end are integers, the other fields
 #' are character data in UTF-8 encoding. \cr

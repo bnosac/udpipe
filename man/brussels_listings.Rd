@@ -5,7 +5,7 @@
 \alias{brussels_listings}
 \title{Brussels AirBnB address locations available at www.insideairbnb.com}
 \source{
-\url{http://data.insideairbnb.com/belgium/bru/brussels/2015-10-03/visualisations/listings.csv}
+\url{http://insideairbnb.com/brussels}: information of 2015-10-03
 }
 \description{
 Brussels AirBnB address locations available at www.insideairbnb.com

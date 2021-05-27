@@ -16,17 +16,17 @@
 #' @param files_conllu_holdout a character vector of files in CONLL-U format used for holdout evalution of the model. This argument is optional.
 #' @param annotation_tokenizer a string containing options for the tokenizer. This can be either 'none' or 'default' or a list 
 #' of options as mentioned in the UDPipe manual. See the vignette \code{vignette("udpipe-train", package = "udpipe")} or
-#' go directly to \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_tokenizer} for a full description of the options
+#' go directly to \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_tokenizer} for a full description of the options
 #' or see the examples below.
 #' Defaults to 'default'. If you specify 'none', the model will not be able to perform tokenization.
 #' @param annotation_tagger a string containing options for the pos tagger and lemmatiser. This can be either 'none' or 'default' or a list 
 #' of options as mentioned in the UDPipe manual. See the vignette \code{vignette("udpipe-train", package = "udpipe")} or
-#' go directly to \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_tagger} for a full description of the options
+#' go directly to \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_tagger} for a full description of the options
 #' or see the examples below.
 #' Defaults to 'default'. If you specify 'none', the model will not be able to perform POS tagging or lemmatization.
 #' @param annotation_parser a string containing options for the dependency parser.  This can be either 'none' or 'default' or a list 
 #' of options as mentioned in the UDPipe manual. See the vignette \code{vignette("udpipe-train", package = "udpipe")} or
-#' go directly to \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_parser} for a full description of the options
+#' go directly to \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_parser} for a full description of the options
 #' or see the examples below.
 #' Defaults to 'default'. If you specify 'none', the model will not be able to perform dependency parsing.
 #' @return A list with elements 
@@ -40,7 +40,7 @@
 #' }
 #' @seealso \code{\link{udpipe_annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}},
 #' \code{\link{udpipe_accuracy}}
-#' @references \url{http://ufal.mff.cuni.cz/udpipe/1/users-manual}
+#' @references \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual}
 #' @details 
 #' In order to train a model, you need to provide files which are in CONLL-U format in argument \code{files_conllu_training}. 
 #' This can be a vector of files or just one file. If you do not have your own CONLL-U files, you can download files for your language of 
