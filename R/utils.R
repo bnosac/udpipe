@@ -306,6 +306,7 @@ txt_previousgram <- function(x, n = 2, sep = " "){
 #' library(data.table)
 #' data(brussels_reviews_anno, package = "udpipe")
 #' x      <- as.data.table(brussels_reviews_anno)
+#' x      <- subset(x, doc_id %in% txt_sample(unique(x$doc_id), n = 10))
 #' x      <- x[, context := txt_context(lemma), by = list(doc_id, sentence_id)]
 #' head(x, 20)
 #' x$term <- sprintf("%s/%s", x$lemma, x$upos)

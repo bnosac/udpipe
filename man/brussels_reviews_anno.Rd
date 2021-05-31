@@ -5,7 +5,7 @@
 \alias{brussels_reviews_anno}
 \title{Reviews of the AirBnB customers which are tokenised, POS tagged and lemmatised}
 \source{
-\url{http://data.insideairbnb.com/belgium/bru/brussels/2015-10-03/visualisations/reviews.csv}
+\url{http://insideairbnb.com/brussels}: information of 2015-10-03
 }
 \description{
 Reviews of the AirBnB customerswhich are tokenised, POS tagged and lemmatised.

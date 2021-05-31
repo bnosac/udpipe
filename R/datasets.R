@@ -70,7 +70,7 @@ NULL
 #' to be able to comply to CRAN policies.
 #' @name brussels_reviews_anno
 #' @docType data
-#' @source \url{http://data.insideairbnb.com/belgium/bru/brussels/2015-10-03/visualisations/reviews.csv}
+#' @source \url{http://insideairbnb.com/brussels}: information of 2015-10-03
 #' @seealso \code{\link{brussels_reviews}}, \code{\link{brussels_listings}}
 #' @examples
 #' ## brussels_reviews_anno
