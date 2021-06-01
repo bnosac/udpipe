@@ -3,12 +3,9 @@ title: "UDPipe Natural Language Processing - Basic Analytical Use Cases"
 author: "Jan Wijffels"
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  html_vignette:
     fig_caption: false
     toc: true
-    toc_float:
-      collapsed: false
-      smooth_scroll: false
     toc_depth: 3
 vignette: >
   %\VignetteIndexEntry{UDPipe Natural Language Processing - Basic Analytical Use Cases}
@@ -18,7 +15,7 @@ vignette: >
 
 ```{r setup, include=FALSE, cache=FALSE}
 options(width = 1000)
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, comment = NA, eval = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, comment = NA, eval = TRUE, fig.width = 5, fig.height = 5)
 ```
 
 ## UDPipe - Basic Analytics

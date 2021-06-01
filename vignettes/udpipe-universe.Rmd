@@ -3,7 +3,7 @@ title: "UDPipe Natural Language Processing - Universe"
 author: "Jan Wijffels"
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  html_vignette:
     fig_caption: false
     toc: false
 vignette: >

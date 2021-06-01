@@ -5,6 +5,7 @@
 - read_connlu is now using fixed=TRUE when splitting by newline symbol (for speeding up parsing with function udpipe)
 - Added txt_paste
 - Added txt_context
+- Use html_vignette instead of html_document in the vignettes in order to reduce package size
 
 ## CHANGES IN udpipe VERSION 0.8.5
 
