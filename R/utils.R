@@ -689,7 +689,7 @@ txt_contains <- function(x, patterns, value = FALSE, ignore.case = TRUE, ...){
 #' txt_count(x, pattern = "AB", ignore.case = FALSE)
 txt_count <- function(x, pattern, ...){
   result <- gregexpr(pattern = pattern, text = x, ...)
-  sapply(result, FUN = function(x){
+  result <- sapply(result, FUN = function(x){
     test <- length(x) == 1 && x < 0
     if(is.na(test)){
       return(NA_integer_) 
@@ -700,6 +700,7 @@ txt_count <- function(x, pattern, ...){
       length(x)
     }
   }, USE.NAMES = FALSE)
+  as.integer(result)
 }
 
 #' @title Get the overlap between 2 vectors

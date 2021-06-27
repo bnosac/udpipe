@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.7
+
+- txt_count now always returns an integer, even if in the border case where a character vector of length 0 is supplied
+
 ## CHANGES IN udpipe VERSION 0.8.6
 
 - Downloading models to paths containing non-ASCII characters now works (issue #95)
