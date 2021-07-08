@@ -1291,6 +1291,35 @@ dtm_sample <- function(dtm, size = nrow(dtm), replace = FALSE, prob = NULL){
 #'      type = "n")
 #' text(scores$terminology$similarity_weight, log(scores$terminology$freq), 
 #'      labels = scores$terminology$term)
+#'      
+#' \dontshow{
+#' if(FALSE && require(word2vec))
+#' \{
+#' }
+#' ## More elaborate example using word2vec
+#' ## building word2vec model on all Dutch texts, 
+#' ## finding similarity of dtm to adjectives only
+#' library(word2vec)
+#' text      <- subset(brussels_reviews_anno, language == "nl")
+#' text      <- paste.data.frame(text, term = "lemma", group = "doc_id")
+#' text      <- text$lemma
+#' model     <- word2vec(text, dim = 10, iter = 20, type = "cbow", min_count = 1)
+#' predict(model, newdata = names(weights), type = "nearest", top_n = 3)
+#' embedding <- as.matrix(model)
+#' adj       <- subset(brussels_reviews_anno, language %in% "nl" & upos %in% "ADJ")
+#' adj       <- txt_freq(adj$lemma)
+#' adj       <- subset(adj, freq > 1 & nchar(key) > 1)
+#' scores    <- dtm_svd_similarity(dtm, embedding, weights = weights, type = "dot", 
+#'                                 terminology = adj$key)
+#' scores
+#' plot(scores$terminology$similarity_weight, log(scores$terminology$freq), 
+#'      type = "n")
+#' text(scores$terminology$similarity_weight, log(scores$terminology$freq), 
+#'      labels = scores$terminology$term)
+#' \dontshow{
+#' \}
+#' # End of main if statement running only if the required packages are installed
+#' }
 dtm_svd_similarity <- function(dtm, embedding, weights, terminology = rownames(embedding), type = c("cosine", "dot")){
   doc_id <- term <- prop <- in_terminology <- NULL
   embedding_similarity <- function(x, y, type = c("cosine", "dot")) {
@@ -1385,7 +1414,7 @@ dtm_svd_similarity <- function(dtm, embedding, weights, terminology = rownames(e
   dtf <- dtf[, in_terminology := term %in% terminology, ]
   #dtf <- dtf[, prop := as.numeric(freq / sum(freq)), by = list(doc_id)]
   dtf <- dtf[, prop := as.numeric(ifelse(any(in_terminology), freq[in_terminology] / sum(freq[in_terminology]), 0)), by = list(doc_id)]
-  dtm <- document_term_matrix(dtf, weight = "prop", terminology = terminology)
+  dtm <- document_term_matrix(dtf, weight = "prop", vocabulary = terminology)
   dtm <- dtm[, terminology, drop = FALSE]
   
   scores <- dtm %*% weightspace

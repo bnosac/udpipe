@@ -1,3 +1,9 @@
+## CHANGES IN udpipe VERSION 0.8.8
+
+- dtm_svd_similarity, fix to make sure that if provided a dtm with features which are all missing/zero, 
+  the scoring still works as expected instead of removing features which contain no data whatsoever.
+  So that dtm_svd_similarity can be used alongside embeddings of R package word2vec which might contain words which are not in the dtm. See the example in ?dtm_svd_similarity
+
 ## CHANGES IN udpipe VERSION 0.8.7
 
 - txt_count now always returns an integer, even if in the border case where a character vector of length 0 is supplied
