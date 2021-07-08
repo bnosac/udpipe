@@ -113,3 +113,15 @@ NULL
 #' str(brussels_reviews_anno)
 #' }
 NULL
+
+
+
+#' @title An example matrix of word embeddings 
+#' @description An simple 10-dimensional example matrix of word embeddings trained on the Dutch lemma's 
+#' of the dataset \code{\link{brussels_reviews_anno}}
+#' @name brussels_reviews_w2v_embeddings_lemma_nl
+#' @docType data
+#' @examples
+#' data(brussels_reviews_w2v_embeddings_lemma_nl)
+#' head(brussels_reviews_w2v_embeddings_lemma_nl)
+NULL

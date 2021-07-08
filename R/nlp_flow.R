@@ -1292,13 +1292,11 @@ dtm_sample <- function(dtm, size = nrow(dtm), replace = FALSE, prob = NULL){
 #' text(scores$terminology$similarity_weight, log(scores$terminology$freq), 
 #'      labels = scores$terminology$term)
 #'      
-#' \dontshow{
-#' if(FALSE && require(word2vec))
-#' \{
-#' }
+#' \dontrun{
 #' ## More elaborate example using word2vec
 #' ## building word2vec model on all Dutch texts, 
 #' ## finding similarity of dtm to adjectives only
+#' set.seed(123)
 #' library(word2vec)
 #' text      <- subset(brussels_reviews_anno, language == "nl")
 #' text      <- paste.data.frame(text, term = "lemma", group = "doc_id")
@@ -1306,20 +1304,21 @@ dtm_sample <- function(dtm, size = nrow(dtm), replace = FALSE, prob = NULL){
 #' model     <- word2vec(text, dim = 10, iter = 20, type = "cbow", min_count = 1)
 #' predict(model, newdata = names(weights), type = "nearest", top_n = 3)
 #' embedding <- as.matrix(model)
-#' adj       <- subset(brussels_reviews_anno, language %in% "nl" & upos %in% "ADJ")
-#' adj       <- txt_freq(adj$lemma)
-#' adj       <- subset(adj, freq > 1 & nchar(key) > 1)
+#' }
+#' data(brussels_reviews_w2v_embeddings_lemma_nl)
+#' embedding <- brussels_reviews_w2v_embeddings_lemma_nl
+#' adjective <- subset(brussels_reviews_anno, language %in% "nl" & upos %in% "ADJ")
+#' adjective <- txt_freq(adjective$lemma)
+#' adjective <- subset(adjective, freq >= 5 & nchar(key) > 1)
+#' adjective <- adjective$key
+#' 
 #' scores    <- dtm_svd_similarity(dtm, embedding, weights = weights, type = "dot", 
-#'                                 terminology = adj$key)
+#'                                 terminology = adjective)
 #' scores
 #' plot(scores$terminology$similarity_weight, log(scores$terminology$freq), 
 #'      type = "n")
 #' text(scores$terminology$similarity_weight, log(scores$terminology$freq), 
-#'      labels = scores$terminology$term)
-#' \dontshow{
-#' \}
-#' # End of main if statement running only if the required packages are installed
-#' }
+#'      labels = scores$terminology$term, cex = 0.8)
 dtm_svd_similarity <- function(dtm, embedding, weights, terminology = rownames(embedding), type = c("cosine", "dot")){
   doc_id <- term <- prop <- in_terminology <- NULL
   embedding_similarity <- function(x, y, type = c("cosine", "dot")) {
@@ -1358,6 +1357,10 @@ dtm_svd_similarity <- function(dtm, embedding, weights, terminology = rownames(e
   if(missing(terminology)){
     terminology <- object$terminology
   }else{
+    missing_embeddings <- setdiff(terminology, object$terminology)
+    if(length(missing_embeddings) > 0){
+      warning(sprintf("Removing '%s' from terminology as these are not part of rownames(embedding)", paste(missing_embeddings, collapse = ", ")))
+    }
     terminology <- intersect(terminology, object$terminology)
   }
   not_known_weights <- setdiff(names(weights), object$terminology)
@@ -1426,9 +1429,10 @@ dtm_svd_similarity <- function(dtm, embedding, weights, terminology = rownames(e
   terminology_similarity <- sort(weightspace, decreasing = TRUE)
   terminology_similarity <- data.frame(
     term = names(terminology_similarity), 
-    freq = txt_recode(names(terminology_similarity), from = names(freq), to = as.integer(freq)),
+    freq = txt_recode(names(terminology_similarity), from = names(freq), to = as.integer(freq), na.rm = TRUE),
     similarity_weight = as.numeric(terminology_similarity),
     stringsAsFactors = FALSE)
+  terminology_similarity$freq <- ifelse(is.na(terminology_similarity$freq), 0, terminology_similarity$freq)
   
   result <- list(weights = weights_scaled,
                  type = type,
