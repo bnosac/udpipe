@@ -78,6 +78,42 @@ txt_paste <- function(..., collapse = " ", na.rm = FALSE){
 }
 
 
+#' @title Look up a multiple patterns and indicate their presence in text
+#' @description A variant of \code{\link{grepl}} which allows to specify multiple regular expressions
+#' and allows to combine the result of these into one logical vector.\cr 
+#' You can specify how to combine the results of the regular expressions by specifying
+#' an aggregate function like \code{\link{all}}, \code{\link{any}}, \code{\link{sum}}.
+#' @param x a character vector 
+#' @param pattern a character vector containing one or several regular expressions
+#' @param FUN a function to apply to combine the results ot the different regular expressions for each element of \code{x}. 
+#' Defaults to \code{\link{all}}.
+#' @param ignore.case passed on to \code{\link{grepl}}
+#' @param perl passed on to \code{\link{grepl}}
+#' @param fixed passed on to \code{\link{grepl}}
+#' @param useBytes passed on to \code{\link{grepl}}
+#' @param ... further arguments passed on to \code{FUN}
+#' @return a logical vector with the same length as \code{x} with the result of the call to \code{FUN} applied elementwise to each result of grepl for each pattern
+#' @export
+#' @seealso \code{\link{grepl}}
+#' @examples 
+#' x <- c("--A--", "--B--", "--ABC--", "--AC--", "Z")
+#' txt_grepl(x, pattern = c("A", "C"), FUN = all)
+#' txt_grepl(x, pattern = c("A", "C"), FUN = any)
+#' txt_grepl(x, pattern = c("A", "C"), FUN = sum)
+#' data.frame(x = x, 
+#'            A_and_C = txt_grepl(x, pattern = c("A", "C"), FUN = all),
+#'            A_or_C  = txt_grepl(x, pattern = c("A", "C"), FUN = any),
+#'            A_C_n   = txt_grepl(x, pattern = c("A", "C"), FUN = sum))
+#' txt_grepl(x, pattern = "A|C")
+txt_grepl <- function(x, pattern, FUN = all, ignore.case = FALSE, perl = FALSE,
+                      fixed = FALSE, useBytes = FALSE, ...){
+  found <- lapply(pattern, FUN = function(onepattern, x, ignore.case, perl, fixed, useBytes){
+    grepl(x = x, pattern = onepattern, ignore.case = ignore.case, perl = perl, fixed = fixed, useBytes = useBytes)
+  }, x = x, ignore.case = ignore.case, perl = perl, fixed = fixed, useBytes = useBytes)
+  found <- matrix(unlist(found), nrow = length(x))
+  apply(found, MARGIN = 1, FUN = FUN, ...)
+}
+
 
 
 
