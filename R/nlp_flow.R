@@ -1189,9 +1189,9 @@ dtm_align <- function(x, y, FUN, ...){
   X   <- x[which(rownames(x) %in% nm), , drop = FALSE]
   #idx <- match(rownames(X), nm)
   idx <- which(nm %in% rownames(X))
-  if(is.vector(y) | is.factor(y)){
+  if(NCOL(y) == 1){
     Y <- y[idx]
-  }else if(ncol(y) == 2){
+  }else if(NCOL(y) == 2){
     Y <- y[[2]]
     names(Y) <- nm
     Y <- Y[idx]

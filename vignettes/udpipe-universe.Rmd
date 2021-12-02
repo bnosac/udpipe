@@ -31,7 +31,7 @@ Hereby a small list of loosely coupled packages by the same author which contain
 - **word2vec**: Training and applying the word2vec algorithm: https://CRAN.R-project.org/package=word2vec
 - **doc2vec**: Building paragraph vector models also known as doc2vec https://CRAN.R-project.org/package=doc2vec
 - **ruimtehol**: Text embedding techniques using Starspace: https://CRAN.R-project.org/package=ruimtehol
-- **textrank**: Text summarisation and keyword detection using textrank: https://CRAN.R-project.org/package=textrank
+- **topicmodels.etm**: Topic Modelling in Embedding Spaces: https://CRAN.R-project.org/package=topicmodels.etm
 - **brown**: Brown word clustering on texts
 - **sentencepiece**: Byte Pair Encoding and Unigram tokenisation using sentencepiece: https://CRAN.R-project.org/package=sentencepiece
 - **tokenizers.bpe**: Byte Pair Encoding tokenisation using YouTokenToMe: https://CRAN.R-project.org/package=tokenizers.bpe

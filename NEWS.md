@@ -4,6 +4,7 @@
   the scoring still works as expected instead of removing features which contain no data whatsoever.
   So that dtm_svd_similarity can be used alongside embeddings of R package word2vec which might contain words which are not in the dtm. See the example in ?dtm_svd_similarity
 - added txt_grepl
+- dtm_align now uses NCOL to see if y is a vector instead of a data.frame
 
 ## CHANGES IN udpipe VERSION 0.8.7
 
