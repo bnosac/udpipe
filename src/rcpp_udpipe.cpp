@@ -240,7 +240,7 @@ Rcpp::List udp_tokenise_tag_parse_basic(SEXP udmodel, Rcpp::StringVector x, Rcpp
 Rcpp::CharacterVector na_locf(Rcpp::CharacterVector x) {
   int i;
   for(i = 1; i < x.size(); i++) {
-    if((x[i] == NA_STRING) & (x[i-1] != NA_STRING)) {
+    if((x[i] == NA_STRING) && (x[i-1] != NA_STRING)) {
       x[i] = x[i-1];
     }
   }

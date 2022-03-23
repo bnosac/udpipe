@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.9
+
+- fix R CMD check message on Fedora clang infrastructure: rcpp_udpipe.cpp:243:8: warning: use of bitwise '&' with boolean operands
+
 ## CHANGES IN udpipe VERSION 0.8.8
 
 - dtm_svd_similarity, fix to make sure that if provided a dtm with features which are all missing/zero, 
