@@ -283,7 +283,8 @@ document_term_matrix.data.frame <- function(x, vocabulary, weight = "freq", ...)
 #' @export
 document_term_matrix.matrix <- function(x, ...){
   #x <- as(x, "dgCMatrix")
-  x <- as(as(as(x, "dMatrix"), "generalMatrix"), "CsparseMatrix")
+  #x <- as(as(as(x, "dMatrix"), "generalMatrix"), "CsparseMatrix")
+  x <- Matrix(data = x, sparse = TRUE, doDiag = FALSE, dimnames = dimnames(x))
   x
 }
 
