@@ -282,7 +282,8 @@ document_term_matrix.data.frame <- function(x, vocabulary, weight = "freq", ...)
 #' @describeIn document_term_matrix Construct a sparse document term matrix from a matrix
 #' @export
 document_term_matrix.matrix <- function(x, ...){
-  x <- as(x, "dgCMatrix")
+  #x <- as(x, "dgCMatrix")
+  x <- as(as(as(x, "dMatrix"), "generalMatrix"), "CsparseMatrix")
   x
 }
 
@@ -815,7 +816,7 @@ dtm_colsums_group <- function(x, groups){
   stopifnot(is.list(groups))
   if(length(groups) == 0){
      extra <- matrix(nrow = nrow(x), ncol = 0, byrow = FALSE, dimnames = list(rownames(x)))
-     extra <- as(extra, "dgCMatrix")
+     extra <- document_term_matrix.matrix(extra, "dgCMatrix")
      return(extra)
   }
   #stopifnot(length(groups) > 0)
@@ -855,7 +856,7 @@ dtm_rowsums_group <- function(x, groups){
   stopifnot(is.list(groups))
   if(length(groups) == 0){
      extra <- matrix(nrow = 0, ncol = ncol(x), byrow = FALSE, dimnames = list(character(), colnames(x)))
-     extra <- as(extra, "dgCMatrix")
+     extra <- document_term_matrix.matrix(extra, "dgCMatrix")
      return(extra)
   }
   #stopifnot(length(groups) > 0)
