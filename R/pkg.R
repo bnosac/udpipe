@@ -2,7 +2,7 @@
 #' @importFrom data.table tstrsplit ":=" data.table as.data.table setDF setDT setnames setcolorder rbindlist setorder is.data.table frankv rleid uniqueN dcast.data.table
 #' @importFrom utils download.file head tail capture.output
 #' @importFrom methods cbind2 rbind2 as new setRefClass setMethod
-#' @importFrom Matrix sparseMatrix summary crossprod tcrossprod diag 
+#' @importFrom Matrix sparseMatrix summary crossprod tcrossprod diag Matrix 
 #' @importFrom stats chisq.test
 #' @useDynLib udpipe
 NULL
