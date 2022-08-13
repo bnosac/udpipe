@@ -135,6 +135,14 @@ x <- matrix(c(0, 0, 0, 1, NA, 3, 4, 5, 6, 7), nrow = 2)
 x
 dtm <- document_term_matrix(x)
 dtm
+x <- matrix(c(0, 0, 0, 0.1, NA, 0.3, 0.4, 0.5, 0.6, 0.7), nrow = 2)
+x
+dtm <- document_term_matrix(x)
+dtm
+x   <- setNames(c(TRUE, NA, FALSE, FALSE), c("a", "b", "c", "d"))
+x   <- as.matrix(x)
+dtm <- document_term_matrix(x)
+dtm
 
 ##
 ## Convert vectors to sparse matrices
