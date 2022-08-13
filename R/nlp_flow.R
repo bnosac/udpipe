@@ -225,6 +225,14 @@ document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
 #' x
 #' dtm <- document_term_matrix(x)
 #' dtm
+#' x <- matrix(c(0, 0, 0, 0.1, NA, 0.3, 0.4, 0.5, 0.6, 0.7), nrow = 2)
+#' x
+#' dtm <- document_term_matrix(x)
+#' dtm
+#' x   <- setNames(c(TRUE, NA, FALSE, FALSE), c("a", "b", "c", "d"))
+#' x   <- as.matrix(x)
+#' dtm <- document_term_matrix(x)
+#' dtm
 #' 
 #' ##
 #' ## Convert vectors to sparse matrices
@@ -284,7 +292,11 @@ document_term_matrix.data.frame <- function(x, vocabulary, weight = "freq", ...)
 document_term_matrix.matrix <- function(x, ...){
   #x <- as(x, "dgCMatrix")
   #x <- as(as(as(x, "dMatrix"), "generalMatrix"), "CsparseMatrix")
-  x <- Matrix(data = x, sparse = TRUE, doDiag = FALSE, dimnames = dimnames(x))
+  #x <- Matrix(data = x, sparse = TRUE, doDiag = FALSE, dimnames = dimnames(x))
+  if(is.logical(x)){
+    x[] <- as.integer(x)
+  }
+  x <- as(x, "CsparseMatrix")
   x
 }
 
