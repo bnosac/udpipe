@@ -1,7 +1,3 @@
-## CHANGES IN udpipe VERSION 0.8.10
-
-- dtm_colsums_group and dtm_rowsums_group now use document_term_matrix.matrix and document_term_matrix.matrix no longer uses `as(<matrix>, "dgCMatrix")` but `as(as(as(from, "dMatrix"), "generalMatrix"), "CsparseMatrix")` as indicated by the Matrix package authors 
-
 ## CHANGES IN udpipe VERSION 0.8.9
 
 - fix R CMD check message on Fedora clang infrastructure: rcpp_udpipe.cpp:243:8: warning: use of bitwise '&' with boolean operands

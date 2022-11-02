@@ -290,13 +290,13 @@ document_term_matrix.data.frame <- function(x, vocabulary, weight = "freq", ...)
 #' @describeIn document_term_matrix Construct a sparse document term matrix from a matrix
 #' @export
 document_term_matrix.matrix <- function(x, ...){
-  #x <- as(x, "dgCMatrix")
+  x <- as(x, "dgCMatrix")
   #x <- as(as(as(x, "dMatrix"), "generalMatrix"), "CsparseMatrix")
   #x <- Matrix(data = x, sparse = TRUE, doDiag = FALSE, dimnames = dimnames(x))
-  if(is.logical(x)){
-    x[] <- as.integer(x)
-  }
-  x <- as(x, "CsparseMatrix")
+  #if(is.logical(x)){
+  #  x[] <- as.integer(x)
+  #}
+  #x <- as(x, "CsparseMatrix")
   x
 }
 
