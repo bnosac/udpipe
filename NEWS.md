@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.10
+
+- use snprintf instead of sprintf to handle the R CMD check deprecating note on M1mac
+
 ## CHANGES IN udpipe VERSION 0.8.9
 
 - fix R CMD check message on Fedora clang infrastructure: rcpp_udpipe.cpp:243:8: warning: use of bitwise '&' with boolean operands

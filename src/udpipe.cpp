@@ -4000,7 +4000,7 @@ string czech_lemma_addinfo::format(const unsigned char* addinfo, int addinfo_len
     res.reserve(addinfo_len + 4);
     if (addinfo[0] != 255) {
       char num[5];
-      sprintf(num, "-%u", addinfo[0]);
+      snprintf(num, sizeof(num), "-%u", addinfo[0]);
       res += num;
     }
     for (int i = 1; i < addinfo_len; i++)
