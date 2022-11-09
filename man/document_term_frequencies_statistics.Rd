@@ -28,6 +28,10 @@ and the weighted term frequency as defined at \url{https://en.wikipedia.org/wiki
 }
 \examples{
 data(brussels_reviews_anno)
+\dontshow{
+data.table::setDTthreads(1)
+brussels_reviews_anno <- subset(brussels_reviews_anno, language \%in\% "nl")
+}
 x <- document_term_frequencies(brussels_reviews_anno[, c("doc_id", "token")])
 x <- document_term_frequencies_statistics(x)
 head(x)

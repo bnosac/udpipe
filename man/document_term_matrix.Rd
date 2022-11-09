@@ -77,6 +77,9 @@ the documents in the rows and the terms in the columns
 }}
 
 \examples{
+\dontshow{
+data.table::setDTthreads(1)
+}
 x <- data.frame(doc_id = c(1, 1, 2, 3, 4), 
  term = c("A", "C", "Z", "X", "G"), 
  freq = c(1, 5, 7, 10, 0))

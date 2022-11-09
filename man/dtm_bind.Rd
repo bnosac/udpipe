@@ -31,6 +31,9 @@ In case of \code{dtm_rbind}, if the columns are not ordered in the same way in x
 If there are missing columns these will be filled with NA values.
 }
 \examples{
+\dontshow{
+data.table::setDTthreads(1)
+}
 data(brussels_reviews_anno)
 x <- brussels_reviews_anno
 
@@ -51,7 +54,8 @@ dim(m)
 
 ## cbind
 library(data.table)
-x <- as.data.table(brussels_reviews_anno)
+x <- subset(brussels_reviews_anno, language \%in\% c("nl", "fr"))
+x <- as.data.table(x)
 x <- x[, token_bigram  := txt_nextgram(token, n = 2), by = list(doc_id, sentence_id)]
 x <- x[, lemma_upos    := sprintf("\%s//\%s", lemma, upos)]
 dtm1 <- document_term_frequencies(x = x, document = "doc_id", term = c("token"))

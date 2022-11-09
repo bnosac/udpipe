@@ -59,6 +59,9 @@ Aggregate a data.frame to the document/term level by calculating how many times 
 }}
 
 \examples{
+\dontshow{
+data.table::setDTthreads(1)
+}
 ##
 ## Calculate document_term_frequencies on a data.frame
 ##

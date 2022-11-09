@@ -34,6 +34,9 @@
 #' for the combination of term1 and term2 how many times this combination occurred
 #' @export
 #' @examples 
+#' \dontshow{
+#' data.table::setDTthreads(1)
+#' }
 #' data(brussels_reviews_anno)
 #' 
 #' ## By document, which lemma's co-occur

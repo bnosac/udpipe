@@ -17,6 +17,9 @@
 #' will assume that freq is 1 for each row in the input dataset \code{x}.
 #' @export
 #' @examples 
+#' \dontshow{
+#' data.table::setDTthreads(1)
+#' }
 #' ##
 #' ## Calculate document_term_frequencies on a data.frame
 #' ##
@@ -119,6 +122,10 @@ document_term_frequencies.character <- function(x, document=paste("doc", seq_alo
 #' @export
 #' @examples 
 #' data(brussels_reviews_anno)
+#' \dontshow{
+#' data.table::setDTthreads(1)
+#' brussels_reviews_anno <- subset(brussels_reviews_anno, language %in% "nl")
+#' }
 #' x <- document_term_frequencies(brussels_reviews_anno[, c("doc_id", "token")])
 #' x <- document_term_frequencies_statistics(x)
 #' head(x)
@@ -170,6 +177,9 @@ document_term_frequencies_statistics <- function(x, k = 1.2, b = 0.75){
 #' @export
 #' @seealso \code{\link[Matrix]{sparseMatrix}}, \code{\link{document_term_frequencies}}
 #' @examples 
+#' \dontshow{
+#' data.table::setDTthreads(1)
+#' }
 #' x <- data.frame(doc_id = c(1, 1, 2, 3, 4), 
 #'  term = c("A", "C", "Z", "X", "G"), 
 #'  freq = c(1, 5, 7, 10, 0))
@@ -661,6 +671,9 @@ dtm_cor <- function(x) {
 #' @aliases dtm_rbind dtm_cbind
 #' @export
 #' @examples 
+#' \dontshow{
+#' data.table::setDTthreads(1)
+#' }
 #' data(brussels_reviews_anno)
 #' x <- brussels_reviews_anno
 #' 
@@ -681,7 +694,8 @@ dtm_cor <- function(x) {
 #' 
 #' ## cbind
 #' library(data.table)
-#' x <- as.data.table(brussels_reviews_anno)
+#' x <- subset(brussels_reviews_anno, language %in% c("nl", "fr"))
+#' x <- as.data.table(x)
 #' x <- x[, token_bigram  := txt_nextgram(token, n = 2), by = list(doc_id, sentence_id)]
 #' x <- x[, lemma_upos    := sprintf("%s//%s", lemma, upos)]
 #' dtm1 <- document_term_frequencies(x = x, document = "doc_id", term = c("token"))

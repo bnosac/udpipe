@@ -89,6 +89,9 @@ if terms co-occur
 }}
 
 \examples{
+\dontshow{
+data.table::setDTthreads(1)
+}
 data(brussels_reviews_anno)
 
 ## By document, which lemma's co-occur
