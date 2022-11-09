@@ -63,6 +63,9 @@ Aggregate a data.frame to the document/term level by calculating how many times 
 ## Calculate document_term_frequencies on a data.frame
 ##
 data(brussels_reviews_anno)
+\dontshow{
+brussels_reviews_anno <- subset(brussels_reviews_anno, language \%in\% "nl")
+}
 x <- document_term_frequencies(brussels_reviews_anno[, c("doc_id", "token")])
 x <- document_term_frequencies(brussels_reviews_anno[, c("doc_id", "lemma")])
 str(x)
@@ -85,7 +88,7 @@ x <- document_term_frequencies(x = brussels_reviews$feedback, document = brussel
 ##
 library(data.table)
 x <- as.data.table(brussels_reviews_anno)
-x <- x[, token_bigram := txt_nextgram(token, n = 2), by = list(doc_id, sentence_id)]
+x <- x[, token_bigram  := txt_nextgram(token, n = 2), by = list(doc_id, sentence_id)]
 x <- x[, token_trigram := txt_nextgram(token, n = 3), by = list(doc_id, sentence_id)]
 x <- document_term_frequencies(x = x, 
                                document = "doc_id", 
