@@ -60,8 +60,11 @@ most of the combinations of terms are significant. That's why these indicators o
 are merely used to order the collocations.
 }
 \examples{
+\dontshow{
+data.table::setDTthreads(1)
+}
 data(brussels_reviews_anno)
-x <- subset(brussels_reviews_anno, language \%in\% "fr")
+x      <- subset(brussels_reviews_anno, language \%in\% "fr")
 colloc <- keywords_collocation(x, term = "lemma", group = c("doc_id", "sentence_id"), 
                                ngram_max = 3, n_min = 10)
 head(colloc, 10)
@@ -69,8 +72,8 @@ head(colloc, 10)
 ## Example on finding collocations of nouns preceded by an adjective
 library(data.table)
 x <- as.data.table(x)
-x[, xpos_previous := txt_previous(xpos, n = 1), by = list(doc_id, sentence_id)]
-x[, xpos_next := txt_next(xpos, n = 1), by = list(doc_id, sentence_id)]
+x <- x[, xpos_previous := txt_previous(xpos, n = 1), by = list(doc_id, sentence_id)]
+x <- x[, xpos_next     := txt_next(xpos, n = 1),     by = list(doc_id, sentence_id)]
 x <- subset(x, (xpos \%in\% c("NN") & xpos_previous \%in\% c("JJ")) | 
                (xpos \%in\% c("JJ") & xpos_next \%in\% c("NN")))
 colloc <- keywords_collocation(x, term = "lemma", group = c("doc_id", "sentence_id"), 
