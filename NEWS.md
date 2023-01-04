@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.11
+
+- replace move with std::move to fix R CMD check warning on recent versions of clang compilers
+
 ## CHANGES IN udpipe VERSION 0.8.10
 
 - use snprintf instead of sprintf to handle the R CMD check deprecating note on M1mac

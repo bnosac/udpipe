@@ -10966,7 +10966,7 @@ void tagset_converter_unique_generated(vector<tagged_lemma_forms>& forms) {
       if (forms[j].lemma == forms[i].lemma) {
         // Same lemma was found. Merge form-tag pairs
         for (auto&& tagged_form : forms[j].forms)
-          forms[i].forms.emplace_back(move(tagged_form));
+          forms[i].forms.emplace_back(std::move(tagged_form));
 
         // Remove lemma j by moving it to end and deleting
         if (j < forms.size() - 1) {
@@ -17681,7 +17681,7 @@ unique_ptr<transition_oracle::tree_oracle> transition_system_swap_oracle_static:
         create_projective_component(t, node, projective_components, node);
   }
 
-  return unique_ptr<transition_oracle::tree_oracle>(new tree_oracle_static(labels, root_label, gold, move(projective_order), move(projective_components)));
+  return unique_ptr<transition_oracle::tree_oracle>(new tree_oracle_static(labels, root_label, gold, std::move(projective_order), std::move(projective_components)));
 }
 
 void transition_system_swap_oracle_static::create_projective_order(const tree& gold, int node, vector<int>& projective_order, int& projective_index) const {
@@ -18662,21 +18662,21 @@ bool input_format_presegmented_tokenizer::next_sentence(sentence& s, string& err
       // Append words
       size_t words = s.words.size() - 1;
       for (size_t i = 1; i < partial.words.size(); i++) {
-        s.words.push_back(move(partial.words[i]));
+        s.words.push_back(std::move(partial.words[i]));
         s.words.back().id += words;
         if (s.words.back().head > 0) s.words.back().head += words;
       }
 
       // Append multiword_tokens
       for (auto&& multiword_token : partial.multiword_tokens) {
-        s.multiword_tokens.push_back(move(multiword_token));
+        s.multiword_tokens.push_back(std::move(multiword_token));
         s.multiword_tokens.back().id_first += words;
         s.multiword_tokens.back().id_last += words;
       }
 
       // Append empty nodes
       for (auto&& empty_node : partial.empty_nodes) {
-        s.empty_nodes.push_back(move(empty_node));
+        s.empty_nodes.push_back(std::move(empty_node));
         s.empty_nodes.back().id += words;
       }
     }
@@ -19429,7 +19429,7 @@ void sentence::set_comment(string_piece name, string_piece value) {
     for (size_t i = 0; i < value.len; i++)
       comment.push_back(value.str[i] == '\r' || value.str[i] == '\n' ? ' ' : value.str[i]);
   }
-  comments.push_back(move(comment));
+  comments.push_back(std::move(comment));
 }
 
 /////////
