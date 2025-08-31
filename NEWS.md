@@ -1,3 +1,8 @@
+## CHANGES IN udpipe VERSION 0.8.12
+
+- avoid warning: overlapping comparisons always evaluate to true in parse_int 
+   - replacing: !(str.str[0] >= '0' || str.str[0] <= '9') with (str.str[0] < '0' || str.str[0] > '9')
+   
 ## CHANGES IN udpipe VERSION 0.8.11
 
 - replace move with std::move to fix R CMD check warning on recent versions of clang compilers
