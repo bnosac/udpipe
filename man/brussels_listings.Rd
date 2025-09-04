@@ -5,11 +5,11 @@
 \alias{brussels_listings}
 \title{Brussels AirBnB address locations available at www.insideairbnb.com}
 \source{
-\url{http://insideairbnb.com/brussels}: information of 2015-10-03
+https://insideairbnb.com/brussels: information of 2015-10-03
 }
 \description{
 Brussels AirBnB address locations available at www.insideairbnb.com
-More information: http://insideairbnb.com/get-the-data.html \cr
+More information: https://insideairbnb.com/get-the-data.html \cr
 Data has been converted from UTF-8 to ASCII as in \code{iconv(x, from = "UTF-8", to = "ASCII//TRANSLIT")} in order
 to be able to comply to CRAN policies.
 }

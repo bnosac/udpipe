@@ -5,11 +5,11 @@
 \alias{brussels_reviews}
 \title{Reviews of AirBnB customers on Brussels address locations available at www.insideairbnb.com}
 \source{
-\url{http://insideairbnb.com/brussels}: information of 2015-10-03
+https://insideairbnb.com/brussels: information of 2015-10-03
 }
 \description{
 Reviews of AirBnB customers on Brussels address locations available at www.insideairbnb.com
-More information: http://insideairbnb.com/get-the-data.html.
+More information: https://insideairbnb.com/get-the-data.html.
 The data contains 500 reviews in Spanish, 500 reviews in French and 500 reviews in Dutch.\cr
 The data frame contains the field id (unique), listing_id which corresponds to the listing_id of
 the \code{\link{brussels_listings}} dataset and text fields feedback and language (identified with package cld2) \cr
