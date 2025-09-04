@@ -41,11 +41,11 @@
 #' @param ... currently not used
 #' @return A data.frame with 1 row and the following columns: 
 #' \itemize{
-#'  \item{language: }{The language as provided by the input parameter \code{language}}
-#'  \item{file_model: }{The path to the file on disk where the model was downloaded to}
-#'  \item{url: }{The URL where the model was downloaded from}
-#'  \item{download_failed: }{A logical indicating if the download has failed or not due to internet connectivity issues}
-#'  \item{download_message: }{A character string with the error message in case the downloading of the model failed}
+#'  \item language:  The language as provided by the input parameter \code{language}
+#'  \item file_model: The path to the file on disk where the model was downloaded to
+#'  \item url: The URL where the model was downloaded from
+#'  \item download_failed: A logical indicating if the download has failed or not due to internet connectivity issues
+#'  \item download_message: A character string with the error message in case the downloading of the model failed
 #' }
 #' @seealso \code{\link{udpipe_load_model}}
 #' @details 
@@ -448,8 +448,8 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
 #' @param file full path to the model or the value returned by a call to \code{\link{udpipe_download_model}}
 #' @return An object of class \code{udpipe_model} which is a list with 2 elements
 #' \itemize{
-#'  \item{file: }{The path to the model as provided by \code{file}}
-#'  \item{model: }{An Rcpp-generated pointer to the loaded model which can be used in \code{\link{udpipe_annotate}}}
+#'  \item file: The path to the model as provided by \code{file}
+#'  \item model: An Rcpp-generated pointer to the loaded model which can be used in \code{\link{udpipe_annotate}}
 #' }
 #' @seealso \code{\link{udpipe_annotate}}, \code{\link{udpipe_download_model}}, \code{\link{udpipe_train}}
 #' @references \url{https://ufal.mff.cuni.cz/udpipe}

@@ -11,9 +11,9 @@ txt_tagsequence(x, entities)
 
 \item{entities}{a list of groups, where each list element contains
 \itemize{
- \item{start: }{A length 1 character string with the start element identifying a sequence start. E.g. 'B-LOC'}
- \item{labels: }{A character vector containing all the elements which are considered being part of a same labelling sequence, including the starting element. 
- E.g. \code{c('B-LOC', 'I-LOC', 'E-LOC')}}
+ \item start: A length 1 character string with the start element identifying a sequence start. E.g. 'B-LOC'
+ \item labels: A character vector containing all the elements which are considered being part of a same labelling sequence, including the starting element. 
+ E.g. \code{c('B-LOC', 'I-LOC', 'E-LOC')}
 }
 The list name of the group defines the label that will be assigned to the entity. If \code{entities} is not provided each possible value of \code{x}
 is considered an entity. See the examples.}

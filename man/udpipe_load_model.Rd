@@ -12,8 +12,8 @@ udpipe_load_model(file)
 \value{
 An object of class \code{udpipe_model} which is a list with 2 elements
 \itemize{
- \item{file: }{The path to the model as provided by \code{file}}
- \item{model: }{An Rcpp-generated pointer to the loaded model which can be used in \code{\link{udpipe_annotate}}}
+ \item file: The path to the model as provided by \code{file}
+ \item model: An Rcpp-generated pointer to the loaded model which can be used in \code{\link{udpipe_annotate}}
 }
 }
 \description{
