@@ -5,11 +5,6 @@
 
 using namespace Rcpp;
 
-#ifdef RCPP_USE_GLOBAL_ROSTREAM
-Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
-Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
-#endif
-
 // dependency_rowlocations
 Rcpp::List dependency_rowlocations(const unsigned int& row, const Rcpp::List& x, const int depth);
 RcppExport SEXP _udpipe_dependency_rowlocations(SEXP rowSEXP, SEXP xSEXP, SEXP depthSEXP) {
