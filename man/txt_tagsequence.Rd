@@ -21,10 +21,9 @@ is considered an entity. See the examples.}
 \value{
 a list with elements \code{entity_id} and \code{entity} where 
 \itemize{
- \item{entity is a character vector of the same length as \code{x} containing entities , 
-       constructed by recoding \code{x} to the names of \code{names(entities})}
- \item{entity_id is an integer vector of the same length as \code{x} containing unique identifiers identfying the compound label sequence such that 
-       e.g. the sequence 'B-LOC', 'I-LOC', 'I-LOC', 'E-LOC' (New York City District) would get the same \code{entity_id} identifier.}
+ \item entity is a character vector of the same length as \code{x} containing entities, constructed by recoding \code{x} to the names of \code{names(entities})
+ \item entity_id is an integer vector of the same length as \code{x} containing unique identifiers identfying the compound label sequence such that 
+       e.g. the sequence 'B-LOC', 'I-LOC', 'I-LOC', 'E-LOC' (New York City District) would get the same \code{entity_id} identifier.
 }
 See the examples.
 }
