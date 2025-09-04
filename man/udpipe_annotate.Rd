@@ -48,10 +48,10 @@ allowing you to see how much of the text is already annotated. Defaults to FALSE
 \value{
 a list with 3 elements
 \itemize{
- \item{x: }{The \code{x} character vector with text.}
- \item{conllu: }{A character vector of length 1 containing the annotated result of the annotation flow in CONLL-U format.
- This format is explained at \url{https://universaldependencies.org/format.html}}
- \item{error: }{A vector with the same length of \code{x} containing possible errors when annotating \code{x}}
+ \item x: The \code{x} character vector with text.
+ \item conllu: A character vector of length 1 containing the annotated result of the annotation flow in CONLL-U format.
+ This format is explained at \url{https://universaldependencies.org/format.html}
+ \item error: A vector with the same length of \code{x} containing possible errors when annotating \code{x}
 }
 }
 \description{
