@@ -667,8 +667,14 @@ void utf8::decode(const std::string& str, std::u32string& decoded) {
   decode(str.c_str(), decoded);
 }
 
-class utf8::string_decoder::iterator : public std::iterator<std::input_iterator_tag, char32_t> {
+class utf8::string_decoder::iterator {
  public:
+  // Required iterator traits
+  using iterator_category = std::input_iterator_tag;
+  using value_type = char32_t;
+  using difference_type = std::ptrdiff_t;
+  using pointer = const char32_t*;
+  using reference = const char32_t&;
   iterator(const char* str) : codepoint(0), next(str) { operator++(); }
   iterator(const iterator& it) : codepoint(it.codepoint), next(it.next) {}
   iterator& operator++() { if (next) { codepoint = decode(next); if (!codepoint) next = nullptr; } return *this; }
