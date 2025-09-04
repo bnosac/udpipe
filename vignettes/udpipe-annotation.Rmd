@@ -8,7 +8,7 @@ output:
     toc: true
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{UDPipe Natural Language Processing - Annotating text}
+  %\VignetteIndexEntry{UDPipe Natural Language Processing - Text Annotation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
