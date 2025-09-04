@@ -17,15 +17,15 @@
 #' @param ... further arguments passed on to topicmodels::posterior
 #' @return 
 #' \itemize{
-#'  \item{in case of type = 'topic': }{a data.table with columns 
+#'  \item in case of type = 'topic': a data.table with columns 
 #'  doc_id, 
 #'  topic (the topic number to which the document is assigned to), 
 #'  topic_label (the topic label)
 #'  topic_prob (the posterior probability score for that topic), 
 #'  topic_probdiff_2nd (the probability score for that topic - the probability score for the 2nd highest topic) 
-#'  and the probability scores for each topic as indicated by topic_labelyourownlabel}
-#'  \item{n case of type = 'terms': }{a list of data.frames with columns term and prob, 
-#'  giving the posterior probability that each term is emitted by the topic}
+#'  and the probability scores for each topic as indicated by topic_labelyourownlabel
+#'  \item n case of type = 'terms': a list of data.frames with columns term and prob, 
+#'  giving the posterior probability that each term is emitted by the topic
 #' }
 #' @export
 #' @rdname predict.LDA

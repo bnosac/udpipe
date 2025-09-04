@@ -26,8 +26,8 @@ udpipe_accuracy(
 \value{
 a list with 3 elements
 \itemize{
- \item{accuracy: }{A character vector with accuracy metrics.}
- \item{error: }{A character string with possible errors when calculating the accuracy metrics}
+ \item accuracy: A character vector with accuracy metrics.
+ \item error: A character string with possible errors when calculating the accuracy metrics
 }
 }
 \description{

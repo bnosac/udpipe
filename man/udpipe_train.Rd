@@ -42,12 +42,12 @@ Defaults to 'default'. If you specify 'none', the model will not be able to perf
 \value{
 A list with elements 
 \itemize{
- \item{file: }{The path to the model, which can be used in \code{udpipe_load_model}}
- \item{annotation_tokenizer: }{The input argument \code{annotation_tokenizer}}
- \item{annotation_tagger: }{The input argument \code{annotation_tagger}}
- \item{annotation_parser: }{The input argument \code{annotation_parser}}
- \item{errors: }{Messages from the UDPipe process indicating possible errors for example when passing the wrong arguments to the 
- annotation_tokenizer, annotation_tagger or annotation_parser}
+ \item file: The path to the model, which can be used in \code{udpipe_load_model}
+ \item annotation_tokenizer: The input argument \code{annotation_tokenizer}
+ \item annotation_tagger: The input argument \code{annotation_tagger}
+ \item annotation_parser: The input argument \code{annotation_parser}
+ \item errors: Messages from the UDPipe process indicating possible errors for example when passing the wrong arguments to the 
+ annotation_tokenizer, annotation_tagger or annotation_parser
 }
 }
 \description{

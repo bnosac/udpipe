@@ -27,12 +27,12 @@
 #' Either 'jwijffels/udpipe.models.ud.2.5', 'jwijffels/udpipe.models.ud.2.4', 'jwijffels/udpipe.models.ud.2.3', 'jwijffels/udpipe.models.ud.2.0', 'jwijffels/udpipe.models.conll18.baseline' or 'bnosac/udpipe.models.ud'. \cr
 #' Defaults to 'jwijffels/udpipe.models.ud.2.5'. \cr
 #' \itemize{
-#'   \item{'bnosac/udpipe.models.ud' contains models mainly released under the CC-BY-SA license constructed on Universal Dependencies 2.1 data, and some models released under the GPL-3 and LGPL-LR license}
-#'   \item{'jwijffels/udpipe.models.ud.2.5' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.5 data}
-#'   \item{'jwijffels/udpipe.models.ud.2.4' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.4 data}
-#'   \item{'jwijffels/udpipe.models.ud.2.3' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.3 data}
-#'   \item{'jwijffels/udpipe.models.ud.2.0' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.0 data}
-#'   \item{'jwijffels/udpipe.models.conll18.baseline' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.2 data for the 2018 conll shared task}
+#'   \item 'bnosac/udpipe.models.ud' contains models mainly released under the CC-BY-SA license constructed on Universal Dependencies 2.1 data, and some models released under the GPL-3 and LGPL-LR license
+#'   \item 'jwijffels/udpipe.models.ud.2.5' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.5 data
+#'   \item 'jwijffels/udpipe.models.ud.2.4' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.4 data
+#'   \item 'jwijffels/udpipe.models.ud.2.3' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.3 data
+#'   \item 'jwijffels/udpipe.models.ud.2.0' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.0 data
+#'   \item 'jwijffels/udpipe.models.conll18.baseline' contains models released under the CC-BY-NC-SA license constructed on Universal Dependencies 2.2 data for the 2018 conll shared task
 #' }
 #' See the Details section for further information on which languages are available in each of these repositories.
 #' @param overwrite logical indicating to overwrite the file if the file was already downloaded. Defaults to \code{TRUE} indicating 
@@ -41,11 +41,11 @@
 #' @param ... currently not used
 #' @return A data.frame with 1 row and the following columns: 
 #' \itemize{
-#'  \item{language: }{The language as provided by the input parameter \code{language}}
-#'  \item{file_model: }{The path to the file on disk where the model was downloaded to}
-#'  \item{url: }{The URL where the model was downloaded from}
-#'  \item{download_failed: }{A logical indicating if the download has failed or not due to internet connectivity issues}
-#'  \item{download_message: }{A character string with the error message in case the downloading of the model failed}
+#'  \item language:  The language as provided by the input parameter \code{language}
+#'  \item file_model: The path to the file on disk where the model was downloaded to
+#'  \item url: The URL where the model was downloaded from
+#'  \item download_failed: A logical indicating if the download has failed or not due to internet connectivity issues
+#'  \item download_message: A character string with the error message in case the downloading of the model failed
 #' }
 #' @seealso \code{\link{udpipe_load_model}}
 #' @details 
@@ -53,33 +53,33 @@
 #' \itemize{
 #'   \item 'jwijffels/udpipe.models.ud.2.5': \url{https://github.com/jwijffels/udpipe.models.ud.2.5}
 #'     \itemize{
-#'       \item{UDPipe models constructed on data from Universal Dependencies 2.5}
-#'       \item{languages-treebanks: afrikaans-afribooms, ancient_greek-perseus, ancient_greek-proiel, arabic-padt, armenian-armtdp, basque-bdt, belarusian-hse, bulgarian-btb, catalan-ancora, chinese-gsd, chinese-gsdsimp, classical_chinese-kyoto, coptic-scriptorium, croatian-set, czech-cac, czech-cltt, czech-fictree, czech-pdt, danish-ddt, dutch-alpino, dutch-lassysmall, english-ewt, english-gum, english-lines, english-partut, estonian-edt, estonian-ewt, finnish-ftb, finnish-tdt, french-gsd, french-partut, french-sequoia, french-spoken, galician-ctg, galician-treegal, german-gsd, german-hdt, gothic-proiel, greek-gdt, hebrew-htb, hindi-hdtb, hungarian-szeged, indonesian-gsd, irish-idt, italian-isdt, italian-partut, italian-postwita, italian-twittiro, italian-vit, japanese-gsd, korean-gsd, korean-kaist, latin-ittb, latin-perseus, latin-proiel, latvian-lvtb, lithuanian-alksnis, lithuanian-hse, maltese-mudt, marathi-ufal, north_sami-giella, norwegian-bokmaal, norwegian-nynorsk, norwegian-nynorsklia, old_church_slavonic-proiel, old_french-srcmf, old_russian-torot, persian-seraji, polish-lfg, polish-pdb, portuguese-bosque, portuguese-gsd, romanian-nonstandard, romanian-rrt, russian-gsd, russian-syntagrus, russian-taiga, scottish_gaelic-arcosg, serbian-set, slovak-snk, slovenian-ssj, slovenian-sst, spanish-ancora, spanish-gsd, swedish-lines, swedish-talbanken, tamil-ttb, telugu-mtg, turkish-imst, ukrainian-iu, urdu-udtb, uyghur-udt, vietnamese-vtb, wolof-wtb}
-#'       \item{license: CC-BY-SA-NC}
+#'       \item UDPipe models constructed on data from Universal Dependencies 2.5
+#'       \item languages-treebanks: afrikaans-afribooms, ancient_greek-perseus, ancient_greek-proiel, arabic-padt, armenian-armtdp, basque-bdt, belarusian-hse, bulgarian-btb, catalan-ancora, chinese-gsd, chinese-gsdsimp, classical_chinese-kyoto, coptic-scriptorium, croatian-set, czech-cac, czech-cltt, czech-fictree, czech-pdt, danish-ddt, dutch-alpino, dutch-lassysmall, english-ewt, english-gum, english-lines, english-partut, estonian-edt, estonian-ewt, finnish-ftb, finnish-tdt, french-gsd, french-partut, french-sequoia, french-spoken, galician-ctg, galician-treegal, german-gsd, german-hdt, gothic-proiel, greek-gdt, hebrew-htb, hindi-hdtb, hungarian-szeged, indonesian-gsd, irish-idt, italian-isdt, italian-partut, italian-postwita, italian-twittiro, italian-vit, japanese-gsd, korean-gsd, korean-kaist, latin-ittb, latin-perseus, latin-proiel, latvian-lvtb, lithuanian-alksnis, lithuanian-hse, maltese-mudt, marathi-ufal, north_sami-giella, norwegian-bokmaal, norwegian-nynorsk, norwegian-nynorsklia, old_church_slavonic-proiel, old_french-srcmf, old_russian-torot, persian-seraji, polish-lfg, polish-pdb, portuguese-bosque, portuguese-gsd, romanian-nonstandard, romanian-rrt, russian-gsd, russian-syntagrus, russian-taiga, scottish_gaelic-arcosg, serbian-set, slovak-snk, slovenian-ssj, slovenian-sst, spanish-ancora, spanish-gsd, swedish-lines, swedish-talbanken, tamil-ttb, telugu-mtg, turkish-imst, ukrainian-iu, urdu-udtb, uyghur-udt, vietnamese-vtb, wolof-wtb
+#'       \item license: CC-BY-SA-NC
 #'     } 
 #'   \item 'jwijffels/udpipe.models.ud.2.4': \url{https://github.com/jwijffels/udpipe.models.ud.2.4}
 #'     \itemize{
-#'       \item{UDPipe models constructed on data from Universal Dependencies 2.4}
-#'       \item{languages-treebanks: afrikaans-afribooms, ancient_greek-perseus, ancient_greek-proiel, arabic-padt, armenian-armtdp, basque-bdt, belarusian-hse, bulgarian-btb, catalan-ancora, chinese-gsd, classical_chinese-kyoto, coptic-scriptorium, croatian-set, czech-cac, czech-cltt, czech-fictree, czech-pdt, danish-ddt, dutch-alpino, dutch-lassysmall, english-ewt, english-gum, english-lines, english-partut, estonian-edt, estonian-ewt, finnish-ftb, finnish-tdt, french-gsd, french-partut, french-sequoia, french-spoken, galician-ctg, galician-treegal, german-gsd, gothic-proiel, greek-gdt, hebrew-htb, hindi-hdtb, hungarian-szeged, indonesian-gsd, irish-idt, italian-isdt, italian-partut, italian-postwita, italian-vit, japanese-gsd, korean-gsd, korean-kaist, latin-ittb, latin-perseus, latin-proiel, latvian-lvtb, lithuanian-alksnis, lithuanian-hse, maltese-mudt, marathi-ufal, north_sami-giella, norwegian-bokmaal, norwegian-nynorsk, norwegian-nynorsklia, old_church_slavonic-proiel, old_french-srcmf, old_russian-torot, persian-seraji, polish-lfg, polish-pdb, portuguese-bosque, portuguese-gsd, romanian-nonstandard, romanian-rrt, russian-gsd, russian-syntagrus, russian-taiga, serbian-set, slovak-snk, slovenian-ssj, slovenian-sst, spanish-ancora, spanish-gsd, swedish-lines, swedish-talbanken, tamil-ttb, telugu-mtg, turkish-imst, ukrainian-iu, urdu-udtb, uyghur-udt, vietnamese-vtb, wolof-wtb}
-#'       \item{license: CC-BY-SA-NC}
+#'       \item UDPipe models constructed on data from Universal Dependencies 2.4
+#'       \item languages-treebanks: afrikaans-afribooms, ancient_greek-perseus, ancient_greek-proiel, arabic-padt, armenian-armtdp, basque-bdt, belarusian-hse, bulgarian-btb, catalan-ancora, chinese-gsd, classical_chinese-kyoto, coptic-scriptorium, croatian-set, czech-cac, czech-cltt, czech-fictree, czech-pdt, danish-ddt, dutch-alpino, dutch-lassysmall, english-ewt, english-gum, english-lines, english-partut, estonian-edt, estonian-ewt, finnish-ftb, finnish-tdt, french-gsd, french-partut, french-sequoia, french-spoken, galician-ctg, galician-treegal, german-gsd, gothic-proiel, greek-gdt, hebrew-htb, hindi-hdtb, hungarian-szeged, indonesian-gsd, irish-idt, italian-isdt, italian-partut, italian-postwita, italian-vit, japanese-gsd, korean-gsd, korean-kaist, latin-ittb, latin-perseus, latin-proiel, latvian-lvtb, lithuanian-alksnis, lithuanian-hse, maltese-mudt, marathi-ufal, north_sami-giella, norwegian-bokmaal, norwegian-nynorsk, norwegian-nynorsklia, old_church_slavonic-proiel, old_french-srcmf, old_russian-torot, persian-seraji, polish-lfg, polish-pdb, portuguese-bosque, portuguese-gsd, romanian-nonstandard, romanian-rrt, russian-gsd, russian-syntagrus, russian-taiga, serbian-set, slovak-snk, slovenian-ssj, slovenian-sst, spanish-ancora, spanish-gsd, swedish-lines, swedish-talbanken, tamil-ttb, telugu-mtg, turkish-imst, ukrainian-iu, urdu-udtb, uyghur-udt, vietnamese-vtb, wolof-wtb
+#'       \item license: CC-BY-SA-NC
 #'     } 
 #'   \item 'jwijffels/udpipe.models.ud.2.3': \url{https://github.com/jwijffels/udpipe.models.ud.2.3}
 #'     \itemize{
-#'       \item{UDPipe models constructed on data from Universal Dependencies 2.3}
-#'       \item{languages-treebanks: afrikaans-afribooms, ancient_greek-perseus, ancient_greek-proiel, arabic-padt, armenian-armtdp, basque-bdt, belarusian-hse, bulgarian-btb, catalan-ancora, chinese-gsd, coptic-scriptorium, croatian-set, czech-cac, czech-cltt, czech-fictree, czech-pdt, danish-ddt, dutch-alpino, dutch-lassysmall, english-ewt, english-gum, english-lines, english-partut, estonian-edt, finnish-ftb, finnish-tdt, french-gsd, french-partut, french-sequoia, french-spoken, galician-ctg, galician-treegal, german-gsd, gothic-proiel, greek-gdt, hebrew-htb, hindi-hdtb, hungarian-szeged, indonesian-gsd, irish-idt, italian-isdt, italian-partut, italian-postwita, japanese-gsd, korean-gsd, korean-kaist, latin-ittb, latin-perseus, latin-proiel, latvian-lvtb, lithuanian-hse, maltese-mudt, marathi-ufal, north_sami-giella, norwegian-bokmaal, norwegian-nynorsk, norwegian-nynorsklia, old_church_slavonic-proiel, old_french-srcmf, persian-seraji, polish-lfg, polish-sz, portuguese-bosque, portuguese-gsd, romanian-nonstandard, romanian-rrt, russian-gsd, russian-syntagrus, russian-taiga, serbian-set, slovak-snk, slovenian-ssj, slovenian-sst, spanish-ancora, spanish-gsd, swedish-lines, swedish-talbanken, tamil-ttb, telugu-mtg, turkish-imst, ukrainian-iu, urdu-udtb, uyghur-udt, vietnamese-vtb}
-#'       \item{license: CC-BY-SA-NC}
+#'       \item UDPipe models constructed on data from Universal Dependencies 2.3
+#'       \item languages-treebanks: afrikaans-afribooms, ancient_greek-perseus, ancient_greek-proiel, arabic-padt, armenian-armtdp, basque-bdt, belarusian-hse, bulgarian-btb, catalan-ancora, chinese-gsd, coptic-scriptorium, croatian-set, czech-cac, czech-cltt, czech-fictree, czech-pdt, danish-ddt, dutch-alpino, dutch-lassysmall, english-ewt, english-gum, english-lines, english-partut, estonian-edt, finnish-ftb, finnish-tdt, french-gsd, french-partut, french-sequoia, french-spoken, galician-ctg, galician-treegal, german-gsd, gothic-proiel, greek-gdt, hebrew-htb, hindi-hdtb, hungarian-szeged, indonesian-gsd, irish-idt, italian-isdt, italian-partut, italian-postwita, japanese-gsd, korean-gsd, korean-kaist, latin-ittb, latin-perseus, latin-proiel, latvian-lvtb, lithuanian-hse, maltese-mudt, marathi-ufal, north_sami-giella, norwegian-bokmaal, norwegian-nynorsk, norwegian-nynorsklia, old_church_slavonic-proiel, old_french-srcmf, persian-seraji, polish-lfg, polish-sz, portuguese-bosque, portuguese-gsd, romanian-nonstandard, romanian-rrt, russian-gsd, russian-syntagrus, russian-taiga, serbian-set, slovak-snk, slovenian-ssj, slovenian-sst, spanish-ancora, spanish-gsd, swedish-lines, swedish-talbanken, tamil-ttb, telugu-mtg, turkish-imst, ukrainian-iu, urdu-udtb, uyghur-udt, vietnamese-vtb
+#'       \item license: CC-BY-SA-NC
 #'     } 
 #'   \item 'jwijffels/udpipe.models.ud.2.0': \url{https://github.com/jwijffels/udpipe.models.ud.2.0}
 #'     \itemize{
-#'       \item{UDPipe models constructed on data from Universal Dependencies 2.0}
-#'       \item{languages-treebanks: ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, czech-cac, czech-cltt, czech, danish, dutch-lassysmall, dutch, english-lines, english-partut, english, estonian, finnish-ftb, finnish, french-partut, french-sequoia, french, galician-treegal, galician, german, gothic, greek, hebrew, hindi, hungarian, indonesian, irish, italian, japanese, kazakh, korean, latin-ittb, latin-proiel, latin, latvian, lithuanian, norwegian-bokmaal, norwegian-nynorsk, old_church_slavonic, persian, polish, portuguese-br, portuguese, romanian, russian-syntagrus, russian, sanskrit, slovak, slovenian-sst, slovenian, spanish-ancora, spanish, swedish-lines, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese}
-#'       \item{license: CC-BY-SA-NC}
+#'       \item UDPipe models constructed on data from Universal Dependencies 2.0
+#'       \item languages-treebanks: ancient_greek-proiel, ancient_greek, arabic, basque, belarusian, bulgarian, catalan, chinese, coptic, croatian, czech-cac, czech-cltt, czech, danish, dutch-lassysmall, dutch, english-lines, english-partut, english, estonian, finnish-ftb, finnish, french-partut, french-sequoia, french, galician-treegal, galician, german, gothic, greek, hebrew, hindi, hungarian, indonesian, irish, italian, japanese, kazakh, korean, latin-ittb, latin-proiel, latin, latvian, lithuanian, norwegian-bokmaal, norwegian-nynorsk, old_church_slavonic, persian, polish, portuguese-br, portuguese, romanian, russian-syntagrus, russian, sanskrit, slovak, slovenian-sst, slovenian, spanish-ancora, spanish, swedish-lines, swedish, tamil, turkish, ukrainian, urdu, uyghur, vietnamese
+#'       \item license: CC-BY-SA-NC
 #'     } 
 #'   \item 'jwijffels/udpipe.models.conll18.baseline': \url{https://github.com/jwijffels/udpipe.models.conll18.baseline}
 #'     \itemize{
-#'       \item{UDPipe models constructed on data from Universal Dependencies 2.2}
-#'       \item{languages-treebanks: afrikaans-afribooms, ancient_greek-perseus, ancient_greek-proiel, arabic-padt, armenian-armtdp, basque-bdt, bulgarian-btb, buryat-bdt, catalan-ancora, chinese-gsd, croatian-set, czech-cac, czech-fictree, czech-pdt, danish-ddt, dutch-alpino, dutch-lassysmall, english-ewt, english-gum, english-lines, estonian-edt, finnish-ftb, finnish-tdt, french-gsd, french-sequoia, french-spoken, galician-ctg, galician-treegal, german-gsd, gothic-proiel, greek-gdt, hebrew-htb, hindi-hdtb, hungarian-szeged, indonesian-gsd, irish-idt, italian-isdt, italian-postwita, japanese-gsd, kazakh-ktb, korean-gsd, korean-kaist, kurmanji-mg, latin-ittb, latin-perseus, latin-proiel, latvian-lvtb, mixed, north_sami-giella, norwegian-bokmaal, norwegian-nynorsk, norwegian-nynorsklia, old_church_slavonic-proiel, old_french-srcmf, persian-seraji, polish-lfg, polish-sz, portuguese-bosque, romanian-rrt, russian-syntagrus, russian-taiga, serbian-set, slovak-snk, slovenian-ssj, slovenian-sst, spanish-ancora, swedish-lines, swedish-talbanken, turkish-imst, ukrainian-iu, upper_sorbian-ufal, urdu-udtb, uyghur-udt, vietnamese-vtb}
-#'       \item{license: CC-BY-SA-NC}
+#'       \item UDPipe models constructed on data from Universal Dependencies 2.2
+#'       \item languages-treebanks: afrikaans-afribooms, ancient_greek-perseus, ancient_greek-proiel, arabic-padt, armenian-armtdp, basque-bdt, bulgarian-btb, buryat-bdt, catalan-ancora, chinese-gsd, croatian-set, czech-cac, czech-fictree, czech-pdt, danish-ddt, dutch-alpino, dutch-lassysmall, english-ewt, english-gum, english-lines, estonian-edt, finnish-ftb, finnish-tdt, french-gsd, french-sequoia, french-spoken, galician-ctg, galician-treegal, german-gsd, gothic-proiel, greek-gdt, hebrew-htb, hindi-hdtb, hungarian-szeged, indonesian-gsd, irish-idt, italian-isdt, italian-postwita, japanese-gsd, kazakh-ktb, korean-gsd, korean-kaist, kurmanji-mg, latin-ittb, latin-perseus, latin-proiel, latvian-lvtb, mixed, north_sami-giella, norwegian-bokmaal, norwegian-nynorsk, norwegian-nynorsklia, old_church_slavonic-proiel, old_french-srcmf, persian-seraji, polish-lfg, polish-sz, portuguese-bosque, romanian-rrt, russian-syntagrus, russian-taiga, serbian-set, slovak-snk, slovenian-ssj, slovenian-sst, spanish-ancora, swedish-lines, swedish-talbanken, turkish-imst, ukrainian-iu, upper_sorbian-ufal, urdu-udtb, uyghur-udt, vietnamese-vtb
+#'       \item license: CC-BY-SA-NC
 #'     } 
 #'   \item 'bnosac/udpipe.models.ud': \url{https://github.com/bnosac/udpipe.models.ud}
 #'     \itemize{
@@ -88,7 +88,7 @@
 #'       \item{languages-treebanks: afrikaans, croatian, czech-cac, dutch, english, finnish, french-sequoia, irish, norwegian-bokmaal, persian, polish, portuguese, romanian, serbian, slovak, spanish-ancora, swedish}
 #'       \item{license: license is treebank-specific but mainly CC-BY-SA and GPL-3 and LGPL-LR}
 #'     } 
-#'   \item{If you need to train models yourself for commercial purposes or if you want to improve models, you can easily do this with \code{\link{udpipe_train}} which is explained in detail in the package vignette.}
+#'   \item If you need to train models yourself for commercial purposes or if you want to improve models, you can easily do this with \code{\link{udpipe_train}} which is explained in detail in the package vignette.
 #' } 
 #' Note that when you download these models, you comply to the license of your specific language model.
 #' @references 
@@ -448,8 +448,8 @@ udpipe_download_model <- function(language = c("afrikaans-afribooms", "ancient_g
 #' @param file full path to the model or the value returned by a call to \code{\link{udpipe_download_model}}
 #' @return An object of class \code{udpipe_model} which is a list with 2 elements
 #' \itemize{
-#'  \item{file: }{The path to the model as provided by \code{file}}
-#'  \item{model: }{An Rcpp-generated pointer to the loaded model which can be used in \code{\link{udpipe_annotate}}}
+#'  \item file: The path to the model as provided by \code{file}
+#'  \item model: An Rcpp-generated pointer to the loaded model which can be used in \code{\link{udpipe_annotate}}
 #' }
 #' @seealso \code{\link{udpipe_annotate}}, \code{\link{udpipe_download_model}}, \code{\link{udpipe_train}}
 #' @references \url{https://ufal.mff.cuni.cz/udpipe}

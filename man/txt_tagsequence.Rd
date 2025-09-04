@@ -11,9 +11,9 @@ txt_tagsequence(x, entities)
 
 \item{entities}{a list of groups, where each list element contains
 \itemize{
- \item{start: }{A length 1 character string with the start element identifying a sequence start. E.g. 'B-LOC'}
- \item{labels: }{A character vector containing all the elements which are considered being part of a same labelling sequence, including the starting element. 
- E.g. \code{c('B-LOC', 'I-LOC', 'E-LOC')}}
+ \item start: A length 1 character string with the start element identifying a sequence start. E.g. 'B-LOC'
+ \item labels: A character vector containing all the elements which are considered being part of a same labelling sequence, including the starting element. 
+ E.g. \code{c('B-LOC', 'I-LOC', 'E-LOC')}
 }
 The list name of the group defines the label that will be assigned to the entity. If \code{entities} is not provided each possible value of \code{x}
 is considered an entity. See the examples.}
@@ -21,10 +21,9 @@ is considered an entity. See the examples.}
 \value{
 a list with elements \code{entity_id} and \code{entity} where 
 \itemize{
- \item{entity is a character vector of the same length as \code{x} containing entities , 
-       constructed by recoding \code{x} to the names of \code{names(entities})}
- \item{entity_id is an integer vector of the same length as \code{x} containing unique identifiers identfying the compound label sequence such that 
-       e.g. the sequence 'B-LOC', 'I-LOC', 'I-LOC', 'E-LOC' (New York City District) would get the same \code{entity_id} identifier.}
+ \item entity is a character vector of the same length as \code{x} containing entities, constructed by recoding \code{x} to the names of \code{names(entities})
+ \item entity_id is an integer vector of the same length as \code{x} containing unique identifiers identfying the compound label sequence such that 
+       e.g. the sequence 'B-LOC', 'I-LOC', 'I-LOC', 'E-LOC' (New York City District) would get the same \code{entity_id} identifier.
 }
 See the examples.
 }

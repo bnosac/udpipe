@@ -31,12 +31,12 @@
 #' Defaults to 'default'. If you specify 'none', the model will not be able to perform dependency parsing.
 #' @return A list with elements 
 #' \itemize{
-#'  \item{file: }{The path to the model, which can be used in \code{udpipe_load_model}}
-#'  \item{annotation_tokenizer: }{The input argument \code{annotation_tokenizer}}
-#'  \item{annotation_tagger: }{The input argument \code{annotation_tagger}}
-#'  \item{annotation_parser: }{The input argument \code{annotation_parser}}
-#'  \item{errors: }{Messages from the UDPipe process indicating possible errors for example when passing the wrong arguments to the 
-#'  annotation_tokenizer, annotation_tagger or annotation_parser}
+#'  \item file: The path to the model, which can be used in \code{udpipe_load_model}
+#'  \item annotation_tokenizer: The input argument \code{annotation_tokenizer}
+#'  \item annotation_tagger: The input argument \code{annotation_tagger}
+#'  \item annotation_parser: The input argument \code{annotation_parser}
+#'  \item errors: Messages from the UDPipe process indicating possible errors for example when passing the wrong arguments to the 
+#'  annotation_tokenizer, annotation_tagger or annotation_parser
 #' }
 #' @seealso \code{\link{udpipe_annotation_params}}, \code{\link{udpipe_annotate}}, \code{\link{udpipe_load_model}},
 #' \code{\link{udpipe_accuracy}}
@@ -146,8 +146,8 @@ udpipe_train <- function(file = file.path(getwd(), "my_annotator.udpipe"),
 #' @param parser a character string of length 1, which is either 'default' or 'none'
 #' @return a list with 3 elements
 #' \itemize{
-#'  \item{accuracy: }{A character vector with accuracy metrics.}
-#'  \item{error: }{A character string with possible errors when calculating the accuracy metrics}
+#'  \item accuracy: A character vector with accuracy metrics.
+#'  \item error: A character string with possible errors when calculating the accuracy metrics
 #' }
 #' @seealso \code{\link{udpipe_load_model}}
 #' @references \url{https://ufal.mff.cuni.cz/udpipe}, 

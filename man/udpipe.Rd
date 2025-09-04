@@ -9,9 +9,9 @@ udpipe(x, object, parallel.cores = 1L, parallel.chunksize, ...)
 \arguments{
 \item{x}{either
 \itemize{
- \item{a character vector: }{The character vector contains the text you want to tokenize, lemmatise, tag and perform dependency parsing. The names of the character vector indicate the document identifier.}
- \item{a data.frame with columns doc_id and text: }{The text column contains the text you want to tokenize, lemmatise, tag and perform dependency parsing. The doc_id column indicate the document identifier.}
- \item{a list of tokens: }{If you have already a tokenised list of tokens and you want to enrich it by lemmatising, tagging and performing dependency parsing. The names of the list indicate the document identifier.}
+ \item a character vector: The character vector contains the text you want to tokenize, lemmatise, tag and perform dependency parsing. The names of the character vector indicate the document identifier.
+ \item a data.frame with columns doc_id and text: The text column contains the text you want to tokenize, lemmatise, tag and perform dependency parsing. The doc_id column indicate the document identifier.
+ \item a list of tokens: If you have already a tokenised list of tokens and you want to enrich it by lemmatising, tagging and performing dependency parsing. The names of the list indicate the document identifier.
 }
 All text data should be in UTF-8 encoding}
 
@@ -33,23 +33,23 @@ If \code{parallel.cores} is bigger than 1 and \code{object} is of class \code{ud
 a data.frame with one row per doc_id and term_id containing all the tokens in the data, the lemma, the part of speech tags,
 the morphological features and the dependency relationship along the tokens. The data.frame has the following fields:
 \itemize{
- \item{doc_id: }{The document identifier.}
- \item{paragraph_id: }{The paragraph identifier which is unique within each document.}
- \item{sentence_id: }{The sentence identifier which is unique within each document.}
- \item{sentence: }{The text of the sentence of the sentence_id.}
- \item{start: }{Integer index indicating in the original text where the token starts. Missing in case of tokens part of multi-word tokens which are not in the text.}
- \item{end: }{Integer index indicating in the original text where the token ends. Missing in case of tokens part of multi-word tokens which are not in the text.}
- \item{term_id: }{A row identifier which is unique within the doc_id identifier.}
- \item{token_id: }{Token index, integer starting at 1 for each new sentence. May be a range for multiword tokens or a decimal number for empty nodes.}
- \item{token: }{The token.}
- \item{lemma: }{The lemma of the token.}
- \item{upos: }{The universal parts of speech tag of the token. See \url{https://universaldependencies.org/format.html}}
- \item{xpos: }{The treebank-specific parts of speech tag of the token. See \url{https://universaldependencies.org/format.html}}
- \item{feats: }{The morphological features of the token, separated by |. See \url{https://universaldependencies.org/format.html}}
- \item{head_token_id: }{Indicating what is the token_id of the head of the token, indicating to which other token in the sentence it is related. See \url{https://universaldependencies.org/format.html}}
- \item{dep_rel: }{The type of relation the token has with the head_token_id. See \url{https://universaldependencies.org/format.html}}
- \item{deps: }{Enhanced dependency graph in the form of a list of head-deprel pairs. See \url{https://universaldependencies.org/format.html}}
- \item{misc: }{SpacesBefore/SpacesAfter/SpacesInToken spaces before/after/inside the token. Used to reconstruct the original text. See \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual}}
+ \item doc_id: The document identifier.
+ \item paragraph_id: The paragraph identifier which is unique within each document.
+ \item sentence_id: The sentence identifier which is unique within each document.
+ \item sentence: The text of the sentence of the sentence_id.
+ \item start: Integer index indicating in the original text where the token starts. Missing in case of tokens part of multi-word tokens which are not in the text.
+ \item end: Integer index indicating in the original text where the token ends. Missing in case of tokens part of multi-word tokens which are not in the text.
+ \item term_id: A row identifier which is unique within the doc_id identifier.
+ \item token_id: Token index, integer starting at 1 for each new sentence. May be a range for multiword tokens or a decimal number for empty nodes.
+ \item token: The token.
+ \item lemma: The lemma of the token.
+ \item upos: The universal parts of speech tag of the token. See \url{https://universaldependencies.org/format.html}
+ \item xpos: The treebank-specific parts of speech tag of the token. See \url{https://universaldependencies.org/format.html}
+ \item feats: The morphological features of the token, separated by |. See \url{https://universaldependencies.org/format.html}
+ \item head_token_id: Indicating what is the token_id of the head of the token, indicating to which other token in the sentence it is related. See \url{https://universaldependencies.org/format.html}
+ \item dep_rel: The type of relation the token has with the head_token_id. See \url{https://universaldependencies.org/format.html}
+ \item deps: Enhanced dependency graph in the form of a list of head-deprel pairs. See \url{https://universaldependencies.org/format.html}
+ \item misc: SpacesBefore/SpacesAfter/SpacesInToken spaces before/after/inside the token. Used to reconstruct the original text. See \url{https://ufal.mff.cuni.cz/udpipe/1/users-manual}
 }
 The columns paragraph_id, sentence_id, term_id, start, end are integers, the other fields
 are character data in UTF-8 encoding. \cr
