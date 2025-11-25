@@ -3391,26 +3391,26 @@ T* unaligned_upper_bound(T* first, size_t size, T val);
 template<class T, class P>
 inline T unaligned_load(const P* ptr) {
   T value;
-  memcpy(&value, ptr, sizeof(T));
+  memcpy(&value, (const void*)ptr, sizeof(T));
   return value;
 }
 
 template<class T, class P>
 inline T unaligned_load_inc(const P*& ptr) {
   T value;
-  memcpy(&value, ptr, sizeof(T));
+  memcpy(&value, (const void*)ptr, sizeof(T));
   ((const char*&)ptr) += sizeof(T);
   return value;
 }
 
 template<class T, class P>
 inline void unaligned_store(P* ptr, T value) {
-  memcpy(ptr, &value, sizeof(T));
+  memcpy((void*)ptr, &value, sizeof(T));
 }
 
 template<class T, class P>
 inline void unaligned_store_inc(P*& ptr, T value) {
-  memcpy(ptr, &value, sizeof(T));
+  memcpy((void*)ptr, &value, sizeof(T));
   ((char*&)ptr) += sizeof(T);
 }
 
@@ -3518,7 +3518,7 @@ struct persistent_unordered_map::fnv_hash {
     uint32_t size = data.next_4B();
     mask = size - 2;
     hash.resize(size);
-    memcpy(hash.data(), data.next<uint32_t>(size), size * sizeof(uint32_t));
+    memcpy(hash.data(), (const void*)data.next<uint32_t>(size), size * sizeof(uint32_t));
 
     size = data.next_4B();
     this->data.resize(size);
@@ -12762,8 +12762,8 @@ void gru_tokenizer_network::matrix<R, C>::clear() {
 
 template <int R, int C>
 void gru_tokenizer_network::matrix<R, C>::load(binary_decoder& data) {
-  for (int i = 0; i < R; i++) memcpy(w[i], data.next<float>(C), sizeof(float) * C);
-  memcpy(b, data.next<float>(R), sizeof(float) * R);
+  for (int i = 0; i < R; i++) memcpy(w[i], (const void*)data.next<float>(C), sizeof(float) * C);
+  memcpy(b, (const void*)data.next<float>(R), sizeof(float) * R);
 }
 
 template <int D>
@@ -12858,7 +12858,7 @@ gru_tokenizer_network_implementation<D>* gru_tokenizer_network_implementation<D>
 
   for (unsigned chars = data.next_4B(); chars; chars--) {
     auto& embedding = network->embeddings[data.next_4B()];
-    copy_n(data.next<float>(D), D, embedding.e.w[0]);
+    memcpy(embedding.e.w[0], (const void*)data.next<float>(D), sizeof(float) * D);
   }
   fill_n(network->empty_embedding.e.w[0], D, 0.f);
 
