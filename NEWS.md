@@ -1,6 +1,6 @@
 ## CHANGES IN udpipe VERSION 0.8.13
 
-- fix load of misaligned address reported by CRAN
+- fix load of misaligned address and UBSan messages reported by CRAN
 
 ## CHANGES IN udpipe VERSION 0.8.12
 
