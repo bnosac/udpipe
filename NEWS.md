@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.13
+
+- fix load of misaligned address reported by CRAN
+
 ## CHANGES IN udpipe VERSION 0.8.12
 
 - avoid warning: overlapping comparisons always evaluate to true in parse_int 
