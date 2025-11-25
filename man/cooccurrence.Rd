@@ -80,14 +80,14 @@ You can also aggregate cooccurrences if you decide to do any of these 3 by a cer
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{character}: Create a cooccurence data.frame based on a vector of terms
+\item \code{cooccurrence(character)}: Create a cooccurence data.frame based on a vector of terms
 
-\item \code{cooccurrence}: Aggregate co-occurrence statistics by summing the cooc by term/term2
+\item \code{cooccurrence(cooccurrence)}: Aggregate co-occurrence statistics by summing the cooc by term/term2
 
-\item \code{data.frame}: Create a cooccurence data.frame based on a data.frame where you look within a document / sentence / paragraph / group 
+\item \code{cooccurrence(data.frame)}: Create a cooccurence data.frame based on a data.frame where you look within a document / sentence / paragraph / group 
 if terms co-occur
-}}
 
+}}
 \examples{
 \dontshow{
 data.table::setDTthreads(1)

@@ -58,24 +58,24 @@ Create a document/term matrix from either
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{data.frame}: Construct a document term matrix from a data.frame with columns doc_id, term, freq
+\item \code{document_term_matrix(data.frame)}: Construct a document term matrix from a data.frame with columns doc_id, term, freq
 
-\item \code{matrix}: Construct a sparse document term matrix from a matrix
+\item \code{document_term_matrix(matrix)}: Construct a sparse document term matrix from a matrix
 
-\item \code{integer}: Construct a sparse document term matrix from an named integer vector
+\item \code{document_term_matrix(integer)}: Construct a sparse document term matrix from an named integer vector
 
-\item \code{numeric}: Construct a sparse document term matrix from a named numeric vector
+\item \code{document_term_matrix(numeric)}: Construct a sparse document term matrix from a named numeric vector
 
-\item \code{default}: Construct a document term matrix from a list of tokens
+\item \code{document_term_matrix(default)}: Construct a document term matrix from a list of tokens
 
-\item \code{DocumentTermMatrix}: Convert an object of class \code{DocumentTermMatrix} from the tm package to a sparseMatrix
+\item \code{document_term_matrix(DocumentTermMatrix)}: Convert an object of class \code{DocumentTermMatrix} from the tm package to a sparseMatrix
 
-\item \code{TermDocumentMatrix}: Convert an object of class \code{TermDocumentMatrix} from the tm package to a sparseMatrix with
+\item \code{document_term_matrix(TermDocumentMatrix)}: Convert an object of class \code{TermDocumentMatrix} from the tm package to a sparseMatrix with
 the documents in the rows and the terms in the columns
 
-\item \code{simple_triplet_matrix}: Convert an object of class \code{simple_triplet_matrix} from the slam package to a sparseMatrix
-}}
+\item \code{document_term_matrix(simple_triplet_matrix)}: Convert an object of class \code{simple_triplet_matrix} from the slam package to a sparseMatrix
 
+}}
 \examples{
 \dontshow{
 data.table::setDTthreads(1)
