@@ -53,11 +53,11 @@ Aggregate a data.frame to the document/term level by calculating how many times 
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{data.frame}: Create a data.frame with one row per document/term combination indicating the frequency of the term in the document
+\item \code{document_term_frequencies(data.frame)}: Create a data.frame with one row per document/term combination indicating the frequency of the term in the document
 
-\item \code{character}: Create a data.frame with one row per document/term combination indicating the frequency of the term in the document
+\item \code{document_term_frequencies(character)}: Create a data.frame with one row per document/term combination indicating the frequency of the term in the document
+
 }}
-
 \examples{
 \dontshow{
 data.table::setDTthreads(1)
