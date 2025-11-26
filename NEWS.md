@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.14
+
+- Add comment section in Authors@R and put aut instead of ctb for udpipe.cpp part
+
 ## CHANGES IN udpipe VERSION 0.8.13
 
 - fix load of misaligned address and UBSan messages reported by CRAN

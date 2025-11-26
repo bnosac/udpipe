@@ -2,14 +2,14 @@ Package: udpipe
 Type: Package
 Title: Tokenization, Parts of Speech Tagging, Lemmatization and Dependency
     Parsing with the 'UDPipe' 'NLP' Toolkit
-Version: 0.8.13
+Version: 0.8.14
 Maintainer: Jan Wijffels <jwijffels@bnosac.be>
 Authors@R: c(
-    person('Jan', 'Wijffels', role = c('aut', 'cre', 'cph'), email = 'jwijffels@bnosac.be'), 
-    person('BNOSAC', role = 'cph'), 
-    person("Institute of Formal and Applied Linguistics, Faculty of Mathematics and Physics, Charles University in Prague, Czech Republic", role = 'cph'), 
-    person('Milan Straka', role = c('ctb', 'cph'), email = 'straka@ufal.mff.cuni.cz'), 
-    person('Jana Straková', role = c('ctb', 'cph'), email = 'strakova@ufal.mff.cuni.cz'))
+    person('Jan', 'Wijffels', role = c('aut', 'cre', 'cph'), email = 'jwijffels@bnosac.be', comment = 'R wrapper'), 
+    person('BNOSAC', role = 'cph', comment = 'R wrapper'), 
+    person("Institute of Formal and Applied Linguistics, Faculty of Mathematics and Physics, Charles University in Prague, Czech Republic", role = 'cph', comment = "src/udpipe.cpp & src/udpipe.h"), 
+    person('Milan Straka', role = c('aut', 'cph'), email = 'straka@ufal.mff.cuni.cz', comment = "src/udpipe.cpp & src/udpipe.h"), 
+    person('Jana Straková', role = c('ctb', 'cph'), email = 'strakova@ufal.mff.cuni.cz', comment = "src/udpipe.cpp & src/udpipe.h"))
 Description: This natural language processing toolkit provides language-agnostic
     'tokenization', 'parts of speech tagging', 'lemmatization' and 'dependency
     parsing' of raw text. Next to text parsing, the package also allows you to train
