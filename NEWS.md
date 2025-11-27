@@ -1,6 +1,6 @@
 ## CHANGES IN udpipe VERSION 0.8.15
 
-- Use C++17 instead of C++11
+- Drop C++11 from Makevars
 
 ## CHANGES IN udpipe VERSION 0.8.14
 
