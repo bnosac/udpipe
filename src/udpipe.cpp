@@ -3471,6 +3471,44 @@ T* unaligned_upper_bound(T* first, size_t size, T val) {
 
 namespace morphodita {
 
+// Definitions - Move fnv_hash BEFORE persistent_unordered_map
+struct persistent_unordered_map_fnv_hash {
+  persistent_unordered_map_fnv_hash(unsigned num) {
+    mask = 1;
+    while (mask < num)
+      mask <<= 1;
+    hash.resize(mask + 1);
+    mask--;
+  }
+  persistent_unordered_map_fnv_hash(binary_decoder& data) {
+    uint32_t size = data.next_4B();
+    mask = size - 2;
+    hash.resize(size);
+    memcpy(hash.data(), (const void*)data.next<uint32_t>(size), size * sizeof(uint32_t));
+
+    size = data.next_4B();
+    this->data.resize(size);
+    if (size) memcpy(this->data.data(), data.next<char>(size), size);
+  }
+
+  inline uint32_t index(const char* data, int len) const {
+    if (len <= 0) return 0;
+    if (len == 1) return unaligned_load<uint8_t>(data);
+    if (len == 2) return unaligned_load<uint16_t>(data);
+
+    uint32_t hash = 2166136261U;
+    while (len--)
+      hash = (hash ^ unsigned(*data++)) * 16777619U;
+    return hash & mask;
+  }
+
+  inline void save(binary_encoder& enc);
+
+  unsigned mask;
+  vector<uint32_t> hash;
+  vector<unsigned char> data;
+};
+
 // Declarations
 class persistent_unordered_map {
  public:
@@ -3510,50 +3548,13 @@ class persistent_unordered_map {
   inline void save(binary_encoder& enc);
 
  private:
-  struct fnv_hash;
+  using fnv_hash = persistent_unordered_map_fnv_hash;
   vector<fnv_hash> hashes;
 
   template <class Entry, class EntryEncode>
   void construct(const map<string, Entry>& map, double load_factor, EntryEncode entry_encode);
 };
 
-// Definitions
-struct persistent_unordered_map::fnv_hash {
-  fnv_hash(unsigned num) {
-    mask = 1;
-    while (mask < num)
-      mask <<= 1;
-    hash.resize(mask + 1);
-    mask--;
-  }
-  fnv_hash(binary_decoder& data) {
-    uint32_t size = data.next_4B();
-    mask = size - 2;
-    hash.resize(size);
-    memcpy(hash.data(), (const void*)data.next<uint32_t>(size), size * sizeof(uint32_t));
-
-    size = data.next_4B();
-    this->data.resize(size);
-    if (size) memcpy(this->data.data(), data.next<char>(size), size);
-  }
-
-  inline uint32_t index(const char* data, int len) const {
-    if (len <= 0) return 0;
-    if (len == 1) return unaligned_load<uint8_t>(data);
-    if (len == 2) return unaligned_load<uint16_t>(data);
-
-    uint32_t hash = 2166136261U;
-    while (len--)
-      hash = (hash ^ unsigned(*data++)) * 16777619U;
-    return hash & mask;
-  }
-
-  inline void save(binary_encoder& enc);
-
-  unsigned mask;
-  vector<uint32_t> hash;
-  vector<unsigned char> data;
-};
 
 template <class EntrySize>
 const unsigned char* persistent_unordered_map::at(const char* str, int len, EntrySize entry_size) const {
