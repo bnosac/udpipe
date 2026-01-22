@@ -1,2 +1,3 @@
 PKG_CPPFLAGS = -DSTRICT_R_HEADERS
 CXX = g++ -std=gnu++20
+CXX_STD = CXX20
