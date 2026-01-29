@@ -3636,6 +3636,8 @@ const unsigned char* persistent_unordered_map::data_start(int len) const {
   return unsigned(len) < hashes.size() ? hashes[len].data.data() : nullptr;
 }
 
+persistent_unordered_map::persistent_unordered_map() {}
+
 void persistent_unordered_map::resize(unsigned elems) {
   if (hashes.size() == 0) hashes.emplace_back(1);
   else if (hashes.size() == 1) hashes.emplace_back(1<<8);
