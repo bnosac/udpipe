@@ -3492,7 +3492,7 @@ class persistent_unordered_map {
   inline const unsigned char* data_start(int len) const;
 
   // Creation functions
-  persistent_unordered_map() {}
+  inline persistent_unordered_map() {}
   template <class Entry, class EntryEncode>
   persistent_unordered_map(const unordered_map<string, Entry>& map, double load_factor, EntryEncode entry_encode);
   template <class Entry, class EntryEncode>
