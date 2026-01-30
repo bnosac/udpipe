@@ -1,3 +1,7 @@
+## CHANGES IN udpipe VERSION 0.8.16
+
+- Fix on the declaration of persistent_unordered_map for C++20
+
 ## CHANGES IN udpipe VERSION 0.8.15
 
 - Drop C++11 from Makevars
