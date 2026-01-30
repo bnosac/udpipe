@@ -3517,7 +3517,6 @@ class persistent_unordered_map {
   void construct(const map<string, Entry>& map, double load_factor, EntryEncode entry_encode);
 };
 
-
 // Definitions
 struct persistent_unordered_map::fnv_hash {
   fnv_hash(unsigned num) {
@@ -3555,7 +3554,6 @@ struct persistent_unordered_map::fnv_hash {
   vector<uint32_t> hash;
   vector<unsigned char> data;
 };
-
 
 template <class EntrySize>
 const unsigned char* persistent_unordered_map::at(const char* str, int len, EntrySize entry_size) const {
